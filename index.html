@@ -570,7 +570,7 @@ scroll.addEventListener('wheel', function (e) {
   const nextIndex = e.deltaY > 0 || e.deltaX > 0 ? currentIndex + 1 : currentIndex - 1;
   const clamped = Math.max(0, Math.min(nextIndex, project.images.length - 1));
   scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
-  setTimeout(() => { isScrolling = false; }, 100);
+  setTimeout(() => { isScrolling = false; }, 500);
 }, { passive: false });
 
       // Click right = forward, left = back
