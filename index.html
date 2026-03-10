@@ -571,7 +571,7 @@ scroll.addEventListener('wheel', function (e) {
   } else {
     scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
   }
-  setTimeout(() => { isScrolling = false; }, 600);
+  setTimeout(() => { isScrolling = false; }, 100);
 }, { passive: false });
 
       // Click right = forward, left = back
