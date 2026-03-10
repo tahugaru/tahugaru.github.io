@@ -565,6 +565,7 @@ let isScrolling = false;
 scroll.addEventListener('wheel', function (e) {
   e.preventDefault();
   if (isScrolling) return;
+  if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
   isScrolling = true;
   const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
   const nextIndex = e.deltaY > 0 || e.deltaX > 0 ? currentIndex + 1 : currentIndex - 1;
