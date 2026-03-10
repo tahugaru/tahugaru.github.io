@@ -589,7 +589,7 @@
       page.classList.add('active');
       document.body.style.overflow = 'hidden';
 
-      // Update counter on scroll
+     // Update counter on scroll
       scroll.addEventListener('scroll', function () {
         const index = Math.round(scroll.scrollLeft / window.innerWidth);
         counter.textContent =
@@ -599,6 +599,22 @@
         else hint.classList.remove('hidden');
       });
 
+      // Mouse wheel scrolls horizontally
+      scroll.addEventListener('wheel', function (e) {
+        e.preventDefault();
+        scroll.scrollBy({ left: e.deltaY + e.deltaX, behavior: 'smooth' });
+      }, { passive: false });
+
+      // Click right half to go forward, left half to go back
+      scroll.addEventListener('click', function (e) {
+        const middle = window.innerWidth / 2;
+        if (e.clientX > middle) {
+          scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+        } else {
+          scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        }
+      });
+
       // Keyboard navigation
       document.onkeydown = function (e) {
         if (e.key === 'ArrowRight') scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
@@ -606,7 +622,6 @@
         if (e.key === 'Escape') window.closeProject();
       };
     };
-
     // ── Close project
     window.closeProject = function() {
       document.getElementById('project-page').classList.remove('active');
