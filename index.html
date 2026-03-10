@@ -1,1 +1,628 @@
-l
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ivan Codrean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --cream: #F8F4EE;
+      --ink: #1C1A18;
+      --ink-light: #7A746C;
+      --accent: #1C1A18;
+      --font-display: 'Unna', Georgia, serif;
+      --font-body: 'Jost', sans-serif;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background-color: var(--cream);
+      padding: 2rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-name {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    nav a {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--ink);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      padding: 0 3.5rem;
+      padding-top: 10rem;
+      padding-bottom: 6rem;
+    }
+
+    /* ── PROJECT LIST ── */
+    .project-list {
+      list-style: none;
+      width: 100%;
+    }
+
+    .project-item {
+      border-top: 1px solid rgba(28, 26, 24, 0.12);
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .project-item:nth-child(1) { animation-delay: 0.1s; }
+    .project-item:nth-child(2) { animation-delay: 0.2s; }
+    .project-item:nth-child(3) { animation-delay: 0.3s; }
+    .project-item:nth-child(4) { animation-delay: 0.4s; }
+    .project-item:nth-child(5) { animation-delay: 0.5s; }
+    .project-item:nth-child(6) { animation-delay: 0.6s; }
+
+    .project-item:last-child {
+      border-bottom: 1px solid rgba(28, 26, 24, 0.12);
+    }
+
+    .project-link {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 1.8rem 0;
+      text-decoration: none;
+      color: var(--ink);
+      transition: padding-left 0.35s ease;
+      gap: 2rem;
+    }
+
+    .project-link:hover {
+      padding-left: 1rem;
+    }
+
+    .project-link:hover .project-title {
+      font-style: italic;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      transition: font-style 0.2s ease;
+    }
+
+    .project-meta {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      white-space: nowrap;
+      align-self: center;
+      flex-shrink: 0;
+    }
+
+    /* ── PROJECT PAGE ── */
+    .project-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: var(--cream);
+      z-index: 200;
+      overflow: hidden;
+    }
+
+    .project-page.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 2rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, var(--cream) 60%, transparent);
+    }
+
+    .project-header-title {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .back-btn {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-btn:hover {
+      color: var(--ink);
+    }
+
+    /* Horizontal scroll gallery */
+    .gallery-scroll {
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      cursor: ew-resize;
+    }
+
+    .gallery-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gallery-slide {
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 3.5rem 3rem;
+    }
+
+    .gallery-slide img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      position: absolute;
+      bottom: 2rem;
+      right: 3.5rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--ink-light);
+    }
+
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .scroll-hint.hidden {
+      opacity: 0;
+    }
+
+    .scroll-hint::before,
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--ink-light);
+    }
+
+    /* ── CONTACT PAGE ── */
+    .contact-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: var(--cream);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .contact-page.active {
+      display: flex;
+    }
+
+    .contact-content {
+      text-align: center;
+    }
+
+    .contact-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-email {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      color: var(--ink);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 1.5rem;
+      transition: font-style 0.2s ease;
+    }
+
+    .contact-email:hover {
+      font-style: italic;
+    }
+
+    .contact-instagram {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--ink-light);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .contact-instagram:hover {
+      color: var(--ink);
+    }
+
+    .contact-close {
+      position: absolute;
+      top: 2rem;
+      right: 3.5rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .contact-close:hover {
+      color: var(--ink);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(28, 26, 24, 0.08);
+    }
+
+    .footer-copy {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-light);
+    }
+
+    /* ── ANIMATION ── */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header,
+      main,
+      footer {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+
+      main {
+        padding-top: 8rem;
+      }
+
+      .project-header {
+        padding: 1.5rem;
+      }
+
+      .gallery-slide {
+        padding: 4.5rem 1.5rem 3rem;
+      }
+
+      .slide-counter {
+        right: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header>
+    <a href="#" class="site-name" onclick="showHome()">Ivan Codrean</a>
+    <nav>
+      <a href="#" onclick="showContact()">Contact</a>
+      <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener">Instagram</a>
+    </nav>
+  </header>
+
+  <!-- ── MAIN: PROJECT LIST ── -->
+  <main id="home">
+    <ul class="project-list">
+
+      <li class="project-item">
+        <a href="#" class="project-link" onclick="openProject('book')">
+          <span class="project-title">S'échapper</span>
+          <span class="project-meta">Book &mdash; 2022&ndash;2025</span>
+        </a>
+      </li>
+
+      <li class="project-item">
+        <a href="#" class="project-link" onclick="openProject('mediterranean')">
+          <span class="project-title">Mediterranean</span>
+          <span class="project-meta">Photography &mdash; 2024</span>
+        </a>
+      </li>
+
+      <li class="project-item">
+        <a href="#" class="project-link" onclick="openProject('portraits')">
+          <span class="project-title">Portraits</span>
+          <span class="project-meta">Photography &mdash; 2023</span>
+        </a>
+      </li>
+
+      <li class="project-item">
+        <a href="#" class="project-link" onclick="openProject('analog')">
+          <span class="project-title">Analog</span>
+          <span class="project-meta">Photography &mdash; 2022</span>
+        </a>
+      </li>
+
+    </ul>
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span class="footer-copy">&copy; Ivan Codrean <span id="year"></span>. All rights reserved.</span>
+  </footer>
+
+  <!-- ── PROJECT PAGE ── -->
+  <div class="project-page" id="project-page">
+    <div class="project-header">
+      <span class="project-header-title" id="project-page-title"></span>
+      <button class="back-btn" onclick="closeProject()">&#8592; Back</button>
+    </div>
+
+    <div class="gallery-scroll" id="gallery-scroll">
+      <!-- Images injected by JS -->
+    </div>
+
+    <div class="scroll-hint" id="scroll-hint">Scroll</div>
+    <div class="slide-counter" id="slide-counter"></div>
+  </div>
+
+  <!-- ── CONTACT PAGE ── -->
+  <div class="contact-page" id="contact-page">
+    <button class="contact-close" onclick="closeContact()">&#8592; Back</button>
+    <div class="contact-content">
+      <p class="contact-label">Get in touch</p>
+      <a href="mailto:hello@codrean.art" class="contact-email">hello@codrean.art</a>
+      <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener" class="contact-instagram">@codrean.art</a>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── Project data
+    // Replace the placeholder image arrays with your actual image filenames.
+    // Place your images in an /images/ folder in your GitHub repository.
+    // Example: images/book-01.jpg, images/book-02.jpg etc.
+    const projects = {
+      book: {
+        title: "S'échapper",
+        images: [
+          'images/book-01.jpg',
+          'images/book-02.jpg',
+          'images/book-03.jpg',
+          'images/book-04.jpg',
+          'images/book-05.jpg',
+        ]
+      },
+      mediterranean: {
+        title: 'Mediterranean',
+        images: [
+          'images/med-01.jpg',
+          'images/med-02.jpg',
+          'images/med-03.jpg',
+        ]
+      },
+      portraits: {
+        title: 'Portraits',
+        images: [
+          'images/portrait-01.jpg',
+          'images/portrait-02.jpg',
+          'images/portrait-03.jpg',
+        ]
+      },
+      analog: {
+        title: 'Analog',
+        images: [
+          'images/analog-01.jpg',
+          'images/analog-02.jpg',
+          'images/analog-03.jpg',
+        ]
+      }
+    };
+
+    // ── Open project
+    window.openProject = function(key) {
+      const project = projects[key];
+      if (!project) return;
+
+      const page = document.getElementById('project-page');
+      const scroll = document.getElementById('gallery-scroll');
+      const titleEl = document.getElementById('project-page-title');
+      const counter = document.getElementById('slide-counter');
+      const hint = document.getElementById('scroll-hint');
+
+      titleEl.textContent = project.title;
+      scroll.innerHTML = '';
+
+      project.images.forEach((src, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'gallery-slide';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = project.title + ' ' + (i + 1);
+        slide.appendChild(img);
+        scroll.appendChild(slide);
+      });
+
+      counter.textContent = '01 / ' + String(project.images.length).padStart(2, '0');
+      scroll.scrollLeft = 0;
+      hint.classList.remove('hidden');
+      page.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Update counter on scroll
+      scroll.addEventListener('scroll', function () {
+        const index = Math.round(scroll.scrollLeft / window.innerWidth);
+        counter.textContent =
+          String(index + 1).padStart(2, '0') + ' / ' +
+          String(project.images.length).padStart(2, '0');
+        if (index > 0) hint.classList.add('hidden');
+        else hint.classList.remove('hidden');
+      });
+
+      // Keyboard navigation
+      document.onkeydown = function (e) {
+        if (e.key === 'ArrowRight') scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+        if (e.key === 'ArrowLeft') scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        if (e.key === 'Escape') window.closeProject();
+      };
+    };
+
+    // ── Close project
+    window.closeProject = function() {
+      document.getElementById('project-page').classList.remove('active');
+      document.body.style.overflow = '';
+      document.onkeydown = null;
+    };
+
+    // ── Contact
+    window.showContact = function() {
+      document.getElementById('contact-page').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeContact = function() {
+      document.getElementById('contact-page').classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    // ── Home
+    window.showHome = function() {
+      window.closeProject();
+      window.closeContact();
+    };
+
+    // ── Prevent default on internal links
+    document.querySelectorAll('a[onclick]').forEach(a => {
+      a.addEventListener('click', e => e.preventDefault());
+    });
+
+  </script>
+
+</body>
+</html>
