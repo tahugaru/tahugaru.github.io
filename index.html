@@ -561,10 +561,18 @@
       });
 
       // Mouse wheel → horizontal
-      scroll.addEventListener('wheel', function (e) {
-        e.preventDefault();
-        scroll.scrollBy({ left: e.deltaY + e.deltaX, behavior: 'smooth' });
-      }, { passive: false });
+let isScrolling = false;
+scroll.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  if (isScrolling) return;
+  isScrolling = true;
+  if (e.deltaY > 0 || e.deltaX > 0) {
+    scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+  } else {
+    scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+  }
+  setTimeout(() => { isScrolling = false; }, 600);
+}, { passive: false });
 
       // Click right = forward, left = back
       scroll.addEventListener('click', function (e) {
