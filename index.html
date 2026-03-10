@@ -18,6 +18,7 @@
       --ink-light: #7A746C;
       --font-display: 'Unna', Georgia, serif;
       --font-body: 'Jost', sans-serif;
+      --space: 3.5rem;
     }
 
     html { font-size: 16px; scroll-behavior: smooth; }
@@ -39,7 +40,7 @@
       top: 0; left: 0; right: 0;
       z-index: 100;
       background-color: var(--cream);
-      padding: 2rem 3.5rem;
+      padding: 2rem var(--space);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -72,7 +73,7 @@
     /* ── MAIN ── */
     main {
       flex: 1;
-      padding: 0 3.5rem;
+      padding: 0 var(--space);
       padding-top: 10rem;
       padding-bottom: 6rem;
     }
@@ -133,15 +134,18 @@
       inset: 0;
       background-color: var(--cream);
       z-index: 200;
-      overflow: visible;
       flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     .project-page.active { display: flex; }
 
+    /* Top bar */
     .project-header {
-      position: relative;
+      position: sticky;
+      top: 0;
       z-index: 10;
-      padding: 3.5rem 3.5rem 1.5rem;
+      padding: 2rem var(--space) 1.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -172,10 +176,10 @@
     }
     .back-btn:hover { color: var(--ink); }
 
-    /* Static description bar */
+    /* Description bar */
     .project-description-bar {
       display: none;
-      padding: 1.5rem 3.5rem 1.5rem;
+      padding: 0 var(--space) 1.5rem;
       flex-shrink: 0;
       background-color: var(--cream);
       border-bottom: 1px solid rgba(28, 26, 24, 0.1);
@@ -192,13 +196,14 @@
       font-style: italic;
     }
 
-    /* Gallery */
+    /* ── GALLERY ── */
+    /* Outer horizontal scroll container */
     .gallery-scroll {
-      flex: 1;
+      width: 100%;
+      flex-shrink: 0;
       display: flex;
-      align-items: flex-start;
       overflow-x: auto;
-      overflow-y: auto;
+      overflow-y: visible;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
@@ -206,50 +211,66 @@
     }
     .gallery-scroll::-webkit-scrollbar { display: none; }
 
-    <button class="gallery-arrow prev" id="gallery-prev" onclick="window.galleryPrev()">
-  <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
-    <polyline points="16,4 4,20 16,36"/>
-  </svg>
-</button>
-
-<button class="gallery-arrow next" id="gallery-next" onclick="window.galleryNext()">
-  <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
-    <polyline points="4,4 16,20 4,36"/>
-  </svg>
-</button>
-   
+    /* Each slide */
     .gallery-slide {
       flex-shrink: 0;
       width: 100vw;
-      min-height: 100%;
       scroll-snap-align: start;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 3.5rem 3.5rem 7rem;
+      padding: var(--space) 28% var(--space);
     }
 
-.gallery-slide img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+    /* Image fills the padded area, height is natural */
+    .gallery-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
+    /* Navigation arrows */
+    .gallery-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 210;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 1rem;
+      opacity: 0.2;
+      transition: opacity 0.3s ease;
+    }
+    .gallery-arrow:hover { opacity: 0.7; }
+    .gallery-arrow svg {
+      display: block;
+      width: 1rem;
+      height: auto;
+      stroke: var(--ink);
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .gallery-arrow.prev { left: 1rem; }
+    .gallery-arrow.next { right: 1rem; }
+    .gallery-arrow.gone { display: none; }
+
+    /* Counter */
     .slide-counter {
-      position: absolute;
-      bottom: 3.5rem;
-      right: 3.5rem;
+      position: fixed;
+      bottom: var(--space);
+      right: var(--space);
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 0.72rem;
       letter-spacing: 0.15em;
       color: var(--ink-light);
-      z-index: 10;
+      z-index: 210;
     }
 
+    /* Scroll hint */
     .scroll-hint {
-      position: absolute;
-      bottom: 3.5rem;
+      position: fixed;
+      bottom: var(--space);
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--font-body);
@@ -263,7 +284,7 @@
       gap: 0.75rem;
       opacity: 1;
       transition: opacity 0.4s ease;
-      z-index: 10;
+      z-index: 210;
       pointer-events: none;
     }
     .scroll-hint.hidden { opacity: 0; }
@@ -275,38 +296,6 @@
       background: var(--ink-light);
     }
 
-/* Navigation arrows */
-.gallery-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 1rem;
-  opacity: 0.25;
-  transition: opacity 0.3s ease;
-}
-
-.gallery-arrow:hover {
-  opacity: 0.8;
-}
-
-.gallery-arrow svg {
-  display: block;
-  width: 1.2rem;
-  height: auto;
-  stroke: var(--ink);
-  stroke-width: 1;
-  fill: none;
-}
-
-.gallery-arrow.prev { left: 1.5rem; }
-.gallery-arrow.next { right: 1.5rem; }
-.gallery-arrow.hidden { opacity: 0; pointer-events: none; }
-    
-    
     /* ── CONTACT PAGE ── */
     .contact-page {
       display: none;
@@ -358,7 +347,7 @@
     .contact-close {
       position: absolute;
       top: 2rem;
-      right: 3.5rem;
+      right: var(--space);
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 0.75rem;
@@ -374,7 +363,7 @@
 
     /* ── FOOTER ── */
     footer {
-      padding: 2rem 3.5rem;
+      padding: 2rem var(--space);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -395,14 +384,12 @@
     }
 
     /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  header, main, footer { padding-left: 1rem; padding-right: 1rem; }
-  main { padding-top: 8rem; }
-  .project-header { padding: 1rem 1rem 0.75rem; }
-  .project-description-bar { padding: 1rem 1rem 1rem; }
-  .gallery-slide { padding: 1rem 1rem 4rem; }
-  .slide-counter { right: 1rem; bottom: 1rem; }
-}
+    @media (max-width: 768px) {
+      :root { --space: 1rem; }
+      main { padding-top: 8rem; }
+      .project-header { padding: 1rem 1rem 0.75rem; }
+      .gallery-slide { padding: 1rem 8% 5rem; }
+    }
   </style>
 </head>
 <body>
@@ -470,10 +457,23 @@
 
     <div class="gallery-scroll" id="gallery-scroll"></div>
 
-    <div class="scroll-hint" id="scroll-hint">Scroll</div>
-    <div class="slide-counter" id="slide-counter"></div>
-
   </div>
+
+  <!-- Arrows (outside project-page so they stay fixed over everything) -->
+  <button class="gallery-arrow prev gone" id="gallery-prev" onclick="window.galleryStep(-1)">
+    <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="16,4 4,20 16,36"/>
+    </svg>
+  </button>
+
+  <button class="gallery-arrow next gone" id="gallery-next" onclick="window.galleryStep(1)">
+    <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="4,4 16,20 4,36"/>
+    </svg>
+  </button>
+
+  <div class="scroll-hint gone" id="scroll-hint">Scroll</div>
+  <div class="slide-counter gone" id="slide-counter"></div>
 
   <!-- ── CONTACT PAGE ── -->
   <div class="contact-page" id="contact-page">
@@ -487,11 +487,6 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // ── PROJECT DATA
-    // To add images: add filenames to the images array.
-    // To show a description: fill in the description field.
-    // To hide description: leave it as an empty string ''.
 
     const projects = {
 
@@ -509,15 +504,15 @@
         title: 'Summer Haze',
         description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
         images: [
-          'images/haze-1.jpg',
-          'images/haze-2.jpg',
-          'images/haze-3.jpg',
-          'images/haze-4.jpg',
-          'images/haze-5.jpg',
-          'images/haze-6.jpg',
-          'images/haze-7.jpg',
-          'images/haze-8.jpg',
-          'images/haze-9.jpg',
+          'images/haze-01.jpg',
+          'images/haze-02.jpg',
+          'images/haze-03.jpg',
+          'images/haze-04.jpg',
+          'images/haze-05.jpg',
+          'images/haze-06.jpg',
+          'images/haze-07.jpg',
+          'images/haze-08.jpg',
+          'images/haze-09.jpg',
           'images/haze-10.jpg',
           'images/haze-11.jpg',
           'images/haze-12.jpg',
@@ -551,26 +546,37 @@
 
     };
 
+    let currentProject = null;
+
+    function updateCounter(index) {
+      const total = currentProject ? currentProject.images.length : 1;
+      document.getElementById('slide-counter').textContent =
+        String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+      document.getElementById('scroll-hint').classList.toggle('hidden', index > 0);
+    }
+
     // ── OPEN PROJECT
     window.openProject = function(key) {
-      const project = projects[key];
-      if (!project) return;
+      currentProject = projects[key];
+      if (!currentProject) return;
 
       const page     = document.getElementById('project-page');
       const scroll   = document.getElementById('gallery-scroll');
       const titleEl  = document.getElementById('project-page-title');
-      const counter  = document.getElementById('slide-counter');
-      const hint     = document.getElementById('scroll-hint');
       const descBar  = document.getElementById('project-description-bar');
       const descText = document.getElementById('project-description-text');
+      const counter  = document.getElementById('slide-counter');
+      const hint     = document.getElementById('scroll-hint');
+      const prev     = document.getElementById('gallery-prev');
+      const next     = document.getElementById('gallery-next');
 
-      titleEl.textContent = project.title;
+      titleEl.textContent = currentProject.title;
       scroll.innerHTML = '';
       scroll.dataset.project = key;
 
-      // Description bar
-      if (project.description && project.description.trim() !== '') {
-        descText.textContent = project.description;
+      // Description
+      if (currentProject.description && currentProject.description.trim() !== '') {
+        descText.textContent = currentProject.description;
         descBar.classList.add('visible');
       } else {
         descText.textContent = '';
@@ -578,55 +584,68 @@
       }
 
       // Build slides
-      project.images.forEach((src, i) => {
+      currentProject.images.forEach((src, i) => {
         const slide = document.createElement('div');
         slide.className = 'gallery-slide';
         const img = document.createElement('img');
         img.src = src;
-        img.alt = project.title + ' ' + (i + 1);
+        img.alt = currentProject.title + ' ' + (i + 1);
         slide.appendChild(img);
         scroll.appendChild(slide);
       });
 
-      counter.textContent = '01 / ' + String(project.images.length).padStart(2, '0');
+      // Reset
       scroll.scrollLeft = 0;
-      hint.classList.remove('hidden');
+      page.scrollTop = 0;
       page.classList.add('active');
       document.body.style.overflow = 'hidden';
 
-      // Counter on scroll
+      // Show UI
+      counter.classList.remove('gone');
+      hint.classList.remove('gone');
+      prev.classList.remove('gone');
+      next.classList.remove('gone');
+      updateCounter(0);
+
+      // Counter update on horizontal scroll
       scroll.addEventListener('scroll', function () {
         const index = Math.round(scroll.scrollLeft / window.innerWidth);
-        counter.textContent =
-          String(index + 1).padStart(2, '0') + ' / ' +
-          String(project.images.length).padStart(2, '0');
-        if (index > 0) hint.classList.add('hidden');
-        else hint.classList.remove('hidden');
-      });
-
-      // Click right = forward, left = back
-      scroll.addEventListener('click', function (e) {
-        if (e.clientX > window.innerWidth / 2) {
-          scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
-        } else {
-          scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
-        }
+        updateCounter(index);
       });
 
       // Keyboard
       document.onkeydown = function (e) {
-        if (e.key === 'ArrowRight') scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
-        if (e.key === 'ArrowLeft')  scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        if (e.key === 'ArrowRight') window.galleryStep(1);
+        if (e.key === 'ArrowLeft')  window.galleryStep(-1);
         if (e.key === 'Escape')     window.closeProject();
       };
     };
 
+    // ── STEP (arrows + keyboard)
+    window.galleryStep = function(dir) {
+      const scroll = document.getElementById('gallery-scroll');
+      const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
+      const total = currentProject ? currentProject.images.length : 1;
+      const next = Math.max(0, Math.min(total - 1, currentIndex + dir));
+      scroll.scrollTo({ left: next * window.innerWidth, behavior: 'smooth' });
+    };
+
     // ── CLOSE PROJECT
     window.closeProject = function() {
+      const counter = document.getElementById('slide-counter');
+      const hint    = document.getElementById('scroll-hint');
+      const prev    = document.getElementById('gallery-prev');
+      const next    = document.getElementById('gallery-next');
+
       document.getElementById('project-page').classList.remove('active');
       document.getElementById('project-description-bar').classList.remove('visible');
+      counter.classList.add('gone');
+      hint.classList.add('gone');
+      prev.classList.add('gone');
+      next.classList.add('gone');
       document.body.style.overflow = '';
       document.onkeydown = null;
+      currentProject = null;
     };
 
     // ── CONTACT
@@ -646,22 +665,6 @@
       window.closeContact();
     };
 
-window.galleryPrev = function() {
-  const scroll = document.getElementById('gallery-scroll');
-  const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
-  const clamped = Math.max(0, currentIndex - 1);
-  scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
-};
-
-window.galleryNext = function() {
-  const scroll = document.getElementById('gallery-scroll');
-  const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
-  const key = scroll.dataset.project;
-  const total = projects[key] ? projects[key].images.length : 999;
-  const clamped = Math.min(total - 1, currentIndex + 1);
-  scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
-};
-    
   </script>
 
 </body>
