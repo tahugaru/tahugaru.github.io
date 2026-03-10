@@ -9,25 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --cream: #F8F4EE;
       --ink: #1C1A18;
       --ink-light: #7A746C;
-      --accent: #1C1A18;
       --font-display: 'Unna', Georgia, serif;
       --font-body: 'Jost', sans-serif;
     }
 
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-    }
+    html { font-size: 16px; scroll-behavior: smooth; }
 
     body {
       background-color: var(--cream);
@@ -43,9 +35,7 @@
     /* ── HEADER ── */
     header {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
       background-color: var(--cream);
       padding: 2rem 3.5rem;
@@ -64,11 +54,7 @@
       text-decoration: none;
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 2.5rem;
-    }
+    nav { display: flex; align-items: center; gap: 2.5rem; }
 
     nav a {
       font-family: var(--font-body);
@@ -80,10 +66,7 @@
       text-decoration: none;
       transition: color 0.2s ease;
     }
-
-    nav a:hover {
-      color: var(--ink);
-    }
+    nav a:hover { color: var(--ink); }
 
     /* ── MAIN ── */
     main {
@@ -94,10 +77,7 @@
     }
 
     /* ── PROJECT LIST ── */
-    .project-list {
-      list-style: none;
-      width: 100%;
-    }
+    .project-list { list-style: none; width: 100%; }
 
     .project-item {
       border-top: 1px solid rgba(28, 26, 24, 0.12);
@@ -105,17 +85,11 @@
       transform: translateY(16px);
       animation: fadeUp 0.6s ease forwards;
     }
-
     .project-item:nth-child(1) { animation-delay: 0.1s; }
     .project-item:nth-child(2) { animation-delay: 0.2s; }
     .project-item:nth-child(3) { animation-delay: 0.3s; }
     .project-item:nth-child(4) { animation-delay: 0.4s; }
-    .project-item:nth-child(5) { animation-delay: 0.5s; }
-    .project-item:nth-child(6) { animation-delay: 0.6s; }
-
-    .project-item:last-child {
-      border-bottom: 1px solid rgba(28, 26, 24, 0.12);
-    }
+    .project-item:last-child { border-bottom: 1px solid rgba(28, 26, 24, 0.12); }
 
     .project-link {
       display: flex;
@@ -127,14 +101,8 @@
       transition: padding-left 0.35s ease;
       gap: 2rem;
     }
-
-    .project-link:hover {
-      padding-left: 1rem;
-    }
-
-    .project-link:hover .project-title {
-      font-style: italic;
-    }
+    .project-link:hover { padding-left: 1rem; }
+    .project-link:hover .project-title { font-style: italic; }
 
     .project-title {
       font-family: var(--font-display);
@@ -165,24 +133,19 @@
       background-color: var(--cream);
       z-index: 200;
       overflow: hidden;
-    }
-
-    .project-page.active {
-      display: flex;
       flex-direction: column;
     }
+    .project-page.active { display: flex; }
 
     .project-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: relative;
       z-index: 10;
       padding: 2rem 3.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(to bottom, var(--cream) 60%, transparent);
+      background-color: var(--cream);
+      flex-shrink: 0;
     }
 
     .project-header-title {
@@ -205,42 +168,52 @@
       border: none;
       cursor: pointer;
       transition: color 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    }
+    .back-btn:hover { color: var(--ink); }
+
+    /* Static description bar */
+    .project-description-bar {
+      display: none;
+      padding: 0 3.5rem 1.5rem;
+      flex-shrink: 0;
+      background-color: var(--cream);
+      border-bottom: 1px solid rgba(28, 26, 24, 0.1);
+    }
+    .project-description-bar.visible { display: block; }
+
+    .project-description-text {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--ink-light);
+      max-width: 56rem;
+      font-style: italic;
     }
 
-    .back-btn:hover {
-      color: var(--ink);
-    }
-
-    /* Horizontal scroll gallery */
+    /* Gallery */
     .gallery-scroll {
+      flex: 1;
       display: flex;
       align-items: center;
-      height: 100vh;
       overflow-x: auto;
       overflow-y: hidden;
       scroll-snap-type: x mandatory;
-      scroll-snap-stop: always;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      cursor: default;
+      cursor: ew-resize;
     }
-
-    .gallery-scroll::-webkit-scrollbar {
-      display: none;
-    }
+    .gallery-scroll::-webkit-scrollbar { display: none; }
 
     .gallery-slide {
       flex-shrink: 0;
       width: 100vw;
-      height: 100vh;
+      height: 100%;
       scroll-snap-align: start;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 5rem 3.5rem 7rem;
+      padding: 2rem 3.5rem 4rem;
     }
 
     .gallery-slide img {
@@ -250,22 +223,21 @@
       display: block;
     }
 
-    /* Slide counter */
     .slide-counter {
       position: absolute;
-      bottom: 3.5rem;
+      bottom: 1.5rem;
       right: 3.5rem;
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 0.72rem;
       letter-spacing: 0.15em;
       color: var(--ink-light);
+      z-index: 10;
     }
 
-    /* Scroll hint */
     .scroll-hint {
       position: absolute;
-      bottom: 3.5rem;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--font-body);
@@ -279,14 +251,11 @@
       gap: 0.75rem;
       opacity: 1;
       transition: opacity 0.4s ease;
+      z-index: 10;
+      pointer-events: none;
     }
-
-    .scroll-hint.hidden {
-      opacity: 0;
-    }
-
-    .scroll-hint::before,
-    .scroll-hint::after {
+    .scroll-hint.hidden { opacity: 0; }
+    .scroll-hint::before, .scroll-hint::after {
       content: '';
       display: block;
       width: 2rem;
@@ -305,14 +274,9 @@
       justify-content: center;
       flex-direction: column;
     }
+    .contact-page.active { display: flex; }
 
-    .contact-page.active {
-      display: flex;
-    }
-
-    .contact-content {
-      text-align: center;
-    }
+    .contact-content { text-align: center; }
 
     .contact-label {
       font-family: var(--font-body);
@@ -334,10 +298,7 @@
       margin-bottom: 1.5rem;
       transition: font-style 0.2s ease;
     }
-
-    .contact-email:hover {
-      font-style: italic;
-    }
+    .contact-email:hover { font-style: italic; }
 
     .contact-instagram {
       font-family: var(--font-body);
@@ -348,10 +309,7 @@
       text-decoration: none;
       transition: color 0.2s ease;
     }
-
-    .contact-instagram:hover {
-      color: var(--ink);
-    }
+    .contact-instagram:hover { color: var(--ink); }
 
     .contact-close {
       position: absolute;
@@ -368,10 +326,7 @@
       cursor: pointer;
       transition: color 0.2s ease;
     }
-
-    .contact-close:hover {
-      color: var(--ink);
-    }
+    .contact-close:hover { color: var(--ink); }
 
     /* ── FOOTER ── */
     footer {
@@ -392,36 +347,17 @@
 
     /* ── ANIMATION ── */
     @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      header,
-      main,
-      footer {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
-      main {
-        padding-top: 8rem;
-      }
-
-      .project-header {
-        padding: 1.5rem;
-      }
-
-      .gallery-slide {
-        padding: 4.5rem 1.5rem 3rem;
-      }
-
-      .slide-counter {
-        right: 1.5rem;
-      }
+      header, main, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      main { padding-top: 8rem; }
+      .project-header { padding: 1.5rem; }
+      .project-description-bar { padding: 0 1.5rem 1.25rem; }
+      .gallery-slide { padding: 1.5rem 1.5rem 4rem; }
+      .slide-counter { right: 1.5rem; }
     }
   </style>
 </head>
@@ -429,9 +365,9 @@
 
   <!-- ── HEADER ── -->
   <header>
-    <a href="#" class="site-name" onclick="showHome()">Ivan Codrean</a>
+    <a href="#" class="site-name" onclick="window.showHome(); return false;">Ivan Codrean</a>
     <nav>
-      <a href="#" onclick="showContact()">Contact</a>
+      <a href="#" onclick="window.showContact(); return false;">Contact</a>
       <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </header>
@@ -441,30 +377,30 @@
     <ul class="project-list">
 
       <li class="project-item">
-        <a href="#" class="project-link" onclick="openProject('book')">
+        <a href="#" class="project-link" onclick="window.openProject('book'); return false;">
           <span class="project-title">S'échapper</span>
           <span class="project-meta">Book &mdash; 2022&ndash;2025</span>
         </a>
       </li>
 
       <li class="project-item">
-        <a href="#" class="project-link" onclick="openProject('summerhaze')">
+        <a href="#" class="project-link" onclick="window.openProject('summerhaze'); return false;">
           <span class="project-title">Summer Haze</span>
           <span class="project-meta">Photography &mdash; 2024</span>
         </a>
       </li>
 
       <li class="project-item">
-        <a href="#" class="project-link" onclick="openProject('portraits')">
+        <a href="#" class="project-link" onclick="window.openProject('portraits'); return false;">
           <span class="project-title">Portraits</span>
-          <span class="project-meta">Photography &mdash; 2021&mdash;2025</span>
+          <span class="project-meta">Photography &mdash; 2023</span>
         </a>
       </li>
 
       <li class="project-item">
-        <a href="#" class="project-link" onclick="openProject('passages')">
+        <a href="#" class="project-link" onclick="window.openProject('passages'); return false;">
           <span class="project-title">Passages</span>
-          <span class="project-meta">Photography &mdash; 2020&mdash;Now</span>
+          <span class="project-meta">Photography &mdash; 2022&ndash;2024</span>
         </a>
       </li>
 
@@ -478,22 +414,26 @@
 
   <!-- ── PROJECT PAGE ── -->
   <div class="project-page" id="project-page">
+
     <div class="project-header">
       <span class="project-header-title" id="project-page-title"></span>
-      <button class="back-btn" onclick="closeProject()">&#8592; Back</button>
+      <button class="back-btn" onclick="window.closeProject()">&#8592; Back</button>
     </div>
 
-    <div class="gallery-scroll" id="gallery-scroll">
-      <!-- Images injected by JS -->
+    <div class="project-description-bar" id="project-description-bar">
+      <p class="project-description-text" id="project-description-text"></p>
     </div>
+
+    <div class="gallery-scroll" id="gallery-scroll"></div>
 
     <div class="scroll-hint" id="scroll-hint">Scroll</div>
     <div class="slide-counter" id="slide-counter"></div>
+
   </div>
 
   <!-- ── CONTACT PAGE ── -->
   <div class="contact-page" id="contact-page">
-    <button class="contact-close" onclick="closeContact()">&#8592; Back</button>
+    <button class="contact-close" onclick="window.closeContact()">&#8592; Back</button>
     <div class="contact-content">
       <p class="contact-label">Get in touch</p>
       <a href="mailto:hello@codrean.art" class="contact-email">hello@codrean.art</a>
@@ -501,79 +441,98 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // ── Year
+  <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ── Project data
-    // Replace the placeholder image arrays with your actual image filenames.
-    // Place your images in an /images/ folder in your GitHub repository.
-    // Example: images/book-01.jpg, images/book-02.jpg etc.
+    // ── PROJECT DATA
+    // To add images: add filenames to the images array.
+    // To show a description: fill in the description field.
+    // To hide description: leave it as an empty string ''.
+
     const projects = {
+
       book: {
         title: "S'échapper",
+        description: '',
         images: [
           'images/book-01.jpg',
           'images/book-02.jpg',
           'images/book-03.jpg',
-          'images/book-04.jpg',
-          'images/book-05.jpg',
         ]
       },
+
       summerhaze: {
         title: 'Summer Haze',
+        description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
         images: [
-          'images/haze-1.jpg',
-          'images/haze-2.jpg',
-          'images/haze-3.jpg',
-          'images/haze-4.jpg',
-          'images/haze-5.jpg',
-          'images/haze-6.jpg',
-          'images/haze-7.jpg',
-          'images/haze-8.jpg',
-          'images/haze-9.jpg',
-          'images/haze-10.jpg',
-          'images/haze-11.jpg',
-          'images/haze-12.jpg',
-          'images/haze-13.jpg',
-          'images/haze-14.jpg',
-          'images/haze-15.jpg',
-          'images/haze-16.jpg',
-          'images/haze-17.jpg',
+          'images/summerhaze-01.jpg',
+          'images/summerhaze-02.jpg',
+          'images/summerhaze-03.jpg',
+          'images/summerhaze-04.jpg',
+          'images/summerhaze-05.jpg',
+          'images/summerhaze-06.jpg',
+          'images/summerhaze-07.jpg',
+          'images/summerhaze-08.jpg',
+          'images/summerhaze-09.jpg',
+          'images/summerhaze-10.jpg',
+          'images/summerhaze-11.jpg',
+          'images/summerhaze-12.jpg',
+          'images/summerhaze-13.jpg',
+          'images/summerhaze-14.jpg',
+          'images/summerhaze-15.jpg',
+          'images/summerhaze-16.jpg',
+          'images/summerhaze-17.jpg',
         ]
       },
+
       portraits: {
         title: 'Portraits',
+        description: '',
         images: [
           'images/portrait-01.jpg',
           'images/portrait-02.jpg',
           'images/portrait-03.jpg',
         ]
       },
+
       passages: {
         title: 'Passages',
+        description: '',
         images: [
-          'images/analog-01.jpg',
-          'images/analog-02.jpg',
-          'images/analog-03.jpg',
+          'images/passages-01.jpg',
+          'images/passages-02.jpg',
+          'images/passages-03.jpg',
         ]
       }
+
     };
 
-    // ── Open project
+    // ── OPEN PROJECT
     window.openProject = function(key) {
       const project = projects[key];
       if (!project) return;
 
-      const page = document.getElementById('project-page');
-      const scroll = document.getElementById('gallery-scroll');
-      const titleEl = document.getElementById('project-page-title');
-      const counter = document.getElementById('slide-counter');
-      const hint = document.getElementById('scroll-hint');
+      const page     = document.getElementById('project-page');
+      const scroll   = document.getElementById('gallery-scroll');
+      const titleEl  = document.getElementById('project-page-title');
+      const counter  = document.getElementById('slide-counter');
+      const hint     = document.getElementById('scroll-hint');
+      const descBar  = document.getElementById('project-description-bar');
+      const descText = document.getElementById('project-description-text');
 
       titleEl.textContent = project.title;
       scroll.innerHTML = '';
 
+      // Description bar
+      if (project.description && project.description.trim() !== '') {
+        descText.textContent = project.description;
+        descBar.classList.add('visible');
+      } else {
+        descText.textContent = '';
+        descBar.classList.remove('visible');
+      }
+
+      // Build slides
       project.images.forEach((src, i) => {
         const slide = document.createElement('div');
         slide.className = 'gallery-slide';
@@ -590,7 +549,7 @@
       page.classList.add('active');
       document.body.style.overflow = 'hidden';
 
-     // Update counter on scroll
+      // Counter on scroll
       scroll.addEventListener('scroll', function () {
         const index = Math.round(scroll.scrollLeft / window.innerWidth);
         counter.textContent =
@@ -600,38 +559,38 @@
         else hint.classList.remove('hidden');
       });
 
-      // Mouse wheel scrolls horizontally
+      // Mouse wheel → horizontal
       scroll.addEventListener('wheel', function (e) {
         e.preventDefault();
         scroll.scrollBy({ left: e.deltaY + e.deltaX, behavior: 'smooth' });
       }, { passive: false });
 
-      // Click right half to go forward, left half to go back
+      // Click right = forward, left = back
       scroll.addEventListener('click', function (e) {
-        const middle = window.innerWidth / 2;
-        if (e.clientX > middle) {
+        if (e.clientX > window.innerWidth / 2) {
           scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
         } else {
           scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
         }
       });
 
-      // Keyboard navigation
+      // Keyboard
       document.onkeydown = function (e) {
         if (e.key === 'ArrowRight') scroll.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
-        if (e.key === 'ArrowLeft') scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
-        if (e.key === 'Escape') window.closeProject();
+        if (e.key === 'ArrowLeft')  scroll.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        if (e.key === 'Escape')     window.closeProject();
       };
     };
-    
-    // ── Close project
+
+    // ── CLOSE PROJECT
     window.closeProject = function() {
       document.getElementById('project-page').classList.remove('active');
+      document.getElementById('project-description-bar').classList.remove('visible');
       document.body.style.overflow = '';
       document.onkeydown = null;
     };
 
-    // ── Contact
+    // ── CONTACT
     window.showContact = function() {
       document.getElementById('contact-page').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -642,16 +601,11 @@
       document.body.style.overflow = '';
     };
 
-    // ── Home
+    // ── HOME
     window.showHome = function() {
       window.closeProject();
       window.closeContact();
     };
-
-    // ── Prevent default on internal links
-    document.querySelectorAll('a[onclick]').forEach(a => {
-      a.addEventListener('click', e => e.preventDefault());
-    });
 
   </script>
 
