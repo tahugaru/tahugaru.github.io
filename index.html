@@ -559,20 +559,6 @@
         else hint.classList.remove('hidden');
       });
 
-      // Mouse wheel → horizontal
-let isScrolling = false;
-scroll.addEventListener('wheel', function (e) {
-  e.preventDefault();
-  if (isScrolling) return;
-  if (Math.abs(e.deltaY) < 20 && Math.abs(e.deltaX) < 20) return;
-  isScrolling = true;
-  const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
-  const nextIndex = e.deltaY > 0 || e.deltaX > 0 ? currentIndex + 1 : currentIndex - 1;
-  const clamped = Math.max(0, Math.min(nextIndex, project.images.length - 1));
-  scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
-  setTimeout(() => { isScrolling = false; }, 200);
-}, { passive: false });
-
       // Click right = forward, left = back
       scroll.addEventListener('click', function (e) {
         if (e.clientX > window.innerWidth / 2) {
