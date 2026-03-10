@@ -206,6 +206,18 @@
     }
     .gallery-scroll::-webkit-scrollbar { display: none; }
 
+    <button class="gallery-arrow prev" id="gallery-prev" onclick="window.galleryPrev()">
+  <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="16,4 4,20 16,36"/>
+  </svg>
+</button>
+
+<button class="gallery-arrow next" id="gallery-next" onclick="window.galleryNext()">
+  <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="4,4 16,20 4,36"/>
+  </svg>
+</button>
+   
     .gallery-slide {
       flex-shrink: 0;
       width: 100vw;
@@ -263,6 +275,38 @@
       background: var(--ink-light);
     }
 
+/* Navigation arrows */
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem;
+  opacity: 0.25;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-arrow:hover {
+  opacity: 0.8;
+}
+
+.gallery-arrow svg {
+  display: block;
+  width: 1.2rem;
+  height: auto;
+  stroke: var(--ink);
+  stroke-width: 1;
+  fill: none;
+}
+
+.gallery-arrow.prev { left: 1.5rem; }
+.gallery-arrow.next { right: 1.5rem; }
+.gallery-arrow.hidden { opacity: 0; pointer-events: none; }
+    
+    
     /* ── CONTACT PAGE ── */
     .contact-page {
       display: none;
@@ -522,6 +566,7 @@
 
       titleEl.textContent = project.title;
       scroll.innerHTML = '';
+      scroll.dataset.project = key;
 
       // Description bar
       if (project.description && project.description.trim() !== '') {
@@ -601,6 +646,22 @@
       window.closeContact();
     };
 
+window.galleryPrev = function() {
+  const scroll = document.getElementById('gallery-scroll');
+  const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
+  const clamped = Math.max(0, currentIndex - 1);
+  scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
+};
+
+window.galleryNext = function() {
+  const scroll = document.getElementById('gallery-scroll');
+  const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
+  const key = scroll.dataset.project;
+  const total = projects[key] ? projects[key].images.length : 999;
+  const clamped = Math.min(total - 1, currentIndex + 1);
+  scroll.scrollTo({ left: clamped * window.innerWidth, behavior: 'smooth' });
+};
+    
   </script>
 
 </body>
