@@ -600,6 +600,7 @@
       scroll.scrollLeft = 0;
       page.scrollTop = 0;
       page.classList.add('active');
+      history.pushState({ project: key }, '', '');
       document.body.style.overflow = 'hidden';
 
       // Show UI
@@ -623,6 +624,12 @@
       };
     };
 
+    window.addEventListener('popstate', function () {
+  if (document.getElementById('project-page').classList.contains('active')) {
+    window.closeProject();
+  }
+});
+    
     // ── STEP (arrows + keyboard)
     window.galleryStep = function(dir) {
       const scroll = document.getElementById('gallery-scroll');
