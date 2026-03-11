@@ -636,9 +636,9 @@
       const scroll = document.getElementById('gallery-scroll');
       const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
       const total = currentProject ? currentProject.images.length : 1;
-      const next = Math.max(0, Math.min(total - 1, currentIndex + dir));
+      const next = (currentIndex + dir + total) % total;
       scroll.scrollTo({ left: next * window.innerWidth, behavior: 'smooth' });
-    };
+ };
 
     // ── CLOSE PROJECT
     window.closeProject = function() {
