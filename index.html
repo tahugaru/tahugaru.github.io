@@ -599,6 +599,7 @@
       // Reset
       scroll.scrollLeft = 0;
       page.scrollTop = 0;
+      setTimeout(() => { scroll.scrollLeft = 0; }, 50);
       page.classList.add('active');
       history.pushState({ project: key }, '', '');
       document.body.style.overflow = 'hidden';
