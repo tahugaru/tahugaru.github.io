@@ -625,7 +625,7 @@
       // Build slides
       project.images.forEach((src, i) => {
   const slide = document.createElement('div');
-  slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
+  slide.className = project.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
         img.src = src;
         img.alt = currentProject.title + ' ' + (i + 1);
