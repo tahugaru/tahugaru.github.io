@@ -34,7 +34,8 @@
     /* ── VIEWER ── */
     .viewer {
       width: 100%;
-      height: 100%;
+      height: calc(100% - 10rem);
+      margin-top: 10rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -255,7 +256,7 @@
       left: 3rem;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       letter-spacing: 0.04em;
       color: rgba(28, 26, 24, 0.35);
       z-index: 100;
@@ -498,14 +499,13 @@
       }, 450);
     }
 
-    // Fit stage to viewport — scales width down if spread would overflow vertically
     function fitStage() {
       const stage  = document.getElementById('stage');
       const spacer = document.getElementById('current-spacer');
       if (!spacer.naturalWidth || !spacer.naturalHeight) return;
-      const ratio  = spacer.naturalWidth / spacer.naturalHeight;
-      const maxH   = window.innerHeight * 0.88;
-      const maxW   = Math.min(maxH * ratio, 1200);
+      const ratio     = spacer.naturalWidth / spacer.naturalHeight;
+      const available = (window.innerHeight - 160) * 0.88;
+      const maxW      = Math.min(available * ratio, 1200);
       stage.style.maxWidth = maxW + 'px';
     }
 
