@@ -255,7 +255,7 @@
       left: 3rem;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 0.72rem;
+      font-size: 0.85rem;
       letter-spacing: 0.04em;
       color: rgba(28, 26, 24, 0.35);
       z-index: 100;
@@ -498,6 +498,17 @@
       }, 450);
     }
 
+    // Fit stage to viewport — scales width down if spread would overflow vertically
+    function fitStage() {
+      const stage  = document.getElementById('stage');
+      const spacer = document.getElementById('current-spacer');
+      if (!spacer.naturalWidth || !spacer.naturalHeight) return;
+      const ratio  = spacer.naturalWidth / spacer.naturalHeight;
+      const maxH   = window.innerHeight * 0.88;
+      const maxW   = Math.min(maxH * ratio, 1200);
+      stage.style.maxWidth = maxW + 'px';
+    }
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'ArrowRight') navigate(1);
       if (e.key === 'ArrowLeft')  navigate(-1);
@@ -505,6 +516,9 @@
 
     initCurrentSpread();
     preload(spreads[1]);
+
+    document.getElementById('current-spacer').addEventListener('load', fitStage);
+    window.addEventListener('resize', fitStage);
   </script>
 
 </body>
