@@ -342,9 +342,7 @@
       margin-bottom: 4rem;
     }
 
-    .info-bio p + p {
-      margin-top: 1.5rem;
-    }
+    .info-bio p + p { margin-top: 1.5rem; }
 
     .info-divider {
       width: 2rem;
@@ -447,8 +445,8 @@
     <ul class="project-list">
 
       <li class="project-item">
-        <a href="#" class="project-link" onclick="window.openProject('book'); return false;">
-          <span class="project-title">S'échapper</span>
+        <a href="/jadis/" class="project-link">
+          <span class="project-title">Jadis</span>
           <span class="project-meta">Book &mdash; 2022&ndash;2025</span>
         </a>
       </li>
@@ -463,7 +461,7 @@
       <li class="project-item">
         <a href="#" class="project-link" onclick="window.openProject('portraits'); return false;">
           <span class="project-title">Portraits</span>
-          <span class="project-meta">Photography &mdash; 2023&mdash;2025</span>
+          <span class="project-meta">Photography &mdash; 2023&ndash;2025</span>
         </a>
       </li>
 
@@ -550,16 +548,6 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const projects = {
-
-      book: {
-        title: "S'échapper",
-        description: '',
-        images: [
-          'images/book-01.jpg',
-          'images/book-02.jpg',
-          'images/book-03.jpg',
-        ]
-      },
 
       summerhaze: {
         title: 'Summer Haze',
@@ -745,12 +733,12 @@
 
     // ── BROWSER BACK
     window.addEventListener('popstate', function () {
-  if (document.getElementById('project-page').classList.contains('active')) {
-    window.closeProject();
-  } else if (document.getElementById('info-page').classList.contains('active')) {
-    window.closeInfo();
-  }
-});
+      if (document.getElementById('project-page').classList.contains('active')) {
+        window.closeProject();
+      } else if (document.getElementById('info-page').classList.contains('active')) {
+        window.closeInfo();
+      }
+    });
 
   </script>
 
