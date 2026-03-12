@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jadis — Ivan Codrean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F8F4EE;
+      --ink: #1C1A18;
+      --ink-light: #7A746C;
+      --font-display: 'Unna', Georgia, serif;
+      --font-body: 'Jost', sans-serif;
+      --duration: 348ms;
+      --ease-in: cubic-bezier(0.85, 0, 1, 1);
+      --ease-out: cubic-bezier(0, 0, 0.15, 1);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--cream);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── VIEWER ── */
+    .viewer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── STAGE ── */
+    .stage {
+      position: relative;
+      width: 82vw;
+      max-width: 1200px;
+      perspective: 2400px;
+      animation: none;
+    }
+
+    @keyframes breath-1 {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(0.991); }
+      100% { transform: scale(1); }
+    }
+    @keyframes breath-2 {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(0.991); }
+      100% { transform: scale(1); }
+    }
+
+    .stage.breathing-forward  { animation: breath-1 calc(var(--duration) * 3) cubic-bezier(0.4, 0, 0.1, 1); }
+    .stage.breathing-backward { animation: breath-2 calc(var(--duration) * 3) cubic-bezier(0.4, 0, 0.1, 1); }
+
+    /* ── SPREAD ── */
+    .spread {
+      position: relative;
+      width: 100%;
+      border-radius: 1px;
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 12px 40px rgba(0, 0, 0, 0.075),
+        0 24px 64px rgba(0, 0, 0, 0.052);
+    }
+
+    /* Permanent page-edge shadow */
+    .spread::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      border-radius: 1px;
+      background:
+        linear-gradient(to left,  rgba(0,0,0,0.10) 0%, transparent 8%),
+        linear-gradient(to right, rgba(0,0,0,0.04) 0%, transparent 5%);
+    }
+
+    /* Next spread — hidden beneath current */
+    .spread-next {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Spacer image — drives natural aspect ratio */
+    .aspect-spacer {
+      width: 100%;
+      height: auto;
+      display: block;
+      visibility: hidden;
+      border-radius: 1px;
+    }
+
+    /* ── HALVES ── */
+    .half {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      background-repeat: no-repeat;
+      background-size: 200% auto;
+      background-attachment: local;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      overflow: hidden;
+    }
+
+    .half.left {
+      left: 0;
+      background-position: 0% 50%;
+      border-radius: 1px 0 0 1px;
+      transform-origin: 100% 50%;
+    }
+
+    .half.right {
+      right: 0;
+      background-position: 100% 50%;
+      border-radius: 0 1px 1px 0;
+      transform-origin: 0% 50%;
+    }
+
+    /* ── SPINE OVERLAY ── */
+    .spine-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      border-radius: 1px;
+      background:
+        linear-gradient(
+          to right,
+          transparent calc(50% - 0.7px),
+          rgba(0, 0, 0, 0.18) calc(50% - 0.7px),
+          rgba(0, 0, 0, 0.18) calc(50% + 0.7px),
+          transparent calc(50% + 0.7px)
+        ),
+        radial-gradient(
+          ellipse 16% 100% at 50% 50%,
+          rgba(0, 0, 0, 0.23) 0%,
+          rgba(0, 0, 0, 0.115) 25%,
+          rgba(0, 0, 0, 0.046) 55%,
+          transparent 78%
+        ),
+        linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.04) 0%,
+          transparent 6%,
+          transparent 94%,
+          rgba(0, 0, 0, 0.04) 100%
+        );
+    }
+
+    /* ── FOLD ANIMATION STATES ── */
+
+    .flip-forward .spread-current .half.right {
+      transform: rotateY(-90deg);
+      transition: transform var(--duration) var(--ease-in) 0ms;
+    }
+
+    .flip-backward .spread-current .half.left {
+      transform: rotateY(90deg);
+      transition: transform var(--duration) var(--ease-in) 0ms;
+    }
+
+    .flip-forward .spread-current,
+    .flip-backward .spread-current {
+      box-shadow: none;
+    }
+    .flip-forward .spread-current::before,
+    .flip-backward .spread-current::before {
+      display: none;
+    }
+
+    .flip-forward .spread-next,
+    .flip-backward .spread-next {
+      opacity: 1;
+      pointer-events: none;
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 12px 40px rgba(0, 0, 0, 0.075),
+        0 24px 64px rgba(0, 0, 0, 0.052);
+    }
+
+    /* Fold shadow */
+    .flip-forward .spread-current .half.left::after,
+    .flip-backward .spread-current .half.right::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      animation: shadow-in-out 350ms ease-in-out forwards;
+    }
+
+    .flip-forward .spread-current .half.left::after {
+      background: linear-gradient(to left, rgba(0,0,0,0.085) 0%, transparent 60%);
+    }
+
+    .flip-backward .spread-current .half.right::after {
+      background: linear-gradient(to right, rgba(0,0,0,0.085) 0%, transparent 60%);
+    }
+
+    @keyframes shadow-in-out {
+      0%   { opacity: 0; }
+      20%  { opacity: 1; }
+      60%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* ── NAVIGATION ARROWS ── */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2rem 2.5rem;
+      opacity: 0.2;
+      transition: opacity 0.3s ease;
+    }
+    .nav-arrow:hover { opacity: 0.6; }
+    .nav-arrow svg {
+      display: block;
+      width: 0.9rem;
+      height: auto;
+      stroke: var(--ink);
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .nav-arrow.prev { left: 0; }
+    .nav-arrow.next { right: 0; }
+
+    /* ── DESCRIPTION ── */
+    .book-description {
+      position: fixed;
+      top: 2rem;
+      left: 3rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: rgba(28, 26, 24, 0.35);
+      z-index: 100;
+      max-width: 38rem;
+      line-height: 1.6;
+    }
+
+    /* ── COUNTER ── */
+    .spread-counter {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 3rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      color: rgba(28, 26, 24, 0.35);
+      z-index: 100;
+    }
+
+    /* ── TITLE ── */
+    .book-title {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 3rem;
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: rgba(28, 26, 24, 0.25);
+      z-index: 100;
+    }
+
+    /* ── BACK ── */
+    .back-link {
+      position: fixed;
+      top: 2rem;
+      right: 3rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(28, 26, 24, 0.35);
+      z-index: 100;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .back-link:hover { color: rgba(28, 26, 24, 0.7); }
+
+  </style>
+</head>
+<body>
+
+  <a class="back-link" href="/">&#8592; Back</a>
+
+  <div class="book-description">
+    Photographs and diary fragments. Landscapes, portraits, summer light, and quiet moments collected while wandering.
+  </div>
+
+  <div class="viewer">
+    <div class="stage" id="stage">
+
+      <div class="spread spread-next" id="spread-next">
+        <div class="half left" id="next-left"></div>
+        <div class="half right" id="next-right"></div>
+        <img class="aspect-spacer" id="next-spacer" alt="" />
+        <div class="spine-overlay"></div>
+      </div>
+
+      <div class="spread spread-current" id="spread-current">
+        <div class="half left" id="current-left"></div>
+        <div class="half right" id="current-right"></div>
+        <img class="aspect-spacer" id="current-spacer" alt="" />
+        <div class="spine-overlay"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="nav-arrow prev" onclick="navigate(-1)">
+    <svg viewBox="0 0 20 40"><polyline points="16,4 4,20 16,36"/></svg>
+  </button>
+  <button class="nav-arrow next" onclick="navigate(1)">
+    <svg viewBox="0 0 20 40"><polyline points="4,4 16,20 4,36"/></svg>
+  </button>
+
+  <div class="book-title">Jadis</div>
+  <div class="spread-counter" id="spread-counter"></div>
+
+  <script>
+    const spreads = [
+      'spread2.jpg',
+      'spread3.jpg',
+      'spread4.jpg',
+      'spread5.jpg',
+      'spread6.jpg',
+      'spread7.jpg',
+      'spread8.jpg',
+      'spread9.jpg',
+      'spread10.jpg',
+      'spread11.jpg',
+      'spread12.jpg',
+      'spread13.jpg',
+      'spread14.jpg',
+      'spread15.jpg',
+      'spread16.jpg',
+      'spread17.jpg',
+      'spread18.jpg',
+      'spread19.jpg',
+      'spread20.jpg',
+      'spread21.jpg',
+      'spread22.jpg',
+      'spread23.jpg',
+      'spread24.jpg',
+      'spread25.jpg',
+      'spread26.jpg',
+      'spread27.jpg',
+      'spread28.jpg',
+      'spread29.jpg',
+      'spread30.jpg',
+      'spread31.jpg',
+      'spread32.jpg',
+      'spread33.jpg',
+      'spread34.jpg',
+      'spread35.jpg',
+      'spread36.jpg',
+      'spread37.jpg',
+      'spread38.jpg',
+      'spread39.jpg',
+      'spread40.jpg',
+      'spread41.jpg',
+      'spread42.jpg',
+      'spread43.jpg',
+      'spread44.jpg',
+      'spread45.jpg',
+    ];
+
+    const TOTAL = spreads.length;
+    let current = 0;
+    let animating = false;
+    const DURATION = 348;
+
+    function updateCounter() {
+      document.getElementById('spread-counter').textContent =
+        String(current + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+    }
+
+    function setHalves(leftEl, rightEl, spacerEl, src) {
+      const url = `url(${src})`;
+      leftEl.style.backgroundImage = url;
+      rightEl.style.backgroundImage = url;
+      spacerEl.src = src;
+    }
+
+    function preload(src) {
+      const img = new Image();
+      img.src = src;
+    }
+
+    function initCurrentSpread() {
+      setHalves(
+        document.getElementById('current-left'),
+        document.getElementById('current-right'),
+        document.getElementById('current-spacer'),
+        spreads[current]
+      );
+      updateCounter();
+    }
+
+    function navigate(dir) {
+      if (animating) return;
+      const next = (current + dir + TOTAL) % TOTAL;
+      if (next === current) return;
+
+      animating = true;
+      const stage     = document.getElementById('stage');
+
+      if (stage._cleanupTimer) clearTimeout(stage._cleanupTimer);
+      stage.classList.remove('flip-forward', 'flip-backward');
+
+      const nextLeft   = document.getElementById('next-left');
+      const nextRight  = document.getElementById('next-right');
+      const nextSpacer = document.getElementById('next-spacer');
+      const curLeft    = document.getElementById('current-left');
+      const curRight   = document.getElementById('current-right');
+
+      [nextLeft, nextRight, curLeft, curRight].forEach(el => el.style.cssText = '');
+      setHalves(curLeft, curRight, document.getElementById('current-spacer'), spreads[current]);
+      setHalves(nextLeft, nextRight, nextSpacer, spreads[next]);
+
+      if (dir > 0) {
+        nextLeft.style.transform = 'rotateY(90deg)';
+      } else {
+        nextRight.style.transform = 'rotateY(-90deg)';
+      }
+
+      stage.classList.remove('breathing-forward', 'breathing-backward');
+      const breathClass = dir > 0 ? 'breathing-forward' : 'breathing-backward';
+      const breathToken = Symbol();
+      stage._breathToken = breathToken;
+      requestAnimationFrame(() => {
+        stage.classList.add(breathClass);
+        setTimeout(() => {
+          if (stage._breathToken === breathToken) {
+            stage.classList.remove(breathClass);
+          }
+        }, DURATION * 3);
+      });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          stage.classList.add(dir > 0 ? 'flip-forward' : 'flip-backward');
+
+          setTimeout(() => {
+            if (dir > 0) {
+              curLeft.style.backgroundImage = `url(${spreads[next]})`;
+            } else {
+              curRight.style.backgroundImage = `url(${spreads[next]})`;
+            }
+          }, DURATION);
+        });
+      });
+
+      setTimeout(() => {
+        current = next;
+        updateCounter();
+        preload(spreads[(current + dir + TOTAL) % TOTAL]);
+        animating = false;
+      }, DURATION + 50);
+
+      stage._cleanupTimer = setTimeout(() => {
+        stage.classList.remove('flip-forward', 'flip-backward');
+        [nextLeft, nextRight, curLeft, curRight].forEach(el => el.style.cssText = '');
+        setHalves(curLeft, curRight, document.getElementById('current-spacer'), spreads[next]);
+      }, 450);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight') navigate(1);
+      if (e.key === 'ArrowLeft')  navigate(-1);
+    });
+
+    initCurrentSpread();
+    preload(spreads[1]);
+  </script>
+
+</body>
+</html>
