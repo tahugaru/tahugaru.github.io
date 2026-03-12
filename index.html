@@ -728,6 +728,7 @@
     window.showInfo = function() {
       document.getElementById('info-page').classList.add('active');
       document.body.style.overflow = 'hidden';
+      history.pushState({ page: 'info' }, '', '');
     };
 
     window.closeInfo = function() {
@@ -743,10 +744,12 @@
 
     // ── BROWSER BACK
     window.addEventListener('popstate', function () {
-      if (document.getElementById('project-page').classList.contains('active')) {
-        window.closeProject();
-      }
-    });
+  if (document.getElementById('project-page').classList.contains('active')) {
+    window.closeProject();
+  } else if (document.getElementById('info-page').classList.contains('active')) {
+    window.closeInfo();
+  }
+});
 
   </script>
 
