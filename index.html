@@ -91,6 +91,7 @@
     .project-item:nth-child(2) { animation-delay: 0.2s; }
     .project-item:nth-child(3) { animation-delay: 0.3s; }
     .project-item:nth-child(4) { animation-delay: 0.4s; }
+    .project-item:nth-child(5) { animation-delay: 0.5s; }
     .project-item:last-child { border-bottom: 1px solid rgba(28, 26, 24, 0.12); }
 
     .project-link {
@@ -140,7 +141,6 @@
     }
     .project-page.active { display: flex; }
 
-    /* Top bar */
     .project-header {
       position: sticky;
       top: 0;
@@ -176,7 +176,6 @@
     }
     .back-btn:hover { color: var(--ink); }
 
-    /* Description bar */
     .project-description-bar {
       display: none;
       padding: 0 var(--space) 1.5rem;
@@ -197,7 +196,6 @@
     }
 
     /* ── GALLERY ── */
-    /* Outer horizontal scroll container */
     .gallery-scroll {
       width: 100%;
       flex-shrink: 0;
@@ -211,7 +209,6 @@
     }
     .gallery-scroll::-webkit-scrollbar { display: none; }
 
-    /* Each slide */
     .gallery-slide {
       flex-shrink: 0;
       width: 100vw;
@@ -221,7 +218,6 @@
       padding: var(--space) 28% 7rem;
     }
 
-    /* Image fills the padded area, height is natural */
     .gallery-slide img {
       width: 100%;
       height: auto;
@@ -229,16 +225,17 @@
     }
 
     .gallery-slide.wide {
-  padding: var(--space) var(--space) 7rem;
-  align-items: center;
-}
+      padding: var(--space) var(--space) 7rem;
+      align-items: center;
+    }
 
-.gallery-slide.wide img {
-  max-width: 100%;
-  max-height: 75vh;
-  width: auto;
-  height: auto;
-}
+    .gallery-slide.wide img {
+      max-width: 100%;
+      max-height: 75vh;
+      width: auto;
+      height: auto;
+    }
+
     /* Navigation arrows */
     .gallery-arrow {
       position: fixed;
@@ -261,9 +258,8 @@
       stroke-width: 1.5;
       fill: none;
     }
-    .gallery-arrow.prev { left: 1rem; }
-    .gallery-arrow.next { right: 1rem; }
-    .gallery-arrow.gone { display: none; }
+    .gallery-arrow.prev { left: 0; }
+    .gallery-arrow.next { right: 0; }
 
     /* Counter */
     .slide-counter {
@@ -278,7 +274,7 @@
       z-index: 210;
     }
 
-    /* Scroll hint */
+    /* Swipe hint */
     .scroll-hint {
       position: fixed;
       bottom: var(--space);
@@ -307,58 +303,84 @@
       background: var(--ink-light);
     }
 
+    /* ── GONE (hidden UI elements) ── */
     .gone { display: none; }
-    
-    /* ── CONTACT PAGE ── */
-    .contact-page {
+
+    /* ── INFO PAGE ── */
+    .info-page {
       display: none;
       position: fixed;
       inset: 0;
       background-color: var(--cream);
       z-index: 200;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      overflow-y: auto;
     }
-    .contact-page.active { display: flex; }
+    .info-page.active { display: block; }
 
-    .contact-content { text-align: center; }
+    .info-inner {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 8rem var(--space) 6rem;
+    }
 
-    .contact-label {
+    .info-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin-bottom: 3rem;
+    }
+
+    .info-bio {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--ink);
+      margin-bottom: 4rem;
+    }
+
+    .info-bio p + p {
+      margin-top: 1.5rem;
+    }
+
+    .info-divider {
+      width: 2rem;
+      height: 1px;
+      background: rgba(28, 26, 24, 0.2);
+      margin-bottom: 3rem;
+    }
+
+    .info-contact-label {
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 0.72rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--ink-light);
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
     }
 
-    .contact-email {
+    .info-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .info-link {
       font-family: var(--font-display);
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-size: 1.4rem;
       font-weight: 400;
       color: var(--ink);
       text-decoration: none;
-      display: block;
-      margin-bottom: 1.5rem;
       transition: font-style 0.2s ease;
+      display: inline-block;
     }
-    .contact-email:hover { font-style: italic; }
+    .info-link:hover { font-style: italic; }
 
-    .contact-instagram {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      color: var(--ink-light);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .contact-instagram:hover { color: var(--ink); }
-
-    .contact-close {
-      position: absolute;
+    .info-close {
+      position: fixed;
       top: 2rem;
       right: var(--space);
       font-family: var(--font-body);
@@ -371,8 +393,9 @@
       border: none;
       cursor: pointer;
       transition: color 0.2s ease;
+      z-index: 10;
     }
-    .contact-close:hover { color: var(--ink); }
+    .info-close:hover { color: var(--ink); }
 
     /* ── FOOTER ── */
     footer {
@@ -403,6 +426,7 @@
       .project-header { padding: 1rem 1rem 0.75rem; }
       .gallery-slide { padding: 1rem 8% 5rem; }
       .gallery-arrow { display: none !important; }
+      .info-inner { padding-top: 6rem; }
     }
   </style>
 </head>
@@ -412,7 +436,7 @@
   <header>
     <a href="#" class="site-name" onclick="window.showHome(); return false;">Ivan Codrean</a>
     <nav>
-      <a href="#" onclick="window.showContact(); return false;">Contact</a>
+      <a href="#" onclick="window.showInfo(); return false;">Info</a>
       <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </header>
@@ -443,12 +467,12 @@
       </li>
 
       <li class="project-item">
-  <a href="#" class="project-link" onclick="window.openProject('objet'); return false;">
-    <span class="project-title">Objet</span>
-    <span class="project-meta">Photography &mdash; 2018&ndash;2021</span>
-  </a>
-</li>
-      
+        <a href="#" class="project-link" onclick="window.openProject('objet'); return false;">
+          <span class="project-title">Objet</span>
+          <span class="project-meta">Photography &mdash; 2018&ndash;2021</span>
+        </a>
+      </li>
+
       <li class="project-item">
         <a href="#" class="project-link" onclick="window.openProject('passages'); return false;">
           <span class="project-title">Passages</span>
@@ -480,7 +504,7 @@
 
   </div>
 
-  <!-- Arrows (outside project-page so they stay fixed over everything) -->
+  <!-- Arrows -->
   <button class="gallery-arrow prev gone" id="gallery-prev" onclick="window.galleryStep(-1)">
     <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
       <polyline points="16,4 4,20 16,36"/>
@@ -496,13 +520,28 @@
   <div class="scroll-hint gone" id="scroll-hint">Swipe</div>
   <div class="slide-counter gone" id="slide-counter"></div>
 
-  <!-- ── CONTACT PAGE ── -->
-  <div class="contact-page" id="contact-page">
-    <button class="contact-close" onclick="window.closeContact()">&#8592; Back</button>
-    <div class="contact-content">
-      <p class="contact-label">Get in touch</p>
-      <a href="mailto:hello@codrean.art" class="contact-email">hello@codrean.art</a>
-      <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener" class="contact-instagram">@codrean.art</a>
+  <!-- ── INFO PAGE ── -->
+  <div class="info-page" id="info-page">
+    <button class="info-close" onclick="window.closeInfo()">&#8592; Back</button>
+    <div class="info-inner">
+
+      <h1 class="info-name">About</h1>
+
+      <div class="info-bio">
+        <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to years of commissioned work for luxury brands and advertising agencies.</p>
+        <p>After years of commercial work, a personal style emerged — analog film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and the kind of stillness that only exists between moments.</p>
+        <p>That world between discipline and instinct is where the work lives now.</p>
+      </div>
+
+      <div class="info-divider"></div>
+
+      <p class="info-contact-label">Get in touch</p>
+      <div class="info-links">
+        <a href="mailto:hello@codrean.art" class="info-link">hello@codrean.art</a>
+        <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener" class="info-link">@codrean.art</a>
+        <a href="https://www.behance.net/ivancodrean" target="_blank" rel="noopener" class="info-link">Behance</a>
+      </div>
+
     </div>
   </div>
 
@@ -556,24 +595,23 @@
       },
 
       objet: {
-  title: 'Objet',
-  wide: true,
-  description: 'Commissioned still life and product work for luxury brands and advertising agencies. Precision lighting, controlled environments, objects treated as protagonists.',
-  images: [
-    'images/objet-01.jpg',
-    'images/objet-02.jpg',
-    'images/objet-03.jpg',
-    'images/objet-04.jpg',
-    'images/objet-05.jpg',
-    'images/objet-06.jpg',
-    'images/objet-07.jpg',
-    'images/objet-08.jpg',
-    'images/objet-09.jpg',
-    'images/objet-10.jpg',
-  ]
-},
+        title: 'Objet',
+        wide: true,
+        description: 'Commissioned still life and product work for luxury brands and advertising agencies. Precision lighting, controlled environments, objects treated as protagonists.',
+        images: [
+          'images/objet-01.jpg',
+          'images/objet-02.jpg',
+          'images/objet-03.jpg',
+          'images/objet-04.jpg',
+          'images/objet-05.jpg',
+          'images/objet-06.jpg',
+          'images/objet-07.jpg',
+          'images/objet-08.jpg',
+          'images/objet-09.jpg',
+          'images/objet-10.jpg',
+        ]
+      },
 
-      
       passages: {
         title: 'Passages',
         description: '',
@@ -614,7 +652,6 @@
       scroll.innerHTML = '';
       scroll.dataset.project = key;
 
-      // Description
       if (currentProject.description && currentProject.description.trim() !== '') {
         descText.textContent = currentProject.description;
         descBar.classList.add('visible');
@@ -623,10 +660,9 @@
         descBar.classList.remove('visible');
       }
 
-      // Build slides
       currentProject.images.forEach((src, i) => {
-  const slide = document.createElement('div');
-  slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
+        const slide = document.createElement('div');
+        slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
         img.src = src;
         img.alt = currentProject.title + ' ' + (i + 1);
@@ -634,89 +670,83 @@
         scroll.appendChild(slide);
       });
 
-      // Reset
       scroll.scrollLeft = 0;
       page.scrollTop = 0;
       setTimeout(() => { scroll.scrollLeft = 0; }, 50);
       page.classList.add('active');
-      history.pushState({ project: key }, '', '');
       document.body.style.overflow = 'hidden';
 
-      // Show UI
       counter.classList.remove('gone');
       hint.classList.remove('gone');
       prev.classList.remove('gone');
       next.classList.remove('gone');
       updateCounter(0);
 
-      // Counter update on horizontal scroll
       scroll.addEventListener('scroll', function () {
         const index = Math.round(scroll.scrollLeft / window.innerWidth);
         updateCounter(index);
       });
 
-      // Keyboard
-      // Click anywhere to advance, except back button and arrows
-page.addEventListener('click', function (e) {
-  if (e.target.closest('.back-btn') || e.target.closest('.gallery-arrow') || e.target.closest('.project-header') || e.target.closest('.project-description-bar')) return;
-  window.galleryStep(1);
-});      
+      // Click anywhere to advance except controls
+      page.addEventListener('click', function (e) {
+        if (e.target.closest('.back-btn') || e.target.closest('.gallery-arrow') || e.target.closest('.project-header') || e.target.closest('.project-description-bar')) return;
+        window.galleryStep(1);
+      });
+
       document.onkeydown = function (e) {
         if (e.key === 'ArrowRight') window.galleryStep(1);
         if (e.key === 'ArrowLeft')  window.galleryStep(-1);
         if (e.key === 'Escape')     window.closeProject();
       };
+
+      history.pushState({ project: key }, '', '');
     };
 
-    window.addEventListener('popstate', function () {
-  if (document.getElementById('project-page').classList.contains('active')) {
-    window.closeProject();
-  }
-});
-    
-    // ── STEP (arrows + keyboard)
+    // ── STEP
     window.galleryStep = function(dir) {
       const scroll = document.getElementById('gallery-scroll');
       const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
       const total = currentProject ? currentProject.images.length : 1;
       const next = (currentIndex + dir + total) % total;
       scroll.scrollTo({ left: next * window.innerWidth, behavior: 'smooth' });
- };
+    };
 
     // ── CLOSE PROJECT
     window.closeProject = function() {
-      const counter = document.getElementById('slide-counter');
-      const hint    = document.getElementById('scroll-hint');
-      const prev    = document.getElementById('gallery-prev');
-      const next    = document.getElementById('gallery-next');
-
       document.getElementById('project-page').classList.remove('active');
       document.getElementById('project-description-bar').classList.remove('visible');
-      counter.classList.add('gone');
-      hint.classList.add('gone');
-      prev.classList.add('gone');
-      next.classList.add('gone');
+      document.getElementById('slide-counter').classList.add('gone');
+      document.getElementById('scroll-hint').classList.add('gone');
+      document.getElementById('gallery-prev').classList.add('gone');
+      document.getElementById('gallery-next').classList.add('gone');
       document.body.style.overflow = '';
       document.onkeydown = null;
       currentProject = null;
     };
 
-    // ── CONTACT
-    window.showContact = function() {
-      document.getElementById('contact-page').classList.add('active');
+    // ── INFO
+    window.showInfo = function() {
+      document.getElementById('info-page').classList.add('active');
       document.body.style.overflow = 'hidden';
     };
 
-    window.closeContact = function() {
-      document.getElementById('contact-page').classList.remove('active');
+    window.closeInfo = function() {
+      document.getElementById('info-page').classList.remove('active');
       document.body.style.overflow = '';
     };
 
     // ── HOME
     window.showHome = function() {
       window.closeProject();
-      window.closeContact();
+      window.closeInfo();
     };
+
+    // ── BROWSER BACK
+    window.addEventListener('popstate', function () {
+      if (document.getElementById('project-page').classList.contains('active')) {
+        window.closeProject();
+      }
+    });
 
   </script>
 
