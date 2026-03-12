@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>S'échapper — Book Prototype</title>
+  <title>Jadis — Ivan Codrean</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -40,14 +40,12 @@
       justify-content: center;
     }
 
-    /* ── STAGE — holds perspective and size ── */
+    /* ── STAGE ── */
     .stage {
       position: relative;
       width: 82vw;
       max-width: 1200px;
       perspective: 2400px;
-
-      /* Breath animation — subtle zoom on each turn */
       animation: none;
     }
 
@@ -76,7 +74,7 @@
         0 24px 64px rgba(0, 0, 0, 0.052);
     }
 
-    /* Permanent page-edge shadow — always visible, suggests lifted pages */
+    /* Permanent page-edge shadow */
     .spread::before {
       content: '';
       position: absolute;
@@ -89,7 +87,7 @@
         linear-gradient(to right, rgba(0,0,0,0.04) 0%, transparent 5%);
     }
 
-    /* Next spread sits beneath, invisible until needed */
+    /* Next spread — hidden beneath current */
     .spread-next {
       position: absolute;
       inset: 0;
@@ -98,7 +96,7 @@
       box-shadow: none;
     }
 
-    /* Spacer image — drives natural aspect ratio, invisible */
+    /* Spacer image — drives natural aspect ratio */
     .aspect-spacer {
       width: 100%;
       height: auto;
@@ -107,7 +105,7 @@
       border-radius: 1px;
     }
 
-    /* ── HALVES ── absolutely positioned over spacer ── */
+    /* ── HALVES ── */
     .half {
       position: absolute;
       top: 0;
@@ -137,7 +135,7 @@
       transform-origin: 0% 50%;
     }
 
-    /* ── SPINE OVERLAY ── always on top ── */
+    /* ── SPINE OVERLAY ── */
     .spine-overlay {
       position: absolute;
       inset: 0;
@@ -145,7 +143,6 @@
       pointer-events: none;
       border-radius: 1px;
       background:
-        /* Thin binding line */
         linear-gradient(
           to right,
           transparent calc(50% - 0.7px),
@@ -153,7 +150,6 @@
           rgba(0, 0, 0, 0.18) calc(50% + 0.7px),
           transparent calc(50% + 0.7px)
         ),
-        /* Spine gradient */
         radial-gradient(
           ellipse 16% 100% at 50% 50%,
           rgba(0, 0, 0, 0.23) 0%,
@@ -161,7 +157,6 @@
           rgba(0, 0, 0, 0.046) 55%,
           transparent 78%
         ),
-        /* Edge shadows */
         linear-gradient(
           to right,
           rgba(0, 0, 0, 0.04) 0%,
@@ -173,19 +168,16 @@
 
     /* ── FOLD ANIMATION STATES ── */
 
-    /* FORWARD: current right folds away */
     .flip-forward .spread-current .half.right {
       transform: rotateY(-90deg);
       transition: transform var(--duration) var(--ease-in) 0ms;
     }
 
-    /* BACKWARD: current left folds away */
     .flip-backward .spread-current .half.left {
       transform: rotateY(90deg);
       transition: transform var(--duration) var(--ease-in) 0ms;
     }
 
-    /* No outer shadows during flip — only the fold shadow remains */
     .flip-forward .spread-current,
     .flip-backward .spread-current {
       box-shadow: none;
@@ -194,6 +186,7 @@
     .flip-backward .spread-current::before {
       display: none;
     }
+
     .flip-forward .spread-next,
     .flip-backward .spread-next {
       opacity: 1;
@@ -204,7 +197,7 @@
         0 24px 64px rgba(0, 0, 0, 0.052);
     }
 
-    /* Fold shadow — cast on the stationary half by the turning page */
+    /* Fold shadow */
     .flip-forward .spread-current .half.left::after,
     .flip-backward .spread-current .half.right::after {
       content: '';
@@ -215,22 +208,12 @@
       animation: shadow-in-out 350ms ease-in-out forwards;
     }
 
-    /* Forward: shadow falls from right edge of left page */
     .flip-forward .spread-current .half.left::after {
-      background: linear-gradient(
-        to left,
-        rgba(0, 0, 0, 0.085) 0%,
-        transparent 60%
-      );
+      background: linear-gradient(to left, rgba(0,0,0,0.085) 0%, transparent 60%);
     }
 
-    /* Backward: shadow falls from left edge of right page */
     .flip-backward .spread-current .half.right::after {
-      background: linear-gradient(
-        to right,
-        rgba(0, 0, 0, 0.085) 0%,
-        transparent 60%
-      );
+      background: linear-gradient(to right, rgba(0,0,0,0.085) 0%, transparent 60%);
     }
 
     @keyframes shadow-in-out {
@@ -239,8 +222,6 @@
       60%  { opacity: 1; }
       100% { opacity: 0; }
     }
-
-    /* Stationary half stays fully visible — incoming page unfolds on top of it */
 
     /* ── NAVIGATION ARROWS ── */
     .nav-arrow {
@@ -266,6 +247,21 @@
     }
     .nav-arrow.prev { left: 0; }
     .nav-arrow.next { right: 0; }
+
+    /* ── DESCRIPTION ── */
+    .book-description {
+      position: fixed;
+      top: 2rem;
+      left: 3rem;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: rgba(28, 26, 24, 0.35);
+      z-index: 100;
+      max-width: 38rem;
+      line-height: 1.6;
+    }
 
     /* ── COUNTER ── */
     .spread-counter {
@@ -318,12 +314,15 @@
 </head>
 <body>
 
-  <button class="back-link" onclick="history.back()">&#8592; Back</button>
+  <a class="back-link" href="/">&#8592; Back</a>
+
+  <div class="book-description">
+    Photographs and diary fragments. Landscapes, portraits, summer light, and quiet moments collected while wandering.
+  </div>
 
   <div class="viewer">
     <div class="stage" id="stage">
 
-      <!-- Next spread (beneath) -->
       <div class="spread spread-next" id="spread-next">
         <div class="half left" id="next-left"></div>
         <div class="half right" id="next-right"></div>
@@ -331,7 +330,6 @@
         <div class="spine-overlay"></div>
       </div>
 
-      <!-- Current spread (on top) -->
       <div class="spread spread-current" id="spread-current">
         <div class="half left" id="current-left"></div>
         <div class="half right" id="current-right"></div>
@@ -349,14 +347,55 @@
     <svg viewBox="0 0 20 40"><polyline points="4,4 16,20 4,36"/></svg>
   </button>
 
-  <div class="book-title">S'échapper</div>
+  <div class="book-title">Jadis</div>
   <div class="spread-counter" id="spread-counter"></div>
 
   <script>
     const spreads = [
-      'spread-03.jpg',
-      'spread-02.jpg',
-      'spread-01.jpg',
+      'spread2.jpg',
+      'spread3.jpg',
+      'spread4.jpg',
+      'spread5.jpg',
+      'spread6.jpg',
+      'spread7.jpg',
+      'spread8.jpg',
+      'spread9.jpg',
+      'spread10.jpg',
+      'spread11.jpg',
+      'spread12.jpg',
+      'spread13.jpg',
+      'spread14.jpg',
+      'spread15.jpg',
+      'spread16.jpg',
+      'spread17.jpg',
+      'spread18.jpg',
+      'spread19.jpg',
+      'spread20.jpg',
+      'spread21.jpg',
+      'spread22.jpg',
+      'spread23.jpg',
+      'spread24.jpg',
+      'spread25.jpg',
+      'spread26.jpg',
+      'spread27.jpg',
+      'spread28.jpg',
+      'spread29.jpg',
+      'spread30.jpg',
+      'spread31.jpg',
+      'spread32.jpg',
+      'spread33.jpg',
+      'spread34.jpg',
+      'spread35.jpg',
+      'spread36.jpg',
+      'spread37.jpg',
+      'spread38.jpg',
+      'spread39.jpg',
+      'spread40.jpg',
+      'spread41.jpg',
+      'spread42.jpg',
+      'spread43.jpg',
+      'spread44.jpg',
+      'spread45.jpg',
     ];
 
     const TOTAL = spreads.length;
@@ -376,7 +415,6 @@
       spacerEl.src = src;
     }
 
-    // Preload an image
     function preload(src) {
       const img = new Image();
       img.src = src;
@@ -400,10 +438,7 @@
       animating = true;
       const stage     = document.getElementById('stage');
 
-      // Cancel any pending cleanup from previous flip
       if (stage._cleanupTimer) clearTimeout(stage._cleanupTimer);
-
-      // Remove any stale flip classes — prevents CSS conflicts on rapid direction changes
       stage.classList.remove('flip-forward', 'flip-backward');
 
       const nextLeft   = document.getElementById('next-left');
@@ -412,22 +447,16 @@
       const curLeft    = document.getElementById('current-left');
       const curRight   = document.getElementById('current-right');
 
-      // Clear lingering inline styles then restore current image immediately
       [nextLeft, nextRight, curLeft, curRight].forEach(el => el.style.cssText = '');
       setHalves(curLeft, curRight, document.getElementById('current-spacer'), spreads[current]);
-
-      // Load next spread content
       setHalves(nextLeft, nextRight, nextSpacer, spreads[next]);
 
-      // Pre-position the folded half
       if (dir > 0) {
         nextLeft.style.transform = 'rotateY(90deg)';
       } else {
         nextRight.style.transform = 'rotateY(-90deg)';
       }
 
-      // Breath — independent class, Symbol token prevents rapid flips
-      // from cancelling each other's breath animation
       stage.classList.remove('breathing-forward', 'breathing-backward');
       const breathClass = dir > 0 ? 'breathing-forward' : 'breathing-backward';
       const breathToken = Symbol();
@@ -441,20 +470,20 @@
         }, DURATION * 3);
       });
 
-      // Double rAF — flip class fires after pre-position is painted
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           stage.classList.add(dir > 0 ? 'flip-forward' : 'flip-backward');
 
-          // Swap left image at exact fold completion
           setTimeout(() => {
-            curLeft.style.backgroundImage = `url(${spreads[next]})`;
+            if (dir > 0) {
+              curLeft.style.backgroundImage = `url(${spreads[next]})`;
+            } else {
+              curRight.style.backgroundImage = `url(${spreads[next]})`;
+            }
           }, DURATION);
         });
       });
 
-      // Unlock at fold completion — update current and preload here
-      // so neither is lost if cleanup timer is cancelled on a rapid flip
       setTimeout(() => {
         current = next;
         updateCounter();
@@ -462,7 +491,6 @@
         animating = false;
       }, DURATION + 50);
 
-      // Cleanup — remove flip class and tidy inline styles after shadow fade
       stage._cleanupTimer = setTimeout(() => {
         stage.classList.remove('flip-forward', 'flip-backward');
         [nextLeft, nextRight, curLeft, curRight].forEach(el => el.style.cssText = '');
@@ -470,28 +498,13 @@
       }, 450);
     }
 
-    // Fit stage to viewport — scales width down if spread would overflow vertically
-    function fitStage() {
-      const stage   = document.getElementById('stage');
-      const spacer  = document.getElementById('current-spacer');
-      if (!spacer.naturalWidth || !spacer.naturalHeight) return;
-      const ratio   = spacer.naturalWidth / spacer.naturalHeight;
-      const maxH    = window.innerHeight * 0.88;
-      const maxW    = Math.min(maxH * ratio, 1200);
-      stage.style.maxWidth = maxW + 'px';
-    }
-
     document.addEventListener('keydown', function(e) {
       if (e.key === 'ArrowRight') navigate(1);
       if (e.key === 'ArrowLeft')  navigate(-1);
     });
 
-    // Init
     initCurrentSpread();
     preload(spreads[1]);
-
-    document.getElementById('current-spacer').addEventListener('load', fitStage);
-    window.addEventListener('resize', fitStage);
   </script>
 
 </body>
