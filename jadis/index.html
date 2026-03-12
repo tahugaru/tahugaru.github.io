@@ -505,7 +505,7 @@
       const spacer = document.getElementById('current-spacer');
       if (!spacer.naturalWidth || !spacer.naturalHeight) return;
       const ratio     = spacer.naturalWidth / spacer.naturalHeight;
-      const available = (window.innerHeight - 64) * 0.82;
+      const available = (window.innerHeight - 64) * 0.88;
       const maxW      = Math.min(available * ratio, 1200);
       stage.style.maxWidth = maxW + 'px';
     }
