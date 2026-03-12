@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ivan Codrean // Jadis</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -505,7 +505,7 @@
       const spacer = document.getElementById('current-spacer');
       if (!spacer.naturalWidth || !spacer.naturalHeight) return;
       const ratio     = spacer.naturalWidth / spacer.naturalHeight;
-      const available = (window.innerHeight - 64) * 0.88;
+      const available = (window.innerHeight - 112) * 0.88;
       const maxW      = Math.min(available * ratio, 1200);
       stage.style.maxWidth = maxW + 'px';
     }
