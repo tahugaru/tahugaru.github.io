@@ -798,10 +798,10 @@
       });
 
       // Fade the page in — opacity:0 first, then transition to 1 after reflow
+      loader.classList.add('visible');
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
-      loader.classList.add('visible');
       document.body.style.overflow = 'hidden';
       scroll.scrollLeft = 0;   // after active — element is now rendered, assignment sticks
       page.scrollTop = 0;
