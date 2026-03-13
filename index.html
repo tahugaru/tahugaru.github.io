@@ -798,7 +798,7 @@
       });
 
       // Fade the page in — opacity:0 first, then transition to 1 after reflow
-      loader.classList.add('visible');
+      if (!firstLoaded) loader.classList.add('visible');
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
