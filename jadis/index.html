@@ -466,12 +466,13 @@
       stage._breathToken = breathToken;
       requestAnimationFrame(() => {
         stage.classList.add(breathClass);
-        const foldingHalf = dir > 0 ? curRight : curLeft;
-        const stationaryHalf = dir > 0 ? curLeft : curRight;
-        foldingHalf.addEventListener('transitionend', function swapOnFold() {
-        foldingHalf.removeEventListener('transitionend', swapOnFold);  
-        stationaryHalf.style.backgroundImage = `url(${spreads[next]})`;
-        }, { once: true });
+        setTimeout(() => {
+  if (dir > 0) {
+    curLeft.style.backgroundImage = `url(${spreads[next]})`;
+  } else {
+    curRight.style.backgroundImage = `url(${spreads[next]})`;
+  }
+}, DURATION);
       });
 
       requestAnimationFrame(() => {
