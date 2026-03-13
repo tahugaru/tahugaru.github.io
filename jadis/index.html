@@ -466,11 +466,12 @@
       stage._breathToken = breathToken;
       requestAnimationFrame(() => {
         stage.classList.add(breathClass);
-        setTimeout(() => {
-          if (stage._breathToken === breathToken) {
-            stage.classList.remove(breathClass);
-          }
-        }, DURATION * 3);
+        const foldingHalf = dir > 0 ? curRight : curLeft;
+        const stationaryHalf = dir > 0 ? curLeft : curRight;
+        foldingHalf.addEventListener('transitionend', function swapOnFold() {
+        foldingHalf.removeEventListener('transitionend', swapOnFold);  
+        stationaryHalf.style.backgroundImage = `url(${spreads[next]})`;
+        }, { once: true });
       });
 
       requestAnimationFrame(() => {
