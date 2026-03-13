@@ -172,7 +172,6 @@
       color: var(--ink-light);
       background: none;
       border: none;
-      cursor: pointer;
       transition: color 0.2s ease;
     }
     .back-btn:hover { color: var(--ink); }
@@ -206,7 +205,6 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      cursor: default;
     }
     .gallery-scroll::-webkit-scrollbar { display: none; }
 
@@ -390,7 +388,6 @@
       color: var(--ink-light);
       background: none;
       border: none;
-      cursor: pointer;
       transition: color 0.2s ease;
       z-index: 10;
     }
@@ -655,6 +652,8 @@
     };
 
     let currentProject = null;
+    let _scrollListener = null;
+    let _clickListener  = null;
 
     function updateCounter(index) {
       const total = currentProject ? currentProject.images.length : 1;
@@ -714,16 +713,19 @@
       next.classList.remove('gone');
       updateCounter(0);
 
-      scroll.addEventListener('scroll', function () {
+      if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
+      _scrollListener = function () {
         const index = Math.round(scroll.scrollLeft / window.innerWidth);
         updateCounter(index);
-      });
+      };
+      scroll.addEventListener('scroll', _scrollListener);
 
-      // Click anywhere to advance except controls
-      page.addEventListener('click', function (e) {
+      if (_clickListener) page.removeEventListener('click', _clickListener);
+      _clickListener = function (e) {
         if (e.target.closest('.back-btn') || e.target.closest('.gallery-arrow') || e.target.closest('.project-header') || e.target.closest('.project-description-bar')) return;
         window.galleryStep(1);
-      });
+      };
+      page.addEventListener('click', _clickListener);
 
       document.onkeydown = function (e) {
         if (e.key === 'ArrowRight') window.galleryStep(1);
@@ -745,7 +747,11 @@
 
     // ── CLOSE PROJECT
     window.closeProject = function() {
-      document.getElementById('project-page').classList.remove('active');
+      const scroll = document.getElementById('gallery-scroll');
+      const page   = document.getElementById('project-page');
+      if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
+      if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
+      page.classList.remove('active');
       document.getElementById('project-description-bar').classList.remove('visible');
       document.getElementById('slide-counter').classList.add('gone');
       document.getElementById('scroll-hint').classList.add('gone');
