@@ -330,6 +330,14 @@
       margin-bottom: 3rem;
     }
 
+    /* ── INFO PORTRAIT ── */
+    .info-portrait {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 3rem;
+    }
+
     .info-bio {
       font-family: var(--font-body);
       font-weight: 300;
@@ -346,6 +354,27 @@
       height: 1px;
       background: rgba(28, 26, 24, 0.2);
       margin-bottom: 3rem;
+    }
+
+    /* ── INFO CLIENTS ── */
+    .info-clients-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+    }
+
+    .info-clients {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(28, 26, 24, 0.45);
+      margin-bottom: 4rem;
     }
 
     .info-contact-label {
@@ -417,7 +446,6 @@
     @media (hover: hover) {
       html, body, a, button, [onclick] { cursor: none; }
 
-      /* FIX 1: gallery arrows explicitly cursor: none, not pointer */
       .gallery-arrow { cursor: none; }
 
       #cursor {
@@ -441,7 +469,6 @@
       }
       #cursor.visible { opacity: 1; }
 
-      /* Expands on project titles, arrows, back buttons */
       #cursor.hovering {
         width: 46px;
         height: 46px;
@@ -449,7 +476,6 @@
         background: rgba(28, 26, 24, 0.05);
       }
 
-      /* Constricts on nav links (Info, Instagram) — 14px, crisper border */
       #cursor.constricting {
         width: 14px;
         height: 14px;
@@ -458,7 +484,7 @@
       }
     }
 
-    /* ── IMAGE FADE-IN on first load ── */
+    /* ── IMAGE FADE-IN ── */
     .gallery-slide img {
       opacity: 0;
       transition: opacity 0.4s ease;
@@ -488,7 +514,7 @@
       transition: opacity 300ms ease;
       pointer-events: none;
       z-index: 5;
-}
+    }
     .gallery-loader.visible { opacity: 1; }
     .gallery-loader span {
       width: 4px;
@@ -496,14 +522,14 @@
       border-radius: 50%;
       background: var(--ink-light);
       animation: dot-pulse 1.2s ease-in-out infinite;
-}
+    }
     .gallery-loader span:nth-child(2) { animation-delay: 0.2s; }
     .gallery-loader span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes dot-pulse {
       0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
-      40%           { opacity: 1;   transform: scale(1);   }
-}
-    
+      40%            { opacity: 1;   transform: scale(1);   }
+    }
+
   </style>
 </head>
 <body>
@@ -609,11 +635,18 @@
 
       <h1 class="info-name">About</h1>
 
+      <img src="images/portrait.jpg" alt="Ivan Codrean" class="info-portrait" />
+
       <div class="info-bio">
         <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to years of commissioned work for luxury brands and advertising agencies.</p>
         <p>After years of commercial work, a personal style emerged — analog film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and the kind of stillness that only exists between moments.</p>
         <p>That world between discipline and instinct is where the work lives now.</p>
       </div>
+
+      <div class="info-divider"></div>
+
+      <p class="info-clients-label">Selected clients</p>
+      <p class="info-clients">Rolex &nbsp;&middot;&nbsp; Omega &nbsp;&middot;&nbsp; Watchmaster &nbsp;&middot;&nbsp; Pelagic Partners</p>
 
       <div class="info-divider"></div>
 
@@ -715,6 +748,7 @@
 
       const page     = document.getElementById('project-page');
       const scroll   = document.getElementById('gallery-scroll');
+      const loader   = document.getElementById('gallery-loader');
       const titleEl  = document.getElementById('project-page-title');
       const descBar  = document.getElementById('project-description-bar');
       const descText = document.getElementById('project-description-text');
@@ -735,6 +769,15 @@
         descBar.classList.remove('visible');
       }
 
+      // Guard against onload not firing for cached images (img.complete already true)
+      let firstLoaded = false;
+      function hideLoader() {
+        if (firstLoaded) return;
+        firstLoaded = true;
+        loader.style.transition = 'opacity 400ms ease';
+        loader.classList.remove('visible');
+      }
+
       currentProject.images.forEach((src, i) => {
         const slide = document.createElement('div');
         slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
@@ -742,26 +785,27 @@
         img.alt = currentProject.title + ' ' + (i + 1);
         img.onload = function() {
           img.classList.add('loaded');
-          if (i === 0) {
-            loader.style.transition = 'opacity 400ms ease';
-            loader.classList.remove('visible');
-  }
-};
+          if (i === 0) hideLoader();
+        };
         img.src = src;
-        if (img.complete) img.classList.add('loaded');
+        // Cached images may have complete===true before onload fires
+        if (img.complete) {
+          img.classList.add('loaded');
+          if (i === 0) hideLoader();
+        }
         slide.appendChild(img);
         scroll.appendChild(slide);
       });
 
+      // Fade the page in — opacity:0 first, then transition to 1 after reflow
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
-      const loader = document.getElementById('gallery-loader');
       loader.classList.add('visible');
       document.body.style.overflow = 'hidden';
-      scroll.scrollLeft = 0;        // now the element is rendered, assignment sticks
+      scroll.scrollLeft = 0;   // after active — element is now rendered, assignment sticks
       page.scrollTop = 0;
-      void page.offsetWidth;
+      void page.offsetWidth;   // force reflow before re-enabling transition
       page.style.transition = 'opacity 280ms ease';
       page.style.opacity = '1';
 
@@ -795,8 +839,7 @@
     };
 
     // ── STEP
-    // Arrow clicks and keyboard use a crossfade: fade out current, snap scroll, fade in next.
-    // Trackpad/swipe scrolling is untouched — it drives scrollLeft directly and bypasses this.
+    // Arrow/keyboard: crossfade. Swipe/trackpad: bypasses this entirely.
     const FADE_MS = 320;
 
     window.galleryStep = function(dir) {
@@ -823,7 +866,7 @@
         nextSlide.style.transition = 'none';
         nextSlide.style.opacity    = '0';
 
-        // 3 — snap scroll position instantly (no smooth, no visible movement)
+        // 3 — snap scroll position instantly
         scroll.style.overflow = 'hidden';
         scroll.scrollLeft     = nextIndex * window.innerWidth;
 
@@ -834,7 +877,7 @@
         nextSlide.style.transition = `opacity ${FADE_MS}ms ease`;
         nextSlide.style.opacity    = '1';
 
-        // 6 — silently restore the outgoing slide for when the user cycles back to it
+        // 6 — silently restore the outgoing slide
         currentSlide.style.transition = 'none';
         currentSlide.style.opacity    = '1';
 
@@ -846,13 +889,16 @@
     };
 
     // ── CLOSE PROJECT
-    // fromPopstate flag prevents a double history.back() loop
+    // BUG 4 FIX: clear inline opacity/transition left over from openProject
     window.closeProject = function(fromPopstate) {
       const scroll = document.getElementById('gallery-scroll');
       const page   = document.getElementById('project-page');
       if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
       if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
       page.classList.remove('active');
+      page.style.opacity    = '';
+      page.style.transition = '';
+      document.getElementById('gallery-loader').classList.remove('visible');
       document.getElementById('project-description-bar').classList.remove('visible');
       document.getElementById('slide-counter').classList.add('gone');
       document.getElementById('scroll-hint').classList.add('gone');
@@ -879,9 +925,13 @@
     };
 
     // ── HOME
+    // BUG 5 FIX: only close whichever overlay is actually open — prevents double history.back()
     window.showHome = function() {
-      window.closeProject();
-      window.closeInfo();
+      if (document.getElementById('project-page').classList.contains('active')) {
+        window.closeProject();
+      } else if (document.getElementById('info-page').classList.contains('active')) {
+        window.closeInfo();
+      }
     };
 
     // ── BROWSER BACK
@@ -908,9 +958,7 @@
         cursor.classList.remove('visible');
       });
 
-      // Nav links (Info, Instagram) — constrict
       const constrictSel = 'nav a';
-      // Everything else interactive — expand (nav a excluded so it doesn't match both)
       const expandSel    = 'a:not(nav a), button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
 
       document.addEventListener('mouseover', function(e) {
