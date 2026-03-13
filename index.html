@@ -712,13 +712,13 @@
         scroll.appendChild(slide);
       });
 
-      scroll.scrollLeft = 0;
-      page.scrollTop = 0;
-      page.style.opacity = '';
-      page.style.transition = '';
+      page.style.opacity = '0';
+      page.style.transition = 'none';
       page.classList.add('active');
       document.body.style.overflow = 'hidden';
-      void page.offsetWidth; // force reflow before enabling transition
+      scroll.scrollLeft = 0;        // now the element is rendered, assignment sticks
+      page.scrollTop = 0;
+      void page.offsetWidth;
       page.style.transition = 'opacity 280ms ease';
       page.style.opacity = '1';
 
