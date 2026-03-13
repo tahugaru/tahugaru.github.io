@@ -418,6 +418,45 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── CUSTOM CURSOR ── */
+    @media (hover: hover) {
+      body, a, button, [onclick] { cursor: none; }
+
+      #cursor {
+        position: fixed;
+        top: 0; left: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(28, 26, 24, 0.3);
+        background: transparent;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.22s ease,
+          height 0.22s ease,
+          background 0.22s ease,
+          border-color 0.22s ease,
+          opacity 0.3s ease;
+        opacity: 0;
+      }
+      #cursor.visible  { opacity: 1; }
+      #cursor.hovering {
+        width: 46px;
+        height: 46px;
+        border-color: rgba(28, 26, 24, 0.15);
+        background: rgba(28, 26, 24, 0.05);
+      }
+    }
+
+    /* ── IMAGE FADE-IN ── */
+    .gallery-slide img {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .gallery-slide img.loaded { opacity: 1; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 1280px) {
       :root { --space: 1rem; }
@@ -430,6 +469,8 @@
   </style>
 </head>
 <body>
+
+  <div id="cursor"></div>
 
   <!-- ── HEADER ── -->
   <header>
@@ -536,7 +577,7 @@
 
       <p class="info-contact-label">Get in touch</p>
       <div class="info-links">
-        <a href="mailto:hello@codrean.art" class="info-link">hello@codrean.art</a>
+        <a href="/cdn-cgi/l/email-protection#4028252c2c2f00232f243225212e6e213234" class="info-link"><span class="__cf_email__" data-cfemail="39515c555556795a565d4b5c585717584b4d">[email&#160;protected]</span></a>
         <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener" class="info-link">@codrean.art</a>
         <a href="https://www.behance.net/ivancodrean" target="_blank" rel="noopener" class="info-link">Behance</a>
       </div>
@@ -544,7 +585,7 @@
     </div>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const projects = {
@@ -653,8 +694,10 @@
         const slide = document.createElement('div');
         slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
-        img.src = src;
         img.alt = currentProject.title + ' ' + (i + 1);
+        img.onload = function() { img.classList.add('loaded'); };
+        img.src = src;
+        if (img.complete) img.classList.add('loaded');
         slide.appendChild(img);
         scroll.appendChild(slide);
       });
@@ -739,6 +782,31 @@
         window.closeInfo();
       }
     });
+
+    // ── CUSTOM CURSOR
+    (function() {
+      if (window.matchMedia('(hover: none)').matches) return;
+      const cursor = document.getElementById('cursor');
+
+      document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+        cursor.classList.add('visible');
+      });
+
+      document.addEventListener('mouseleave', function() {
+        cursor.classList.remove('visible');
+      });
+
+      const sel = 'a, button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
+
+      document.addEventListener('mouseover', function(e) {
+        if (e.target.closest(sel)) cursor.classList.add('hovering');
+      });
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.closest(sel)) cursor.classList.remove('hovering');
+      });
+    })();
 
   </script>
 
