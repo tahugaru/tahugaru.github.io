@@ -196,6 +196,7 @@
 
     /* ── GALLERY ── */
     .gallery-scroll {
+      position: relative;
       width: 100%;
       flex-shrink: 0;
       display: flex;
@@ -329,14 +330,6 @@
       margin-bottom: 3rem;
     }
 
-    /* ── INFO PORTRAIT ── */
-    .info-portrait {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin-bottom: 3rem;
-    }
-
     .info-bio {
       font-family: var(--font-body);
       font-weight: 300;
@@ -353,27 +346,6 @@
       height: 1px;
       background: rgba(28, 26, 24, 0.2);
       margin-bottom: 3rem;
-    }
-
-    /* ── INFO CLIENTS ── */
-    .info-clients-label {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 1rem;
-    }
-
-    .info-clients {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(28, 26, 24, 0.45);
-      margin-bottom: 4rem;
     }
 
     .info-contact-label {
@@ -443,8 +415,9 @@
 
     /* ── CUSTOM CURSOR ── */
     @media (hover: hover) {
-      body, a, button, [onclick] { cursor: none; }
+      html, body, a, button, [onclick] { cursor: none; }
 
+      /* FIX 1: gallery arrows explicitly cursor: none, not pointer */
       .gallery-arrow { cursor: none; }
 
       #cursor {
@@ -501,6 +474,36 @@
       .gallery-arrow { display: none !important; }
       .info-inner { padding-top: 6rem; }
     }
+
+    /* ── GALLERY LOADING INDICATOR ── */
+    .gallery-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 300ms ease;
+      pointer-events: none;
+      z-index: 5;
+}
+    .gallery-loader.visible { opacity: 1; }
+    .gallery-loader span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ink-light);
+      animation: dot-pulse 1.2s ease-in-out infinite;
+}
+    .gallery-loader span:nth-child(2) { animation-delay: 0.2s; }
+    .gallery-loader span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dot-pulse {
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+      40%           { opacity: 1;   transform: scale(1);   }
+}
+    
   </style>
 </head>
 <body>
@@ -575,6 +578,10 @@
       <p class="project-description-text" id="project-description-text"></p>
     </div>
 
+    <div class="gallery-loader" id="gallery-loader">
+      <span></span><span></span><span></span>
+    </div>
+
     <div class="gallery-scroll" id="gallery-scroll"></div>
 
   </div>
@@ -602,18 +609,11 @@
 
       <h1 class="info-name">About</h1>
 
-      <img src="portrait.jpg" alt="Ivan Codrean" class="info-portrait" />
-
       <div class="info-bio">
         <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to years of commissioned work for luxury brands and advertising agencies.</p>
         <p>After years of commercial work, a personal style emerged — analog film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and the kind of stillness that only exists between moments.</p>
         <p>That world between discipline and instinct is where the work lives now.</p>
       </div>
-
-      <div class="info-divider"></div>
-
-      <p class="info-clients-label">Selected clients</p>
-      <p class="info-clients">Rolex &nbsp;&middot;&nbsp; Omega &nbsp;&middot;&nbsp; Watchmaster &nbsp;&middot;&nbsp; Pelagic Partners</p>
 
       <div class="info-divider"></div>
 
@@ -740,19 +740,27 @@
         slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
         img.alt = currentProject.title + ' ' + (i + 1);
-        img.onload = function() { img.classList.add('loaded'); };
+        img.onload = function() {
+          img.classList.add('loaded');
+          if (i === 0) {
+            loader.style.transition = 'opacity 400ms ease';
+            loader.classList.remove('visible');
+  }
+};
         img.src = src;
         if (img.complete) img.classList.add('loaded');
         slide.appendChild(img);
         scroll.appendChild(slide);
       });
 
-      scroll.scrollLeft = 0;
-      page.scrollTop = 0;
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
+      const loader = document.getElementById('gallery-loader');
+      loader.classList.add('visible');
       document.body.style.overflow = 'hidden';
+      scroll.scrollLeft = 0;        // now the element is rendered, assignment sticks
+      page.scrollTop = 0;
       void page.offsetWidth;
       page.style.transition = 'opacity 280ms ease';
       page.style.opacity = '1';
@@ -845,8 +853,6 @@
       if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
       if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
       page.classList.remove('active');
-      page.style.opacity = '';
-      page.style.transition = '';
       document.getElementById('project-description-bar').classList.remove('visible');
       document.getElementById('slide-counter').classList.add('gone');
       document.getElementById('scroll-hint').classList.add('gone');
