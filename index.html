@@ -114,7 +114,6 @@
       font-size: clamp(2rem, 5vw, 4rem);
       line-height: 1;
       letter-spacing: -0.01em;
-      /* FIX 2: removed non-animatable `transition: font-style` */
     }
 
     .project-meta {
@@ -243,7 +242,6 @@
       z-index: 210;
       background: none;
       border: none;
-      /* FIX 1: cursor: pointer removed from here — now lives inside @media (hover: hover) as cursor: none */
       padding: 2rem 3rem;
       opacity: 0.2;
       transition: opacity 0.3s ease;
@@ -371,7 +369,6 @@
       font-weight: 400;
       color: var(--ink);
       text-decoration: none;
-      transition: font-style 0.2s ease;
       display: inline-block;
     }
     .info-link:hover { font-style: italic; }
@@ -419,8 +416,7 @@
     @media (hover: hover) {
       body, a, button, [onclick] { cursor: none; }
 
-      /* FIX 1: gallery arrows now inherit cursor: none from the rule above,
-         no longer overridden by a stray cursor: pointer outside this block */
+      /* FIX 1: gallery arrows explicitly cursor: none, not pointer */
       .gallery-arrow { cursor: none; }
 
       #cursor {
@@ -442,16 +438,26 @@
           opacity 0.3s ease;
         opacity: 0;
       }
-      #cursor.visible  { opacity: 1; }
+      #cursor.visible { opacity: 1; }
+
+      /* Expands on project titles, arrows, back buttons */
       #cursor.hovering {
         width: 46px;
         height: 46px;
         border-color: rgba(28, 26, 24, 0.15);
         background: rgba(28, 26, 24, 0.05);
       }
+
+      /* Constricts on nav links (Info, Instagram) — 14px, crisper border */
+      #cursor.constricting {
+        width: 14px;
+        height: 14px;
+        border-color: rgba(28, 26, 24, 0.55);
+        background: transparent;
+      }
     }
 
-    /* ── IMAGE FADE-IN ── */
+    /* ── IMAGE FADE-IN on first load ── */
     .gallery-slide img {
       opacity: 0;
       transition: opacity 0.4s ease;
@@ -658,6 +664,7 @@
     let currentProject = null;
     let _scrollListener = null;
     let _clickListener  = null;
+    let _fading         = false;
 
     function updateCounter(index) {
       const total = currentProject ? currentProject.images.length : 1;
@@ -741,18 +748,58 @@
     };
 
     // ── STEP
+    // Arrow clicks and keyboard use a crossfade: fade out current, snap scroll, fade in next.
+    // Trackpad/swipe scrolling is untouched — it drives scrollLeft directly and bypasses this.
+    const FADE_MS = 320;
+
     window.galleryStep = function(dir) {
-      const scroll = document.getElementById('gallery-scroll');
+      if (_fading) return;
+      const scroll       = document.getElementById('gallery-scroll');
+      const slides       = scroll.querySelectorAll('.gallery-slide');
+      const total        = currentProject ? currentProject.images.length : 1;
       const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
-      const total = currentProject ? currentProject.images.length : 1;
-      const next = (currentIndex + dir + total) % total;
-      scroll.scrollTo({ left: next * window.innerWidth, behavior: 'smooth' });
+      const nextIndex    = (currentIndex + dir + total) % total;
+
+      if (nextIndex === currentIndex) return;
+
+      _fading = true;
+
+      const currentSlide = slides[currentIndex];
+      const nextSlide    = slides[nextIndex];
+
+      // 1 — fade out the current slide
+      currentSlide.style.transition = `opacity ${FADE_MS}ms ease`;
+      currentSlide.style.opacity    = '0';
+
+      setTimeout(() => {
+        // 2 — silence the next slide before snapping to it
+        nextSlide.style.transition = 'none';
+        nextSlide.style.opacity    = '0';
+
+        // 3 — snap scroll position instantly (no smooth, no visible movement)
+        scroll.style.overflow = 'hidden';
+        scroll.scrollLeft     = nextIndex * window.innerWidth;
+
+        // 4 — force reflow so opacity:0 is committed before re-enabling transition
+        void nextSlide.offsetWidth;
+
+        // 5 — fade in the next slide
+        nextSlide.style.transition = `opacity ${FADE_MS}ms ease`;
+        nextSlide.style.opacity    = '1';
+
+        // 6 — silently restore the outgoing slide for when the user cycles back to it
+        currentSlide.style.transition = 'none';
+        currentSlide.style.opacity    = '1';
+
+        scroll.style.overflow = '';
+        updateCounter(nextIndex);
+
+        setTimeout(() => { _fading = false; }, FADE_MS);
+      }, FADE_MS);
     };
 
     // ── CLOSE PROJECT
-    // FIX 3: accepts a `fromPopstate` flag — when true, we skip history.back()
-    // to avoid a double-pop loop. The button path calls history.back() which
-    // naturally triggers popstate, which then calls closeProject(true).
+    // fromPopstate flag prevents a double history.back() loop
     window.closeProject = function(fromPopstate) {
       const scroll = document.getElementById('gallery-scroll');
       const page   = document.getElementById('project-page');
@@ -767,6 +814,7 @@
       document.body.style.overflow = '';
       document.onkeydown = null;
       currentProject = null;
+      _fading = false;
       if (!fromPopstate) history.back();
     };
 
@@ -777,7 +825,6 @@
       history.pushState({ page: 'info' }, '', '');
     };
 
-    // FIX 3: same fromPopstate pattern for closeInfo
     window.closeInfo = function(fromPopstate) {
       document.getElementById('info-page').classList.remove('active');
       document.body.style.overflow = '';
@@ -791,7 +838,6 @@
     };
 
     // ── BROWSER BACK
-    // FIX 3: pass fromPopstate=true so the close functions don't call history.back() again
     window.addEventListener('popstate', function () {
       if (document.getElementById('project-page').classList.contains('active')) {
         window.closeProject(true);
@@ -815,13 +861,24 @@
         cursor.classList.remove('visible');
       });
 
-      const sel = 'a, button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
+      // Nav links (Info, Instagram) — constrict
+      const constrictSel = 'nav a';
+      // Everything else interactive — expand (nav a excluded so it doesn't match both)
+      const expandSel    = 'a:not(nav a), button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
 
       document.addEventListener('mouseover', function(e) {
-        if (e.target.closest(sel)) cursor.classList.add('hovering');
+        if (e.target.closest(constrictSel)) {
+          cursor.classList.remove('hovering');
+          cursor.classList.add('constricting');
+        } else if (e.target.closest(expandSel)) {
+          cursor.classList.remove('constricting');
+          cursor.classList.add('hovering');
+        }
       });
+
       document.addEventListener('mouseout', function(e) {
-        if (e.target.closest(sel)) cursor.classList.remove('hovering');
+        if (e.target.closest(constrictSel)) cursor.classList.remove('constricting');
+        if (e.target.closest(expandSel))    cursor.classList.remove('hovering');
       });
     })();
 
