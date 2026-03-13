@@ -461,6 +461,7 @@
       }
 
       stage.classList.remove('breathing-forward', 'breathing-backward');
+      void stage.offsetWidth;
       const breathClass = dir > 0 ? 'breathing-forward' : 'breathing-backward';
       const breathToken = Symbol();
       stage._breathToken = breathToken;
