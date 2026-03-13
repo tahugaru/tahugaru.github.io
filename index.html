@@ -196,6 +196,7 @@
 
     /* ── GALLERY ── */
     .gallery-scroll {
+      position: relative;
       width: 100%;
       flex-shrink: 0;
       display: flex;
@@ -473,6 +474,36 @@
       .gallery-arrow { display: none !important; }
       .info-inner { padding-top: 6rem; }
     }
+
+    /* ── GALLERY LOADING INDICATOR ── */
+    .gallery-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 300ms ease;
+      pointer-events: none;
+      z-index: 5;
+}
+    .gallery-loader.visible { opacity: 1; }
+    .gallery-loader span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ink-light);
+      animation: dot-pulse 1.2s ease-in-out infinite;
+}
+    .gallery-loader span:nth-child(2) { animation-delay: 0.2s; }
+    .gallery-loader span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dot-pulse {
+      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+      40%           { opacity: 1;   transform: scale(1);   }
+}
+    
   </style>
 </head>
 <body>
@@ -545,6 +576,10 @@
 
     <div class="project-description-bar" id="project-description-bar">
       <p class="project-description-text" id="project-description-text"></p>
+    </div>
+
+    <div class="gallery-loader" id="gallery-loader">
+      <span></span><span></span><span></span>
     </div>
 
     <div class="gallery-scroll" id="gallery-scroll"></div>
@@ -705,7 +740,13 @@
         slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
         img.alt = currentProject.title + ' ' + (i + 1);
-        img.onload = function() { img.classList.add('loaded'); };
+        img.onload = function() {
+          img.classList.add('loaded');
+          if (i === 0) {
+            loader.style.transition = 'opacity 400ms ease';
+            loader.classList.remove('visible');
+  }
+};
         img.src = src;
         if (img.complete) img.classList.add('loaded');
         slide.appendChild(img);
@@ -715,6 +756,8 @@
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
+      const loader = document.getElementById('gallery-loader');
+      loader.classList.add('visible');
       document.body.style.overflow = 'hidden';
       scroll.scrollLeft = 0;        // now the element is rendered, assignment sticks
       page.scrollTop = 0;
