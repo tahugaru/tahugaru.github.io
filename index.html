@@ -714,9 +714,13 @@
 
       scroll.scrollLeft = 0;
       page.scrollTop = 0;
-      setTimeout(() => { scroll.scrollLeft = 0; }, 50);
+      page.style.opacity = '';
+      page.style.transition = '';
       page.classList.add('active');
       document.body.style.overflow = 'hidden';
+      void page.offsetWidth; // force reflow before enabling transition
+      page.style.transition = 'opacity 280ms ease';
+      page.style.opacity = '1';
 
       counter.classList.remove('gone');
       hint.classList.remove('gone');
