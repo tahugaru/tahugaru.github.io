@@ -114,7 +114,7 @@
       font-size: clamp(2rem, 5vw, 4rem);
       line-height: 1;
       letter-spacing: -0.01em;
-      transition: font-style 0.2s ease;
+      /* FIX 2: removed non-animatable `transition: font-style` */
     }
 
     .project-meta {
@@ -243,7 +243,7 @@
       z-index: 210;
       background: none;
       border: none;
-      cursor: pointer;
+      /* FIX 1: cursor: pointer removed from here — now lives inside @media (hover: hover) as cursor: none */
       padding: 2rem 3rem;
       opacity: 0.2;
       transition: opacity 0.3s ease;
@@ -418,6 +418,10 @@
     /* ── CUSTOM CURSOR ── */
     @media (hover: hover) {
       body, a, button, [onclick] { cursor: none; }
+
+      /* FIX 1: gallery arrows now inherit cursor: none from the rule above,
+         no longer overridden by a stray cursor: pointer outside this block */
+      .gallery-arrow { cursor: none; }
 
       #cursor {
         position: fixed;
@@ -746,7 +750,10 @@
     };
 
     // ── CLOSE PROJECT
-    window.closeProject = function() {
+    // FIX 3: accepts a `fromPopstate` flag — when true, we skip history.back()
+    // to avoid a double-pop loop. The button path calls history.back() which
+    // naturally triggers popstate, which then calls closeProject(true).
+    window.closeProject = function(fromPopstate) {
       const scroll = document.getElementById('gallery-scroll');
       const page   = document.getElementById('project-page');
       if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
@@ -760,6 +767,7 @@
       document.body.style.overflow = '';
       document.onkeydown = null;
       currentProject = null;
+      if (!fromPopstate) history.back();
     };
 
     // ── INFO
@@ -769,9 +777,11 @@
       history.pushState({ page: 'info' }, '', '');
     };
 
-    window.closeInfo = function() {
+    // FIX 3: same fromPopstate pattern for closeInfo
+    window.closeInfo = function(fromPopstate) {
       document.getElementById('info-page').classList.remove('active');
       document.body.style.overflow = '';
+      if (!fromPopstate) history.back();
     };
 
     // ── HOME
@@ -781,11 +791,12 @@
     };
 
     // ── BROWSER BACK
+    // FIX 3: pass fromPopstate=true so the close functions don't call history.back() again
     window.addEventListener('popstate', function () {
       if (document.getElementById('project-page').classList.contains('active')) {
-        window.closeProject();
+        window.closeProject(true);
       } else if (document.getElementById('info-page').classList.contains('active')) {
-        window.closeInfo();
+        window.closeInfo(true);
       }
     });
 
