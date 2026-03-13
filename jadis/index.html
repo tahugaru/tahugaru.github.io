@@ -467,7 +467,12 @@
       requestAnimationFrame(() => {
         stage.classList.add(breathClass);
         setTimeout(() => {
-          
+  if (dir > 0) {
+    curLeft.style.backgroundImage = `url(${spreads[next]})`;
+  } else {
+    curRight.style.backgroundImage = `url(${spreads[next]})`;
+  }
+}, DURATION);
       });
 
       requestAnimationFrame(() => {
