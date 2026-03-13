@@ -234,7 +234,7 @@
       z-index: 100;
       background: none;
       border: none;
-      cursor: pointer;
+      /* FIX 2: cursor: pointer removed — handled inside @media (hover: hover) */
       padding: 2rem 2.5rem;
       opacity: 0.2;
       transition: opacity 0.3s ease;
@@ -308,14 +308,59 @@
       transition: color 0.2s ease;
       background: none;
       border: none;
-      cursor: pointer;
+      /* FIX 2: cursor: pointer removed — handled inside @media (hover: hover) */
       text-decoration: none;
     }
     .back-link:hover { color: rgba(28, 26, 24, 0.7); }
 
+    /* ── FIRST SPREAD FADE-IN ── */
+    /* FIX 4: stage starts invisible and fades in once the first spread loads */
+    #stage { opacity: 0; transition: opacity 400ms ease; }
+    #stage.loaded { opacity: 1; }
+
+    /* ── CUSTOM CURSOR ── */
+    /* FIX 1 + 2: custom cursor added, cursor: none enforced on all interactive elements */
+    @media (hover: hover) {
+      body, a, button, [onclick] { cursor: none; }
+
+      .nav-arrow  { cursor: none; }
+      .back-link  { cursor: none; }
+
+      #cursor {
+        position: fixed;
+        top: 0; left: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(28, 26, 24, 0.3);
+        background: transparent;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.22s ease,
+          height 0.22s ease,
+          background 0.22s ease,
+          border-color 0.22s ease,
+          opacity 0.3s ease;
+        opacity: 0;
+      }
+      #cursor.visible { opacity: 1; }
+
+      /* Expands on nav arrows and back link */
+      #cursor.hovering {
+        width: 46px;
+        height: 46px;
+        border-color: rgba(28, 26, 24, 0.15);
+        background: rgba(28, 26, 24, 0.05);
+      }
+    }
+
   </style>
 </head>
 <body>
+
+  <div id="cursor"></div>
 
   <a class="back-link" href="/">&#8592; Back</a>
 
@@ -462,11 +507,9 @@
 
       stage.classList.remove('breathing-forward', 'breathing-backward');
       void stage.offsetWidth;
-      const breathClass = dir > 0 ? 'breathing-forward' : 'breathing-backward';
-      const breathToken = Symbol();
-      stage._breathToken = breathToken;
+      // FIX 3: removed dead breathToken / stage._breathToken code
       requestAnimationFrame(() => {
-        stage.classList.add(breathClass);
+        stage.classList.add(dir > 0 ? 'breathing-forward' : 'breathing-backward');
       });
 
       requestAnimationFrame(() => {
@@ -515,8 +558,39 @@
     initCurrentSpread();
     preload(spreads[1]);
 
-    document.getElementById('current-spacer').addEventListener('load', fitStage);
+    // FIX 4: reveal the stage only after the first spread has loaded
+    document.getElementById('current-spacer').addEventListener('load', function() {
+      fitStage();
+      document.getElementById('stage').classList.add('loaded');
+    });
     window.addEventListener('resize', fitStage);
+
+    // ── CUSTOM CURSOR (FIX 1)
+    (function() {
+      if (window.matchMedia('(hover: none)').matches) return;
+      const cursor = document.getElementById('cursor');
+
+      document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
+        cursor.classList.add('visible');
+      });
+
+      document.addEventListener('mouseleave', function() {
+        cursor.classList.remove('visible');
+      });
+
+      // Nav arrows and back link expand the cursor — no constrict state needed on this page
+      const expandSel = 'a, button, .nav-arrow, .back-link';
+
+      document.addEventListener('mouseover', function(e) {
+        if (e.target.closest(expandSel)) cursor.classList.add('hovering');
+      });
+      document.addEventListener('mouseout', function(e) {
+        if (e.target.closest(expandSel)) cursor.classList.remove('hovering');
+      });
+    })();
+
   </script>
 
 </body>
