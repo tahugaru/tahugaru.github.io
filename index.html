@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ivan Codrean</title>
-  <meta name="description" content="Ivan Codrean — photographer. Editorial portraiture, summer aesthetic, commissioned commercial work.">
+  <meta name="description" content="Ivan Codrean — photographer. Editorials, commissioned commercial work.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -530,43 +530,9 @@
       40%            { opacity: 1;   transform: scale(1);   }
     }
 
-    /* ── SPLASH ── */
-    #splash {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: #0e0e0c url('images/greeting.jpg') center / cover no-repeat;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 28vh;
-      opacity: 1;
-      transition: opacity 0.9s ease;
-    }
-    #splash.leaving { opacity: 0; }
-
-    #splash-enter {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-weight: 400;
-      font-size: 1.7rem;
-      letter-spacing: 0.28em;
-      color: var(--ink);
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      pointer-events: none;
-      text-transform: uppercase;
-    }
-    #splash-enter.visible { opacity: 0.75; }
-
   </style>
 </head>
 <body>
-
-  <!-- ── SPLASH ── -->
-  <div id="splash" onclick="window.dismissSplash()">
-    <span id="splash-enter">Enter</span>
-  </div>
 
   <div id="cursor"></div>
 
@@ -606,7 +572,7 @@
 
       <li class="project-item">
         <a href="#" class="project-link" onclick="window.openProject('objet'); return false;">
-          <span class="project-title">Objet</span>
+          <span class="project-title">Still Life</span>
           <span class="project-meta">Photography &mdash; 2018&ndash;2021</span>
         </a>
       </li>
@@ -669,11 +635,11 @@
 
       <h1 class="info-name">About</h1>
 
-      <img src="images/portrait.jpg" alt="Ivan Codrean" class="info-portrait" />
+      <img src="images/portrait.png" alt="Ivan Codrean" class="info-portrait" />
 
       <div class="info-bio">
-        <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to years of commissioned work for luxury brands and advertising agencies.</p>
-        <p>After years of commercial work, a personal style emerged — analog film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and the kind of stillness that only exists between moments.</p>
+        <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to commissioned work for luxury brands and advertising agencies.</p>
+        <p>After years of commercial projects, a personal style emerged — film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and stillness between moments.</p>
         <p>That world between discipline and instinct is where the work lives now.</p>
       </div>
 
@@ -734,7 +700,7 @@
       },
 
       objet: {
-        title: 'Objet',
+        title: 'Still Life',
         wide: true,
         description: 'Commissioned still life and product work for luxury brands and advertising agencies. Precision lighting, controlled environments, objects treated as protagonists.',
         images: [
@@ -832,10 +798,10 @@
       });
 
       // Fade the page in — opacity:0 first, then transition to 1 after reflow
+      if (!firstLoaded) loader.classList.add('visible');
       page.style.opacity = '0';
       page.style.transition = 'none';
       page.classList.add('active');
-      loader.classList.add('visible');
       document.body.style.overflow = 'hidden';
       scroll.scrollLeft = 0;   // after active — element is now rendered, assignment sticks
       page.scrollTop = 0;
@@ -923,6 +889,7 @@
     };
 
     // ── CLOSE PROJECT
+    // BUG 4 FIX: clear inline opacity/transition left over from openProject
     window.closeProject = function(fromPopstate) {
       const scroll = document.getElementById('gallery-scroll');
       const page   = document.getElementById('project-page');
@@ -958,6 +925,7 @@
     };
 
     // ── HOME
+    // BUG 5 FIX: only close whichever overlay is actually open — prevents double history.back()
     window.showHome = function() {
       if (document.getElementById('project-page').classList.contains('active')) {
         window.closeProject();
@@ -1007,34 +975,6 @@
         if (e.target.closest(constrictSel)) cursor.classList.remove('constricting');
         if (e.target.closest(expandSel))    cursor.classList.remove('hovering');
       });
-    })();
-
-    // ── SPLASH
-    (function() {
-      if (sessionStorage.getItem('splashSeen')) {
-        document.getElementById('splash').style.display = 'none';
-        return;
-      }
-
-      const splash = document.getElementById('splash');
-      const enter  = document.getElementById('splash-enter');
-
-      const img = new Image();
-      img.onload = function() {
-        setTimeout(function() {
-          enter.classList.add('visible');
-        }, 600);
-      };
-      img.src = 'images/greeting.jpg';
-      if (img.complete) { setTimeout(function() { enter.classList.add('visible'); }, 600); }
-
-      window.dismissSplash = function() {
-        sessionStorage.setItem('splashSeen', '1');
-        splash.classList.add('leaving');
-        setTimeout(function() {
-          splash.style.display = 'none';
-        }, 900);
-      };
     })();
 
   </script>
