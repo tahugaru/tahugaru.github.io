@@ -546,9 +546,8 @@
     #splash.leaving { opacity: 0; }
 
     #splash-enter {
-      font-family: var(--font-display);
-      font-style: italic;
-      font-weight: 400;
+      font-family: var(--font-body);
+      font-weight: 300;
       font-size: 1.7rem;
       letter-spacing: 0.28em;
       color: var(--ink);
@@ -1031,10 +1030,16 @@
       window.dismissSplash = function() {
         sessionStorage.setItem('splashSeen', '1');
         splash.classList.add('leaving');
+        document.removeEventListener('keydown', splashKeyHandler);
         setTimeout(function() {
           splash.style.display = 'none';
         }, 900);
       };
+
+      function splashKeyHandler(e) {
+        if (e.key === 'Enter') window.dismissSplash();
+      }
+      document.addEventListener('keydown', splashKeyHandler);
     })();
 
   </script>
