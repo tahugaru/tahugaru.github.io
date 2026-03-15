@@ -937,7 +937,6 @@
         slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
         const img = document.createElement('img');
         img.alt = currentProject.title + ' ' + (i + 1);
-        img.loading = 'lazy';
         img.onload = function() {
           img.classList.add('loaded');
           if (i === 0) hideLoader();
