@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ivan Codrean</title>
   <meta name="description" content="Ivan Codrean — photographer. Editorial portraiture, summer aesthetic, commissioned commercial work.">
+  <link rel="canonical" href="https://codrean.art" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Ivan Codrean — Photographer" />
+  <meta property="og:description" content="Editorial portraiture, summer aesthetic, commissioned commercial work." />
+  <meta property="og:url" content="https://codrean.art" />
+  <meta property="og:image" content="https://codrean.art/images/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Ivan Codrean" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Ivan Codrean — Photographer" />
+  <meta name="twitter:description" content="Editorial portraiture, summer aesthetic, commissioned commercial work." />
+  <meta name="twitter:image" content="https://codrean.art/images/og-card.png" />
+
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -214,6 +232,7 @@
       scroll-snap-align: start;
       display: flex;
       justify-content: center;
+      align-items: center;
       padding: var(--space) 28% 7rem;
     }
 
@@ -239,6 +258,7 @@
       padding: 0;
       align-items: stretch;
       position: relative;
+      z-index: 1;
     }
 
     .gallery-slide.hero img {
@@ -258,6 +278,7 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.5s ease 0.15s;
+      will-change: opacity;
     }
     .hero-overlay.visible { opacity: 1; }
 
@@ -559,8 +580,9 @@
       main { padding-top: 8rem; }
       .project-header { padding: 1rem 1rem 0.75rem; }
       .gallery-slide { padding: 1rem 8% 5rem; }
+      .gallery-slide img { max-height: 75vh; width: auto; }
       .gallery-slide.hero { padding: 0; }
-      .gallery-slide.hero img { height: calc(100vh - 2.5rem); }
+      .gallery-slide.hero img { height: calc(100vh - 2.75rem); }
       .hero-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
       .hero-prompt { font-size: 0.62rem; margin-top: 1rem; }
       .gallery-arrow { display: none !important; }
