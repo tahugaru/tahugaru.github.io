@@ -1,1242 +1,1368 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ivan Codrean</title>
-  <meta name="description" content="Ivan Codrean — photographer. Editorial portraiture, summer aesthetic, commissioned commercial work.">
-  <link rel="canonical" href="https://codrean.art" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ivan Codrean</title>
+    <meta
+      name="description"
+      content="Ivan Codrean — photographer. Editorial portraiture, summer aesthetic, commissioned commercial work."
+    />
+    <link rel="canonical" href="https://codrean.art" />
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Ivan Codrean — Photographer" />
-  <meta property="og:description" content="Editorial portraiture, summer aesthetic, commissioned commercial work." />
-  <meta property="og:url" content="https://codrean.art" />
-  <meta property="og:image" content="https://codrean.art/images/og-card.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="Ivan Codrean" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ivan Codrean — Photographer" />
+    <meta
+      property="og:description"
+      content="Editorial portraiture, summer aesthetic, commissioned commercial work."
+    />
+    <meta property="og:url" content="https://codrean.art" />
+    <meta
+      property="og:image"
+      content="https://codrean.art/images/og-card.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Ivan Codrean" />
 
-  <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Ivan Codrean — Photographer" />
-  <meta name="twitter:description" content="Editorial portraiture, summer aesthetic, commissioned commercial work." />
-  <meta name="twitter:image" content="https://codrean.art/images/og-card.png" />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ivan Codrean — Photographer" />
+    <meta
+      name="twitter:description"
+      content="Editorial portraiture, summer aesthetic, commissioned commercial work."
+    />
+    <meta
+      name="twitter:image"
+      content="https://codrean.art/images/og-card.png"
+    />
 
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="preload" as="image" href="images/greeting.jpg">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preload" as="image" href="images/greeting.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --cream: #F8F4EE;
-      --ink: #1C1A18;
-      --ink-light: #7A746C;
-      --font-display: 'Unna', Georgia, serif;
-      --font-body: 'Jost', sans-serif;
-      --space: 3.5rem;
-    }
+            :root {
+              --cream: #F8F4EE;
+              --ink: #1C1A18;
+              --ink-light: #7A746C;
+              --font-display: 'Unna', Georgia, serif;
+              --font-body: 'Jost', sans-serif;
+              --space: 3.5rem;
+            }
 
-    html { font-size: 16px; scroll-behavior: smooth; }
+            html { font-size: 16px; scroll-behavior: smooth; }
 
-    body {
-      background-color: var(--cream);
-      color: var(--ink);
-      font-family: var(--font-body);
-      font-weight: 300;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
-    }
+            body {
+              background-color: var(--cream);
+              color: var(--ink);
+              font-family: var(--font-body);
+              font-weight: 300;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+              -webkit-font-smoothing: antialiased;
+            }
 
-    /* ── HEADER ── */
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background-color: var(--cream);
-      padding: 2rem var(--space);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+            /* ── HEADER ── */
+            header {
+              position: fixed;
+              top: 0; left: 0; right: 0;
+              z-index: 100;
+              background-color: var(--cream);
+              padding: 2rem var(--space);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
 
-    .site-name {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 0.8rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
-    }
+            .site-name {
+              font-family: var(--font-body);
+              font-weight: 400;
+              font-size: 0.8rem;
+              letter-spacing: 0.18em;
+              text-transform: uppercase;
+              color: var(--ink);
+              text-decoration: none;
+            }
 
-    nav { display: flex; align-items: center; gap: 2.5rem; }
+            nav { display: flex; align-items: center; gap: 2.5rem; }
 
-    nav a {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    nav a:hover { color: var(--ink); }
+            nav a {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.75rem;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              text-decoration: none;
+              transition: color 0.2s ease;
+            }
+            nav a:hover { color: var(--ink); }
 
-    /* ── MAIN ── */
-    main {
-      flex: 1;
-      padding: 0 var(--space);
-      padding-top: 10rem;
-      padding-bottom: 6rem;
-    }
+            /* ── MAIN ── */
+            main {
+              flex: 1;
+              padding: 0 var(--space);
+              padding-top: 10rem;
+              padding-bottom: 6rem;
+            }
 
-    /* ── PROJECT LIST ── */
-    .project-list { list-style: none; width: 100%; }
+            /* ── PROJECT LIST ── */
+            .project-list { list-style: none; width: 100%; }
 
-    .project-item {
-      border-top: 1px solid rgba(28, 26, 24, 0.12);
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.6s ease forwards;
-    }
-    .project-item:nth-child(1) { animation-delay: 0.1s; }
-    .project-item:nth-child(2) { animation-delay: 0.2s; }
-    .project-item:nth-child(3) { animation-delay: 0.3s; }
-    .project-item:nth-child(4) { animation-delay: 0.4s; }
-    .project-item:nth-child(5) { animation-delay: 0.5s; }
-    .project-item:last-child { border-bottom: 1px solid rgba(28, 26, 24, 0.12); }
+            .project-item {
+              border-top: 1px solid rgba(28, 26, 24, 0.12);
+              opacity: 0;
+              transform: translateY(16px);
+              animation: fadeUp 0.6s ease forwards;
+            }
+            .project-item:nth-child(1) { animation-delay: 0.1s; }
+            .project-item:nth-child(2) { animation-delay: 0.2s; }
+            .project-item:nth-child(3) { animation-delay: 0.3s; }
+            .project-item:nth-child(4) { animation-delay: 0.4s; }
+            .project-item:nth-child(5) { animation-delay: 0.5s; }
+            .project-item:last-child { border-bottom: 1px solid rgba(28, 26, 24, 0.12); }
 
-    .project-link {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      padding: 1.8rem 0;
-      text-decoration: none;
-      color: var(--ink);
-      transition: padding-left 0.35s ease;
-      gap: 2rem;
-    }
-    .project-link:hover { padding-left: 1rem; }
-    .project-link:hover .project-title { font-style: italic; }
+            .project-link {
+              position: relative; /* Needed to anchor the dot */
+        	  display: flex;
+        	  align-items: baseline;
+        	  justify-content: space-between;
+        	  padding: 1.8rem 0;
+        	  text-decoration: none;
+        	  color: var(--ink);
+        	  transition: padding-left 0.35s ease;
+        	  gap: 2rem;
+            }
 
-    .project-title {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(2rem, 5vw, 4rem);
-      line-height: 1;
-      letter-spacing: -0.01em;
-    }
+        	.project-link:hover { padding-left: 1.5rem; }
 
-    .project-meta {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      white-space: nowrap;
-      align-self: center;
-      flex-shrink: 0;
-    }
+            .project-title {
+              font-family: var(--font-display);
+              font-weight: 700;
+              font-size: clamp(2rem, 5vw, 4rem);
+              line-height: 1;
+              letter-spacing: -0.01em;
+            }
 
-    /* ── PROJECT PAGE ── */
-    .project-page {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background-color: var(--cream);
-      z-index: 200;
-      flex-direction: column;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    .project-page.active { display: flex; }
+        	.project-link {
+        	position: relative; /* Needed to anchor the dot */
+        	display: flex;
+        	align-items: baseline;
+        	justify-content: space-between;
+        	padding: 1.8rem 0;
+        	text-decoration: none;
+        	color: var(--ink);
+        	transition: padding-left 0.35s ease;
+        	gap: 2rem;
+        }
 
-    .project-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 2rem var(--space) 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: var(--cream);
-      flex-shrink: 0;
-    }
 
-    .project-header-title {
-      font-family: var(--font-body);
-      font-weight: 400;
-      font-size: 0.8rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
-
-    .back-btn {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      background: none;
-      border: none;
-      transition: color 0.2s ease;
-    }
-    .back-btn:hover { color: var(--ink); }
-
-    .project-description-bar {
-      display: none;
-      padding: 0 var(--space) 1.5rem;
-      flex-shrink: 0;
-      background-color: var(--cream);
-      border-bottom: 1px solid rgba(28, 26, 24, 0.1);
-    }
-    .project-description-bar.visible { display: block; }
-
-    .project-description-text {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: var(--ink-light);
-      max-width: 56rem;
-      font-style: italic;
-    }
-
-    /* ── GALLERY ── */
-    .gallery-scroll {
-      position: relative;
-      width: 100%;
-      flex-shrink: 0;
-      display: flex;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .gallery-scroll::-webkit-scrollbar { display: none; }
-
-    .gallery-slide {
-      flex-shrink: 0;
-      width: 100vw;
-      scroll-snap-align: start;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: var(--space) 28% 7rem;
-    }
-
-    .gallery-slide img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .gallery-slide.wide {
-      padding: var(--space) var(--space) 7rem;
-      align-items: center;
-    }
-
-    .gallery-slide.wide img {
-      max-width: 100%;
-      max-height: 75vh;
-      width: auto;
-      height: auto;
-    }
-
-    .gallery-slide.hero {
-      padding: 0;
-      align-items: stretch;
-      position: relative;
-      z-index: 1;
-    }
-
-    .gallery-slide.hero img {
-      width: 100%;
-      height: calc(100vh - 4.5rem);
-      object-fit: cover;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.5s ease 0.15s;
-      will-change: opacity;
-    }
-    .hero-overlay.visible { opacity: 1; }
-
-    .hero-title {
-      font-family: var(--font-display);
-      font-weight: 400;
-      font-style: italic;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      color: #ffffff;
-      letter-spacing: -0.01em;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.35);
-    }
-
-    .hero-prompt {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      margin-top: 1.2rem;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.25);
-    }
-
-    /* Navigation arrows */
-    .gallery-arrow {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 210;
-      background: none;
-      border: none;
-      padding: 2rem 3rem;
-      opacity: 0.2;
-      transition: opacity 0.3s ease;
-    }
-    .gallery-arrow:hover { opacity: 0.7; }
-    .gallery-arrow svg {
-      display: block;
-      width: 1rem;
-      height: auto;
-      stroke: var(--ink);
-      stroke-width: 1.5;
-      fill: none;
-    }
-    .gallery-arrow.prev { left: 0; }
-    .gallery-arrow.next { right: 0; }
-
-    /* Counter */
-    .slide-counter {
-      position: fixed;
-      bottom: var(--space);
-      right: var(--space);
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      color: var(--ink-light);
-      z-index: 210;
-    }
-
-    /* Swipe hint */
-    .scroll-hint {
-      position: fixed;
-      bottom: var(--space);
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      opacity: 1;
-      transition: opacity 0.4s ease;
-      z-index: 210;
-      pointer-events: none;
-    }
-    .scroll-hint.hidden { opacity: 0; }
-    .scroll-hint::before, .scroll-hint::after {
-      content: '';
-      display: block;
-      width: 2rem;
-      height: 1px;
-      background: var(--ink-light);
-    }
-
-    /* ── GONE (hidden UI elements) ── */
-    .gone { display: none; }
-
-    /* ── INFO PAGE ── */
-    .info-page {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background-color: var(--cream);
-      z-index: 200;
-      overflow-y: auto;
-    }
-    .info-page.active { display: block; }
-
-    .info-inner {
-      max-width: 42rem;
-      margin: 0 auto;
-      padding: 8rem var(--space) 6rem;
-    }
-
-    .info-name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      line-height: 1;
-      letter-spacing: -0.01em;
-      margin-bottom: 3rem;
-    }
-
-    /* ── INFO PORTRAIT ── */
-    .info-portrait {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin-bottom: 3rem;
-    }
-
-    .info-bio {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.95rem;
-      line-height: 1.85;
-      color: var(--ink);
-      margin-bottom: 4rem;
-    }
-
-    .info-bio p + p { margin-top: 1.5rem; }
-
-    .info-divider {
-      width: 2rem;
-      height: 1px;
-      background: rgba(28, 26, 24, 0.2);
-      margin-bottom: 3rem;
-    }
-
-    /* ── INFO CLIENTS ── */
-    .info-clients-label {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 1rem;
-    }
-
-    .info-clients {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(28, 26, 24, 0.45);
-      margin-bottom: 4rem;
-    }
-
-    .info-contact-label {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin-bottom: 1.5rem;
-    }
-
-    .info-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .info-link {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--ink);
-      text-decoration: none;
-      display: inline-block;
-    }
-    .info-link:hover { font-style: italic; }
-
-    .info-close {
-      position: fixed;
-      top: 2rem;
-      right: var(--space);
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      background: none;
-      border: none;
-      transition: color 0.2s ease;
-      z-index: 10;
-    }
-    .info-close:hover { color: var(--ink); }
-
-    .info-page.active .info-inner > * {
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeUp 0.5s ease forwards;
-    }
-    .info-page.active .info-inner > *:nth-child(1) { animation-delay: 0.15s; }
-    .info-page.active .info-inner > *:nth-child(2) { animation-delay: 0.22s; }
-    .info-page.active .info-inner > *:nth-child(3) { animation-delay: 0.29s; }
-    .info-page.active .info-inner > *:nth-child(4) { animation-delay: 0.34s; }
-    .info-page.active .info-inner > *:nth-child(5) { animation-delay: 0.39s; }
-    .info-page.active .info-inner > *:nth-child(6) { animation-delay: 0.43s; }
-    .info-page.active .info-inner > *:nth-child(7) { animation-delay: 0.47s; }
-    .info-page.active .info-inner > *:nth-child(8) { animation-delay: 0.51s; }
-    .info-page.active .info-inner > *:nth-child(9) { animation-delay: 0.55s; }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 2rem var(--space);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(28, 26, 24, 0.08);
-    }
-
-    .footer-copy {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      color: var(--ink-light);
-    }
-
-    /* ── ANIMATION ── */
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── CUSTOM CURSOR ── */
-    @media (hover: hover) {
-      html, body, a, button, [onclick] { cursor: none; }
-
-      .gallery-arrow { cursor: none; }
-
-      #cursor {
-        position: fixed;
-        top: 0; left: 0;
-        width: 32px;
-        height: 32px;
+        .project-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        background-color: var(--ink-light);
         border-radius: 50%;
-        border: 1px solid rgba(28, 26, 24, 0.3);
-        background: transparent;
         pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition:
-          width 0.22s ease,
-          height 0.22s ease,
-          background 0.22s ease,
-          border-color 0.22s ease,
-          opacity 0.3s ease;
+
+        /* THIS IS THE "LEAVING" TRANSITION (when hover ends) */
+        /* It fades out in 0.1 seconds with NO delay */
         opacity: 0;
-      }
-      #cursor.visible { opacity: 1; }
-
-      #cursor.hovering {
-        width: 46px;
-        height: 46px;
-        border-color: rgba(28, 26, 24, 0.15);
-        background: rgba(28, 26, 24, 0.05);
+        transition: opacity 0.1s ease 0s;
       }
 
-      #cursor.constricting {
-        width: 14px;
-        height: 14px;
-        border-color: rgba(28, 26, 24, 0.55);
-        background: transparent;
+      .project-link:hover::before {
+        /* THIS IS THE "ENTERING" TRANSITION (when hover starts) */
+        /* It fades in with the 0.1s delay you liked */
+        opacity: 1;
+        transition: opacity 0.3s ease 0.1s;
       }
-    }
 
-    /* ── IMAGE FADE-IN ── */
-    .gallery-slide img {
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .gallery-slide img.loaded { opacity: 1; }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1280px) {
-      :root { --space: 1rem; }
-      main { padding-top: 8rem; }
-      .project-header { padding: 1rem 1rem 0.75rem; }
-      .gallery-slide { padding: 1rem 8% 5rem; }
-      .gallery-slide img { max-height: 75vh; width: auto; }
-      .gallery-slide.hero { padding: 0; }
-      .gallery-slide.hero img { height: calc(100vh - 2.75rem); }
-      .hero-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-      .hero-prompt { font-size: 0.62rem; margin-top: 1rem; }
-      .gallery-arrow { display: none !important; }
-      .info-inner { padding-top: 6rem; }
-    }
 
-    /* ── GALLERY LOADING INDICATOR ── */
-    .gallery-loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      opacity: 0;
-      transition: opacity 300ms ease;
-      pointer-events: none;
-      z-index: 5;
-    }
-    .gallery-loader.visible { opacity: 1; }
-    .gallery-loader span {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--ink-light);
-      animation: dot-pulse 1.2s ease-in-out infinite;
-    }
-    .gallery-loader span:nth-child(2) { animation-delay: 0.2s; }
-    .gallery-loader span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes dot-pulse {
-      0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
-      40%            { opacity: 1;   transform: scale(1);   }
-    }
+            .project-meta {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              white-space: nowrap;
+              align-self: center;
+              flex-shrink: 0;
+            }
 
-    /* ── SPLASH ── */
-    #splash {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: #0e0e0c url('images/greeting.jpg') center / cover no-repeat;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 28vh;
-      opacity: 1;
-      transition: opacity 0.9s ease;
-    }
-    #splash.leaving { opacity: 0; }
+            /* ── PROJECT PAGE ── */
+            .project-page {
+              display: none;
+              position: fixed;
+              inset: 0;
+              background-color: var(--cream);
+              z-index: 200;
+              flex-direction: column;
+              overflow-y: auto;
+              overflow-x: hidden;
+            }
+            .project-page.active { display: flex; }
 
-    #splash-enter {
-      font-family: var(--font-body);
-      font-weight: 300;
-      font-size: 1.7rem;
-      letter-spacing: 0.28em;
-      color: #ffffff;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      pointer-events: none;
-      text-transform: uppercase;
-    }
-    #splash-enter.visible { opacity: 1; }
+            .project-header {
+              position: sticky;
+              top: 0;
+              z-index: 10;
+              padding: 2rem var(--space) 1.5rem;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background-color: var(--cream);
+              flex-shrink: 0;
+            }
 
-  </style>
-</head>
-<body>
+            .project-header-title {
+              font-family: var(--font-body);
+              font-weight: 400;
+              font-size: 0.8rem;
+              letter-spacing: 0.18em;
+              text-transform: uppercase;
+              color: var(--ink);
+            }
 
-  <!-- ── SPLASH ── -->
-  <div id="splash" onclick="window.dismissSplash()">
-    <span id="splash-enter">Enter</span>
-  </div>
+            .back-btn {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.75rem;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              background: none;
+              border: none;
+              transition: color 0.2s ease;
+            }
+            .back-btn:hover { color: var(--ink); }
 
-  <div id="cursor"></div>
+            .project-description-bar {
+              display: none;
+              padding: 0 var(--space) 1.5rem;
+              flex-shrink: 0;
+              background-color: var(--cream);
+              border-bottom: 1px solid rgba(28, 26, 24, 0.1);
+            }
+            .project-description-bar.visible { display: block; }
 
-  <!-- ── HEADER ── -->
-  <header>
-    <a href="#" class="site-name" onclick="window.showHome(); return false;">Ivan Codrean</a>
-    <nav>
-      <a href="#" onclick="window.showInfo(); return false;">Info</a>
-      <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener">Instagram</a>
-    </nav>
-  </header>
+            .project-description-text {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.82rem;
+              line-height: 1.7;
+              color: var(--ink-light);
+              max-width: 56rem;
+              font-style: italic;
+            }
 
-  <!-- ── MAIN: PROJECT LIST ── -->
-  <main id="home">
-    <ul class="project-list">
+            /* ── GALLERY ── */
+            .gallery-scroll {
+              position: relative;
+              width: 100%;
+              flex-shrink: 0;
+              display: flex;
+              overflow-x: auto;
+              overflow-y: visible;
+              scroll-snap-type: x mandatory;
+              -webkit-overflow-scrolling: touch;
+              scrollbar-width: none;
+            }
+            .gallery-scroll::-webkit-scrollbar { display: none; }
 
-      <li class="project-item">
-        <a href="/jadis/" class="project-link">
-          <span class="project-title">Jadis</span>
-          <span class="project-meta">Book &mdash; 2022&ndash;2025</span>
-        </a>
-      </li>
+            .gallery-slide {
+              flex-shrink: 0;
+              width: 100vw;
+              scroll-snap-align: start;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: var(--space) 28% 7rem;
+            }
 
-      <li class="project-item">
-        <a href="#" class="project-link" onclick="window.openProject('summerhaze'); return false;">
-          <span class="project-title">Summer Haze</span>
-          <span class="project-meta">Photography &mdash; 2024</span>
-        </a>
-      </li>
+            .gallery-slide img {
+              width: 100%;
+              height: auto;
+              display: block;
+            }
 
-      <li class="project-item">
-        <a href="#" class="project-link" onclick="window.openProject('portraits'); return false;">
-          <span class="project-title">Portraits</span>
-          <span class="project-meta">Photography &mdash; 2023&ndash;2025</span>
-        </a>
-      </li>
+            .gallery-slide.wide {
+              padding: var(--space) var(--space) 7rem;
+              align-items: center;
+            }
 
-      <li class="project-item">
-        <a href="#" class="project-link" onclick="window.openProject('stilllife'); return false;">
-          <span class="project-title">Still Life</span>
-          <span class="project-meta">Photography &mdash; 2018&ndash;2021</span>
-        </a>
-      </li>
+            .gallery-slide.wide img {
+              max-width: 100%;
+              max-height: 75vh;
+              width: auto;
+              height: auto;
+            }
 
-      <li class="project-item">
-        <a href="#" class="project-link" onclick="window.openProject('passages'); return false;">
-          <span class="project-title">Passages</span>
-          <span class="project-meta">Photography &mdash; 2020&ndash;2026</span>
-        </a>
-      </li>
+            .gallery-slide.hero {
+              padding: 0;
+              align-items: stretch;
+              position: relative;
+              z-index: 1;
+            }
 
-    </ul>
-  </main>
+            .gallery-slide.hero img {
+              width: 100%;
+              height: calc(100vh - 4.5rem);
+              object-fit: cover;
+            }
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <span class="footer-copy">&copy; Ivan Codrean <span id="year"></span>. All rights reserved.</span>
-  </footer>
+            .hero-overlay {
+              position: absolute;
+              inset: 0;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              z-index: 2;
+              pointer-events: none;
+              opacity: 0;
+              transition: opacity 0.5s ease 0.15s;
+              will-change: opacity;
+            }
+            .hero-overlay.visible { opacity: 1; }
 
-  <!-- ── PROJECT PAGE ── -->
-  <div class="project-page" id="project-page">
+            .hero-title {
+              font-family: var(--font-display);
+              font-weight: 400;
+              font-style: italic;
+              font-size: clamp(2rem, 4vw, 3.5rem);
+              color: #ffffff;
+              letter-spacing: -0.01em;
+              text-shadow: 0 2px 20px rgba(0,0,0,0.35);
+            }
 
-    <div class="project-header">
-      <span class="project-header-title" id="project-page-title"></span>
-      <button class="back-btn" onclick="window.closeProject()">&#8592; Back</button>
+            .hero-prompt {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.7rem;
+              letter-spacing: 0.18em;
+              text-transform: uppercase;
+              color: rgba(255,255,255,0.6);
+              margin-top: 1.2rem;
+              text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+            }
+
+            /* Navigation arrows */
+            .gallery-arrow {
+              position: fixed;
+              top: 50%;
+              transform: translateY(-50%);
+              z-index: 210;
+              background: none;
+              border: none;
+              padding: 2rem 3rem;
+              opacity: 0.2;
+              transition: opacity 0.3s ease;
+            }
+            .gallery-arrow:hover { opacity: 0.7; }
+            .gallery-arrow svg {
+              display: block;
+              width: 1rem;
+              height: auto;
+              stroke: var(--ink);
+              stroke-width: 1.5;
+              fill: none;
+            }
+            .gallery-arrow.prev { left: 0; }
+            .gallery-arrow.next { right: 0; }
+
+            /* Counter */
+            .slide-counter {
+              position: fixed;
+              bottom: var(--space);
+              right: var(--space);
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.15em;
+              color: var(--ink-light);
+              z-index: 210;
+            }
+
+            /* Swipe hint */
+            .scroll-hint {
+              position: fixed;
+              bottom: var(--space);
+              left: 50%;
+              transform: translateX(-50%);
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              opacity: 1;
+              transition: opacity 0.4s ease;
+              z-index: 210;
+              pointer-events: none;
+            }
+            .scroll-hint.hidden { opacity: 0; }
+            .scroll-hint::before, .scroll-hint::after {
+              content: '';
+              display: block;
+              width: 2rem;
+              height: 1px;
+              background: var(--ink-light);
+            }
+
+            /* ── GONE (hidden UI elements) ── */
+            .gone { display: none; }
+
+            /* ── INFO PAGE ── */
+            .info-page {
+              display: none;
+              position: fixed;
+              inset: 0;
+              background-color: var(--cream);
+              z-index: 200;
+              overflow-y: auto;
+            }
+            .info-page.active { display: block; }
+
+            .info-inner {
+              max-width: 42rem;
+              margin: 0 auto;
+              padding: 8rem var(--space) 6rem;
+            }
+
+            .info-name {
+              font-family: var(--font-display);
+              font-weight: 700;
+              font-size: clamp(2.5rem, 5vw, 4.5rem);
+              line-height: 1;
+              letter-spacing: -0.01em;
+              margin-bottom: 3rem;
+            }
+
+            /* ── INFO PORTRAIT ── */
+            .info-portrait {
+              width: 100%;
+              height: auto;
+              display: block;
+              margin-bottom: 3rem;
+            }
+
+            .info-bio {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.95rem;
+              line-height: 1.85;
+              color: var(--ink);
+              margin-bottom: 4rem;
+            }
+
+            .info-bio p + p { margin-top: 1.5rem; }
+
+            .info-divider {
+              width: 2rem;
+              height: 1px;
+              background: rgba(28, 26, 24, 0.2);
+              margin-bottom: 3rem;
+            }
+
+            /* ── INFO CLIENTS ── */
+            .info-clients-label {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              margin-bottom: 1rem;
+            }
+
+            .info-clients {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.18em;
+              text-transform: uppercase;
+              color: rgba(28, 26, 24, 0.45);
+              margin-bottom: 4rem;
+            }
+
+            .info-contact-label {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              margin-bottom: 1.5rem;
+            }
+
+            .info-links {
+              display: flex;
+              flex-direction: column;
+              gap: 0.75rem;
+            }
+
+            .info-link {
+              font-family: var(--font-display);
+              font-size: 1.4rem;
+              font-weight: 400;
+              color: var(--ink);
+              text-decoration: none;
+              display: inline-block;
+            }
+            .info-link:hover { font-style: italic; }
+
+            .info-close {
+              position: fixed;
+              top: 2rem;
+              right: var(--space);
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.75rem;
+              letter-spacing: 0.15em;
+              text-transform: uppercase;
+              color: var(--ink-light);
+              background: none;
+              border: none;
+              transition: color 0.2s ease;
+              z-index: 10;
+            }
+            .info-close:hover { color: var(--ink); }
+
+            .info-page.active .info-inner > * {
+              opacity: 0;
+              transform: translateY(16px);
+              animation: fadeUp 0.5s ease forwards;
+            }
+            .info-page.active .info-inner > *:nth-child(1) { animation-delay: 0.15s; }
+            .info-page.active .info-inner > *:nth-child(2) { animation-delay: 0.22s; }
+            .info-page.active .info-inner > *:nth-child(3) { animation-delay: 0.29s; }
+            .info-page.active .info-inner > *:nth-child(4) { animation-delay: 0.34s; }
+            .info-page.active .info-inner > *:nth-child(5) { animation-delay: 0.39s; }
+            .info-page.active .info-inner > *:nth-child(6) { animation-delay: 0.43s; }
+            .info-page.active .info-inner > *:nth-child(7) { animation-delay: 0.47s; }
+            .info-page.active .info-inner > *:nth-child(8) { animation-delay: 0.51s; }
+            .info-page.active .info-inner > *:nth-child(9) { animation-delay: 0.55s; }
+
+            /* ── FOOTER ── */
+            footer {
+              padding: 2rem var(--space);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              border-top: 1px solid rgba(28, 26, 24, 0.08);
+            }
+
+            .footer-copy {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 0.72rem;
+              letter-spacing: 0.1em;
+              color: var(--ink-light);
+            }
+
+            /* ── ANIMATION ── */
+            @keyframes fadeUp {
+              to { opacity: 1; transform: translateY(0); }
+            }
+
+            /* ── CUSTOM CURSOR ── */
+            @media (hover: hover) {
+              html, body, a, button, [onclick] { cursor: none; }
+
+              .gallery-arrow { cursor: none; }
+
+              #cursor {
+                position: fixed;
+                top: 0; left: 0;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: 1px solid rgba(28, 26, 24, 0.3);
+                background: transparent;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition:
+                  width 0.22s ease,
+                  height 0.22s ease,
+                  background 0.22s ease,
+                  border-color 0.22s ease,
+                  opacity 0.3s ease;
+                opacity: 0;
+              }
+              #cursor.visible { opacity: 1; }
+
+              #cursor.hovering {
+                width: 46px;
+                height: 46px;
+                border-color: rgba(28, 26, 24, 0.15);
+                background: rgba(28, 26, 24, 0.05);
+              }
+
+              #cursor.constricting {
+                width: 14px;
+                height: 14px;
+                border-color: rgba(28, 26, 24, 0.55);
+                background: transparent;
+              }
+            }
+
+            /* ── IMAGE FADE-IN ── */
+            .gallery-slide img {
+              opacity: 0;
+              transition: opacity 0.4s ease;
+            }
+            .gallery-slide img.loaded { opacity: 1; }
+
+            /* ── RESPONSIVE ── */
+            @media (max-width: 1280px) {
+              :root { --space: 1rem; }
+              main { padding-top: 8rem; }
+              .project-header { padding: 1rem 1rem 0.75rem; }
+              .gallery-slide { padding: 1rem 8% 5rem; }
+              .gallery-slide img { max-height: 75vh; width: auto; }
+              .gallery-slide.hero { padding: 0; }
+              .gallery-slide.hero img { height: calc(100vh - 2.75rem); }
+              .hero-title { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+              .hero-prompt { font-size: 0.62rem; margin-top: 1rem; }
+              .gallery-arrow { display: none !important; }
+              .info-inner { padding-top: 6rem; }
+            }
+
+            /* ── GALLERY LOADING INDICATOR ── */
+            .gallery-loader {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              display: flex;
+              gap: 6px;
+              align-items: center;
+              opacity: 0;
+              transition: opacity 300ms ease;
+              pointer-events: none;
+              z-index: 5;
+            }
+            .gallery-loader.visible { opacity: 1; }
+            .gallery-loader span {
+              width: 4px;
+              height: 4px;
+              border-radius: 50%;
+              background: var(--ink-light);
+              animation: dot-pulse 1.2s ease-in-out infinite;
+            }
+            .gallery-loader span:nth-child(2) { animation-delay: 0.2s; }
+            .gallery-loader span:nth-child(3) { animation-delay: 0.4s; }
+            @keyframes dot-pulse {
+              0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+              40%            { opacity: 1;   transform: scale(1);   }
+            }
+
+            /* ── SPLASH ── */
+            #splash {
+              position: fixed;
+              inset: 0;
+              z-index: 300;
+              background: #0e0e0c url('images/greeting.jpg') center / cover no-repeat;
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;
+              padding-top: 28vh;
+              opacity: 1;
+              transition: opacity 0.9s ease;
+            }
+            #splash.leaving { opacity: 0; }
+
+            #splash-enter {
+              font-family: var(--font-body);
+              font-weight: 300;
+              font-size: 1.7rem;
+              letter-spacing: 0.28em;
+              color: #ffffff;
+              opacity: 0;
+              transition: opacity 0.8s ease;
+              pointer-events: none;
+              text-transform: uppercase;
+            }
+            #splash-enter.visible { opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <!-- ── SPLASH ── -->
+    <div id="splash" onclick="window.dismissSplash()">
+      <span id="splash-enter">Enter</span>
     </div>
 
-    <div class="project-description-bar" id="project-description-bar">
-      <p class="project-description-text" id="project-description-text"></p>
-    </div>
+    <div id="cursor"></div>
 
-    <div class="gallery-loader" id="gallery-loader">
-      <span></span><span></span><span></span>
-    </div>
+    <!-- ── HEADER ── -->
+    <header>
+      <a href="#" class="site-name" onclick="window.showHome(); return false;"
+        >Ivan Codrean</a
+      >
+      <nav>
+        <a href="#" onclick="window.showInfo(); return false;">Info</a>
+        <a
+          href="https://instagram.com/codrean.art"
+          target="_blank"
+          rel="noopener"
+          >Instagram</a
+        >
+      </nav>
+    </header>
 
-    <div class="gallery-scroll" id="gallery-scroll"></div>
+    <!-- ── MAIN: PROJECT LIST ── -->
+    <main id="home">
+      <ul class="project-list">
+        <li class="project-item">
+          <a href="/jadis/" class="project-link">
+            <span class="project-title">Jadis</span>
+            <span class="project-meta">Book &mdash; 2022&ndash;2025</span>
+          </a>
+        </li>
 
-  </div>
+        <li class="project-item">
+          <a
+            href="#"
+            class="project-link"
+            onclick="window.openProject('summerhaze'); return false;"
+          >
+            <span class="project-title">Summer Haze</span>
+            <span class="project-meta">Photography &mdash; 2024</span>
+          </a>
+        </li>
 
-  <!-- Arrows -->
-  <button class="gallery-arrow prev gone" id="gallery-prev" onclick="window.galleryStep(-1)">
-    <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
-      <polyline points="16,4 4,20 16,36"/>
-    </svg>
-  </button>
+        <li class="project-item">
+          <a
+            href="#"
+            class="project-link"
+            onclick="window.openProject('portraits'); return false;"
+          >
+            <span class="project-title">Portraits</span>
+            <span class="project-meta"
+              >Photography &mdash; 2023&ndash;2025</span
+            >
+          </a>
+        </li>
 
-  <button class="gallery-arrow next gone" id="gallery-next" onclick="window.galleryStep(1)">
-    <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
-      <polyline points="4,4 16,20 4,36"/>
-    </svg>
-  </button>
+        <li class="project-item">
+          <a
+            href="#"
+            class="project-link"
+            onclick="window.openProject('stilllife'); return false;"
+          >
+            <span class="project-title">Still Life</span>
+            <span class="project-meta"
+              >Photography &mdash; 2018&ndash;2021</span
+            >
+          </a>
+        </li>
 
-  <div class="scroll-hint gone" id="scroll-hint">Swipe</div>
-  <div class="slide-counter gone" id="slide-counter"></div>
+        <li class="project-item">
+          <a
+            href="#"
+            class="project-link"
+            onclick="window.openProject('passages'); return false;"
+          >
+            <span class="project-title">Passages</span>
+            <span class="project-meta"
+              >Photography &mdash; 2020&ndash;2026</span
+            >
+          </a>
+        </li>
+      </ul>
+    </main>
 
-  <!-- ── INFO PAGE ── -->
-  <div class="info-page" id="info-page">
-    <button class="info-close" onclick="window.closeInfo()">&#8592; Back</button>
-    <div class="info-inner">
+    <!-- ── FOOTER ── -->
+    <footer>
+      <span class="footer-copy"
+        >&copy; Ivan Codrean <span id="year"></span>. All rights reserved.</span
+      >
+    </footer>
 
-      <h1 class="info-name">About</h1>
-
-      <img src="images/portrait.png" alt="Ivan Codrean" class="info-portrait" />
-
-      <div class="info-bio">
-        <p>Ivan was introduced to photography through working in large commercial studios — building sets, shaping light, learning the craft from the inside out. That foundation led to commissioned work for luxury brands and advertising agencies.</p>
-        <p>After years of commercial projects, a personal style emerged within film, warm light, the unhurried quality of a summer afternoon. A visual language built around female beauty, natural environments, and stillness between moments.</p>
-        <p>That world between discipline and instinct is where the work lives now.</p>
+    <!-- ── PROJECT PAGE ── -->
+    <div class="project-page" id="project-page">
+      <div class="project-header">
+        <span class="project-header-title" id="project-page-title"></span>
+        <button class="back-btn" onclick="window.closeProject()">
+          &#8592; Back
+        </button>
       </div>
 
-      <div class="info-divider"></div>
-
-      <p class="info-clients-label">Selected clients</p>
-      <p class="info-clients">Rolex &nbsp;&middot;&nbsp; Omega &nbsp;&middot;&nbsp; Watchmaster &nbsp;&middot;&nbsp; Pelagic Partners</p>
-
-      <div class="info-divider"></div>
-
-      <p class="info-contact-label">Get in touch</p>
-      <div class="info-links">
-        <a href="mailto:hello@codrean.art" class="info-link">hello@codrean.art</a>
-        <a href="https://instagram.com/codrean.art" target="_blank" rel="noopener" class="info-link">@codrean.art</a>
-        <a href="https://www.behance.net/ivancodrean" target="_blank" rel="noopener" class="info-link">Behance</a>
+      <div class="project-description-bar" id="project-description-bar">
+        <p class="project-description-text" id="project-description-text"></p>
       </div>
 
+      <div class="gallery-loader" id="gallery-loader">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="gallery-scroll" id="gallery-scroll"></div>
     </div>
-  </div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    <!-- Arrows -->
+    <button
+      class="gallery-arrow prev gone"
+      id="gallery-prev"
+      onclick="window.galleryStep(-1)"
+    >
+      <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="16,4 4,20 16,36" />
+      </svg>
+    </button>
 
-    const projects = {
+    <button
+      class="gallery-arrow next gone"
+      id="gallery-next"
+      onclick="window.galleryStep(1)"
+    >
+      <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="4,4 16,20 4,36" />
+      </svg>
+    </button>
 
-      summerhaze: {
-        title: 'Summer Haze',
-        hero: 'images/summerhaze-hero.jpg',
-        description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
-        images: [
-          'images/haze-1.jpg',
-          'images/haze-2.jpg',
-          'images/haze-3.jpg',
-          'images/haze-4.jpg',
-          'images/haze-5.jpg',
-          'images/haze-6.jpg',
-          'images/haze-7.jpg',
-          'images/haze-8.jpg',
-          'images/haze-9.jpg',
-          'images/haze-10.jpg',
-          'images/haze-11.jpg',
-          'images/haze-12.jpg',
-          'images/haze-13.jpg',
-          'images/haze-14.jpg',
-          'images/haze-15.jpg',
-          'images/haze-16.jpg',
-          'images/haze-17.jpg',
-        ]
-      },
+    <div class="scroll-hint gone" id="scroll-hint">Swipe</div>
+    <div class="slide-counter gone" id="slide-counter"></div>
 
-      portraits: {
-        title: 'Portraits',
-        hero: 'images/portraits-hero.jpg',
-        description: '',
-        images: [
-          'images/portrait-01.jpg',
-          'images/portrait-02.jpg',
-          'images/portrait-03.jpg',
-        ]
-      },
+    <!-- ── INFO PAGE ── -->
+    <div class="info-page" id="info-page">
+      <button class="info-close" onclick="window.closeInfo()">
+        &#8592; Back
+      </button>
+      <div class="info-inner">
+        <h1 class="info-name">About</h1>
 
-      stilllife: {
-        title: 'Still Life',
-        hero: 'images/stilllife-hero.jpg',
-        wide: true,
-        description: 'Commissioned photography and retouch work for luxury brands and advertising agencies.',
-        images: [
-          'images/objet-01.jpg',
-          'images/objet-02.jpg',
-          'images/objet-03.jpg',
-          'images/objet-04.jpg',
-          'images/objet-05.jpg',
-          'images/objet-06.jpg',
-          'images/objet-07.jpg',
-          'images/objet-08.jpg',
-          'images/objet-09.jpg',
-          'images/objet-10.jpg',
-        ]
-      },
+        <img
+          src="images/portrait.png"
+          alt="Ivan Codrean"
+          class="info-portrait"
+        />
 
-      passages: {
-        title: 'Passages',
-        hero: 'images/passages-hero.jpg',
-        description: '',
-        images: [
-          'images/passages-01.jpg',
-          'images/passages-02.jpg',
-          'images/passages-03.jpg',
-        ]
+        <div class="info-bio">
+          <p>
+            Ivan was introduced to photography through working in large
+            commercial studios — building sets, shaping light, learning the
+            craft from the inside out. That foundation led to commissioned work
+            for luxury brands and advertising agencies.
+          </p>
+          <p>
+            After years of commercial projects, a personal style emerged within
+            film, warm light, the unhurried quality of a summer afternoon. A
+            visual language built around female beauty, natural environments,
+            and stillness between moments.
+          </p>
+          <p>
+            That world between discipline and instinct is where the work lives
+            now.
+          </p>
+        </div>
+
+        <div class="info-divider"></div>
+
+        <p class="info-clients-label">Selected clients</p>
+        <p class="info-clients">
+          Rolex &nbsp;&middot;&nbsp; Omega &nbsp;&middot;&nbsp; Watchmaster
+          &nbsp;&middot;&nbsp; Pelagic Partners
+        </p>
+
+        <div class="info-divider"></div>
+
+        <p class="info-contact-label">Get in touch</p>
+        <div class="info-links">
+          <a href="mailto:hello@codrean.art" class="info-link"
+            >hello@codrean.art</a
+          >
+          <a
+            href="https://instagram.com/codrean.art"
+            target="_blank"
+            rel="noopener"
+            class="info-link"
+            >@codrean.art</a
+          >
+          <a
+            href="https://www.behance.net/ivancodrean"
+            target="_blank"
+            rel="noopener"
+            class="info-link"
+            >Behance</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const projects = {
+
+        summerhaze: {
+          title: 'Summer Haze',
+          hero: 'images/summerhaze-hero.jpg',
+          description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
+          images: [
+            'images/haze-1.jpg',
+            'images/haze-2.jpg',
+            'images/haze-3.jpg',
+            'images/haze-4.jpg',
+            'images/haze-5.jpg',
+            'images/haze-6.jpg',
+            'images/haze-7.jpg',
+            'images/haze-8.jpg',
+            'images/haze-9.jpg',
+            'images/haze-10.jpg',
+            'images/haze-11.jpg',
+            'images/haze-12.jpg',
+            'images/haze-13.jpg',
+            'images/haze-14.jpg',
+            'images/haze-15.jpg',
+            'images/haze-16.jpg',
+            'images/haze-17.jpg',
+          ]
+        },
+
+        portraits: {
+          title: 'Portraits',
+          hero: 'images/portraits-hero.jpg',
+          description: '',
+          images: [
+            'images/portrait-01.jpg',
+            'images/portrait-02.jpg',
+            'images/portrait-03.jpg',
+          ]
+        },
+
+        stilllife: {
+          title: 'Still Life',
+          hero: 'images/stilllife-hero.jpg',
+          wide: true,
+          description: 'Commissioned photography and retouch work for luxury brands and advertising agencies.',
+          images: [
+            'images/objet-01.jpg',
+            'images/objet-02.jpg',
+            'images/objet-03.jpg',
+            'images/objet-04.jpg',
+            'images/objet-05.jpg',
+            'images/objet-06.jpg',
+            'images/objet-07.jpg',
+            'images/objet-08.jpg',
+            'images/objet-09.jpg',
+            'images/objet-10.jpg',
+          ]
+        },
+
+        passages: {
+          title: 'Passages',
+          hero: 'images/passages-hero.jpg',
+          description: '',
+          images: [
+            'images/passages-01.jpg',
+            'images/passages-02.jpg',
+            'images/passages-03.jpg',
+          ]
+        }
+
+      };
+
+      let currentProject = null;
+      let _scrollListener = null;
+      let _clickListener  = null;
+      let _fading         = false;
+      let _closing        = false;
+      let _closingInfo    = false;
+
+      function updateCounter(index) {
+        const total = document.getElementById('gallery-scroll').querySelectorAll('.gallery-slide').length || 1;
+        document.getElementById('slide-counter').textContent =
+          String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
       }
 
-    };
+      // ── OPEN PROJECT
+      window.openProject = function(key) {
+        currentProject = projects[key];
+        if (!currentProject) return;
 
-    let currentProject = null;
-    let _scrollListener = null;
-    let _clickListener  = null;
-    let _fading         = false;
-    let _closing        = false;
-    let _closingInfo    = false;
+        const page     = document.getElementById('project-page');
+        const scroll   = document.getElementById('gallery-scroll');
+        const loader   = document.getElementById('gallery-loader');
+        const titleEl  = document.getElementById('project-page-title');
+        const descBar  = document.getElementById('project-description-bar');
+        const descText = document.getElementById('project-description-text');
+        const counter  = document.getElementById('slide-counter');
+        const prev     = document.getElementById('gallery-prev');
+        const next     = document.getElementById('gallery-next');
 
-    function updateCounter(index) {
-      const total = document.getElementById('gallery-scroll').querySelectorAll('.gallery-slide').length || 1;
-      document.getElementById('slide-counter').textContent =
-        String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
-    }
+        titleEl.textContent = currentProject.title;
+        scroll.innerHTML = '';
+        scroll.dataset.project = key;
 
-    // ── OPEN PROJECT
-    window.openProject = function(key) {
-      currentProject = projects[key];
-      if (!currentProject) return;
+        if (currentProject.description && currentProject.description.trim() !== '') {
+          descText.textContent = currentProject.description;
+          descBar.classList.add('visible');
+        } else {
+          descText.textContent = '';
+          descBar.classList.remove('visible');
+        }
 
-      const page     = document.getElementById('project-page');
-      const scroll   = document.getElementById('gallery-scroll');
-      const loader   = document.getElementById('gallery-loader');
-      const titleEl  = document.getElementById('project-page-title');
-      const descBar  = document.getElementById('project-description-bar');
-      const descText = document.getElementById('project-description-text');
-      const counter  = document.getElementById('slide-counter');
-      const prev     = document.getElementById('gallery-prev');
-      const next     = document.getElementById('gallery-next');
+        // Guard against onload not firing for cached images (img.complete already true)
+        let firstLoaded = false;
+        function hideLoader() {
+          if (firstLoaded) return;
+          firstLoaded = true;
+          loader.style.transition = 'opacity 400ms ease';
+          loader.classList.remove('visible');
+        }
 
-      titleEl.textContent = currentProject.title;
-      scroll.innerHTML = '';
-      scroll.dataset.project = key;
+        if (currentProject.hero) {
+          const heroSlide = document.createElement('div');
+          heroSlide.className = 'gallery-slide hero';
+          const heroImg = document.createElement('img');
+          heroImg.alt = currentProject.title;
 
-      if (currentProject.description && currentProject.description.trim() !== '') {
-        descText.textContent = currentProject.description;
-        descBar.classList.add('visible');
-      } else {
-        descText.textContent = '';
-        descBar.classList.remove('visible');
-      }
+          const overlay = document.createElement('div');
+          overlay.className = 'hero-overlay';
+          overlay.innerHTML =
+            '<span class="hero-title">' + currentProject.title + '</span>' +
+            '<span class="hero-prompt">click or swipe to proceed</span>';
 
-      // Guard against onload not firing for cached images (img.complete already true)
-      let firstLoaded = false;
-      function hideLoader() {
-        if (firstLoaded) return;
-        firstLoaded = true;
-        loader.style.transition = 'opacity 400ms ease';
-        loader.classList.remove('visible');
-      }
+          heroImg.onload = function() {
+            heroImg.classList.add('loaded');
+            overlay.classList.add('visible');
+            hideLoader();
+          };
+          heroImg.src = currentProject.hero;
+          if (heroImg.complete) {
+            heroImg.classList.add('loaded');
+            overlay.classList.add('visible');
+            hideLoader();
+          }
+          heroSlide.appendChild(heroImg);
+          heroSlide.appendChild(overlay);
+          scroll.appendChild(heroSlide);
+        }
 
-      if (currentProject.hero) {
-        const heroSlide = document.createElement('div');
-        heroSlide.className = 'gallery-slide hero';
-        const heroImg = document.createElement('img');
-        heroImg.alt = currentProject.title;
+        currentProject.images.forEach((src, i) => {
+          const slide = document.createElement('div');
+          slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
+          const img = document.createElement('img');
+          img.alt = currentProject.title + ' ' + (i + 1);
+          img.onload = function() {
+            img.classList.add('loaded');
+            if (i === 0) hideLoader();
+          };
+          img.src = src;
+          // Cached images may have complete===true before onload fires
+          if (img.complete) {
+            img.classList.add('loaded');
+            if (i === 0) hideLoader();
+          }
+          slide.appendChild(img);
+          scroll.appendChild(slide);
+        });
 
-        const overlay = document.createElement('div');
-        overlay.className = 'hero-overlay';
-        overlay.innerHTML =
-          '<span class="hero-title">' + currentProject.title + '</span>' +
-          '<span class="hero-prompt">click or swipe to proceed</span>';
+        if (!firstLoaded) loader.classList.add('visible');
+        page.style.opacity = '0';
+        page.style.transform = 'translateY(30px)';
+        page.style.transition = 'none';
+        page.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        scroll.scrollLeft = 0;
+        page.scrollTop = 0;
+        void page.offsetWidth;
+        page.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
+        page.style.opacity = '1';
+        page.style.transform = 'translateY(0)';
 
-        heroImg.onload = function() {
-          heroImg.classList.add('loaded');
-          overlay.classList.add('visible');
-          hideLoader();
+        var home = document.getElementById('home');
+        home.style.transition = 'transform 380ms ease';
+        home.style.transform = 'scale(0.97)';
+
+        counter.classList.remove('gone');
+        prev.classList.remove('gone');
+        next.classList.remove('gone');
+        updateCounter(0);
+
+        if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
+        _scrollListener = function () {
+          const index = Math.round(scroll.scrollLeft / window.innerWidth);
+          updateCounter(index);
         };
-        heroImg.src = currentProject.hero;
-        if (heroImg.complete) {
-          heroImg.classList.add('loaded');
-          overlay.classList.add('visible');
-          hideLoader();
-        }
-        heroSlide.appendChild(heroImg);
-        heroSlide.appendChild(overlay);
-        scroll.appendChild(heroSlide);
-      }
+        scroll.addEventListener('scroll', _scrollListener);
 
-      currentProject.images.forEach((src, i) => {
-        const slide = document.createElement('div');
-        slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
-        const img = document.createElement('img');
-        img.alt = currentProject.title + ' ' + (i + 1);
-        img.onload = function() {
-          img.classList.add('loaded');
-          if (i === 0) hideLoader();
+        if (_clickListener) page.removeEventListener('click', _clickListener);
+        _clickListener = function (e) {
+          if (e.target.closest('.back-btn') || e.target.closest('.gallery-arrow') || e.target.closest('.project-header') || e.target.closest('.project-description-bar')) return;
+          window.galleryStep(1);
         };
-        img.src = src;
-        // Cached images may have complete===true before onload fires
-        if (img.complete) {
-          img.classList.add('loaded');
-          if (i === 0) hideLoader();
-        }
-        slide.appendChild(img);
-        scroll.appendChild(slide);
-      });
+        page.addEventListener('click', _clickListener);
 
-      if (!firstLoaded) loader.classList.add('visible');
-      page.style.opacity = '0';
-      page.style.transform = 'translateY(30px)';
-      page.style.transition = 'none';
-      page.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      scroll.scrollLeft = 0;
-      page.scrollTop = 0;
-      void page.offsetWidth;
-      page.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
-      page.style.opacity = '1';
-      page.style.transform = 'translateY(0)';
+        document.onkeydown = function (e) {
+          if (e.key === 'ArrowRight') window.galleryStep(1);
+          if (e.key === 'ArrowLeft')  window.galleryStep(-1);
+          if (e.key === 'Escape')     window.closeProject();
+        };
 
-      var home = document.getElementById('home');
-      home.style.transition = 'transform 380ms ease';
-      home.style.transform = 'scale(0.97)';
-
-      counter.classList.remove('gone');
-      prev.classList.remove('gone');
-      next.classList.remove('gone');
-      updateCounter(0);
-
-      if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
-      _scrollListener = function () {
-        const index = Math.round(scroll.scrollLeft / window.innerWidth);
-        updateCounter(index);
-      };
-      scroll.addEventListener('scroll', _scrollListener);
-
-      if (_clickListener) page.removeEventListener('click', _clickListener);
-      _clickListener = function (e) {
-        if (e.target.closest('.back-btn') || e.target.closest('.gallery-arrow') || e.target.closest('.project-header') || e.target.closest('.project-description-bar')) return;
-        window.galleryStep(1);
-      };
-      page.addEventListener('click', _clickListener);
-
-      document.onkeydown = function (e) {
-        if (e.key === 'ArrowRight') window.galleryStep(1);
-        if (e.key === 'ArrowLeft')  window.galleryStep(-1);
-        if (e.key === 'Escape')     window.closeProject();
+        history.pushState({ project: key }, '', '');
       };
 
-      history.pushState({ project: key }, '', '');
-    };
+      // ── STEP
+      // Arrow/keyboard: crossfade. Swipe/trackpad: bypasses this entirely.
+      const FADE_MS = 320;
 
-    // ── STEP
-    // Arrow/keyboard: crossfade. Swipe/trackpad: bypasses this entirely.
-    const FADE_MS = 320;
+      window.galleryStep = function(dir) {
+        if (_fading) return;
+        const scroll       = document.getElementById('gallery-scroll');
+        const slides       = scroll.querySelectorAll('.gallery-slide');
+        const total        = slides.length;
+        const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
+        const nextIndex    = (currentIndex + dir + total) % total;
 
-    window.galleryStep = function(dir) {
-      if (_fading) return;
-      const scroll       = document.getElementById('gallery-scroll');
-      const slides       = scroll.querySelectorAll('.gallery-slide');
-      const total        = slides.length;
-      const currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
-      const nextIndex    = (currentIndex + dir + total) % total;
+        if (nextIndex === currentIndex) return;
 
-      if (nextIndex === currentIndex) return;
+        _fading = true;
 
-      _fading = true;
+        const currentSlide = slides[currentIndex];
+        const nextSlide    = slides[nextIndex];
+        const outImg       = currentSlide.querySelector('img');
+        const inImg        = nextSlide.querySelector('img');
 
-      const currentSlide = slides[currentIndex];
-      const nextSlide    = slides[nextIndex];
-      const outImg       = currentSlide.querySelector('img');
-      const inImg        = nextSlide.querySelector('img');
-
-      currentSlide.style.transition = `opacity ${FADE_MS}ms ease`;
-      currentSlide.style.opacity    = '0';
-      if (outImg) {
-        outImg.style.transition = `transform ${FADE_MS}ms ease`;
-        outImg.style.transform  = 'translateY(8px)';
-      }
-
-      setTimeout(() => {
-        nextSlide.style.transition = 'none';
-        nextSlide.style.opacity    = '0';
-        if (inImg) {
-          inImg.style.transition = 'none';
-          inImg.style.transform  = 'scale(1.015)';
-        }
-
-        scroll.style.overflow = 'hidden';
-        scroll.scrollLeft     = nextIndex * window.innerWidth;
-
-        void nextSlide.offsetWidth;
-
-        nextSlide.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.25, 0, 0.15, 1)`;
-        nextSlide.style.opacity    = '1';
-        if (inImg) {
-          inImg.style.transition = `transform ${FADE_MS}ms cubic-bezier(0.25, 0, 0.15, 1)`;
-          inImg.style.transform  = 'scale(1)';
-        }
-
-        currentSlide.style.transition = 'none';
-        currentSlide.style.opacity    = '1';
+        currentSlide.style.transition = `opacity ${FADE_MS}ms ease`;
+        currentSlide.style.opacity    = '0';
         if (outImg) {
-          outImg.style.transition = 'none';
-          outImg.style.transform  = '';
+          outImg.style.transition = `transform ${FADE_MS}ms ease`;
+          outImg.style.transform  = 'translateY(8px)';
         }
-
-        scroll.style.overflow = '';
-        updateCounter(nextIndex);
 
         setTimeout(() => {
-          _fading = false;
-          if (inImg) { inImg.style.transition = ''; inImg.style.transform = ''; }
+          nextSlide.style.transition = 'none';
+          nextSlide.style.opacity    = '0';
+          if (inImg) {
+            inImg.style.transition = 'none';
+            inImg.style.transform  = 'scale(1.015)';
+          }
+
+          scroll.style.overflow = 'hidden';
+          scroll.scrollLeft     = nextIndex * window.innerWidth;
+
+          void nextSlide.offsetWidth;
+
+          nextSlide.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.25, 0, 0.15, 1)`;
+          nextSlide.style.opacity    = '1';
+          if (inImg) {
+            inImg.style.transition = `transform ${FADE_MS}ms cubic-bezier(0.25, 0, 0.15, 1)`;
+            inImg.style.transform  = 'scale(1)';
+          }
+
+          currentSlide.style.transition = 'none';
+          currentSlide.style.opacity    = '1';
+          if (outImg) {
+            outImg.style.transition = 'none';
+            outImg.style.transform  = '';
+          }
+
+          scroll.style.overflow = '';
+          updateCounter(nextIndex);
+
+          setTimeout(() => {
+            _fading = false;
+            if (inImg) { inImg.style.transition = ''; inImg.style.transform = ''; }
+          }, FADE_MS);
         }, FADE_MS);
-      }, FADE_MS);
-    };
+      };
 
-    // ── CLOSE PROJECT
-    window.closeProject = function(fromPopstate) {
-      if (_closing) return;
-      const page = document.getElementById('project-page');
-      if (!page.classList.contains('active')) return;
-      _closing = true;
+      // ── CLOSE PROJECT
+      window.closeProject = function(fromPopstate) {
+        if (_closing) return;
+        const page = document.getElementById('project-page');
+        if (!page.classList.contains('active')) return;
+        _closing = true;
 
-      const scroll = document.getElementById('gallery-scroll');
-      if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
-      if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
-      document.onkeydown = null;
+        const scroll = document.getElementById('gallery-scroll');
+        if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
+        if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
+        document.onkeydown = null;
 
-      document.getElementById('slide-counter').classList.add('gone');
-      document.getElementById('gallery-prev').classList.add('gone');
-      document.getElementById('gallery-next').classList.add('gone');
+        document.getElementById('slide-counter').classList.add('gone');
+        document.getElementById('gallery-prev').classList.add('gone');
+        document.getElementById('gallery-next').classList.add('gone');
 
-      page.style.transition = 'opacity 300ms ease, transform 300ms ease';
-      page.style.opacity    = '0';
-      page.style.transform  = 'translateY(20px)';
+        page.style.transition = 'opacity 300ms ease, transform 300ms ease';
+        page.style.opacity    = '0';
+        page.style.transform  = 'translateY(20px)';
 
-      var home = document.getElementById('home');
-      home.style.transition = 'transform 300ms ease';
-      home.style.transform  = '';
+        var home = document.getElementById('home');
+        home.style.transition = 'transform 300ms ease';
+        home.style.transform  = '';
 
-      setTimeout(function() {
-        page.classList.remove('active');
-        page.style.opacity    = '';
-        page.style.transition = '';
-        page.style.transform  = '';
-        document.getElementById('gallery-loader').classList.remove('visible');
-        document.getElementById('project-description-bar').classList.remove('visible');
-        document.body.style.overflow = '';
-        currentProject = null;
-        _fading  = false;
-        _closing = false;
-      }, 300);
+        setTimeout(function() {
+          page.classList.remove('active');
+          page.style.opacity    = '';
+          page.style.transition = '';
+          page.style.transform  = '';
+          document.getElementById('gallery-loader').classList.remove('visible');
+          document.getElementById('project-description-bar').classList.remove('visible');
+          document.body.style.overflow = '';
+          currentProject = null;
+          _fading  = false;
+          _closing = false;
+        }, 300);
 
-      if (!fromPopstate) history.back();
-    };
+        if (!fromPopstate) history.back();
+      };
 
-    // ── INFO
-    window.showInfo = function() {
-      var info = document.getElementById('info-page');
-      var home = document.getElementById('home');
+      // ── INFO
+      window.showInfo = function() {
+        var info = document.getElementById('info-page');
+        var home = document.getElementById('home');
 
-      info.style.opacity = '0';
-      info.style.transform = 'translateY(30px)';
-      info.style.transition = 'none';
-      info.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      info.scrollTop = 0;
-      void info.offsetWidth;
+        info.style.opacity = '0';
+        info.style.transform = 'translateY(30px)';
+        info.style.transition = 'none';
+        info.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        info.scrollTop = 0;
+        void info.offsetWidth;
 
-      info.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
-      info.style.opacity = '1';
-      info.style.transform = 'translateY(0)';
+        info.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
+        info.style.opacity = '1';
+        info.style.transform = 'translateY(0)';
 
-      home.style.transition = 'transform 380ms ease';
-      home.style.transform = 'scale(0.97)';
+        home.style.transition = 'transform 380ms ease';
+        home.style.transform = 'scale(0.97)';
 
-      history.pushState({ page: 'info' }, '', '');
-    };
+        history.pushState({ page: 'info' }, '', '');
+      };
 
-    window.closeInfo = function(fromPopstate) {
-      if (_closingInfo) return;
-      var info = document.getElementById('info-page');
-      if (!info.classList.contains('active')) return;
-      _closingInfo = true;
+      window.closeInfo = function(fromPopstate) {
+        if (_closingInfo) return;
+        var info = document.getElementById('info-page');
+        if (!info.classList.contains('active')) return;
+        _closingInfo = true;
 
-      info.style.transition = 'opacity 300ms ease, transform 300ms ease';
-      info.style.opacity = '0';
-      info.style.transform = 'translateY(20px)';
+        info.style.transition = 'opacity 300ms ease, transform 300ms ease';
+        info.style.opacity = '0';
+        info.style.transform = 'translateY(20px)';
 
-      var home = document.getElementById('home');
-      home.style.transition = 'transform 300ms ease';
-      home.style.transform = '';
+        var home = document.getElementById('home');
+        home.style.transition = 'transform 300ms ease';
+        home.style.transform = '';
 
-      setTimeout(function() {
-        info.classList.remove('active');
-        info.style.opacity = '';
-        info.style.transition = '';
-        info.style.transform = '';
-        document.body.style.overflow = '';
-        _closingInfo = false;
-      }, 300);
+        setTimeout(function() {
+          info.classList.remove('active');
+          info.style.opacity = '';
+          info.style.transition = '';
+          info.style.transform = '';
+          document.body.style.overflow = '';
+          _closingInfo = false;
+        }, 300);
 
-      if (!fromPopstate) history.back();
-    };
+        if (!fromPopstate) history.back();
+      };
 
-    // ── HOME
-    window.showHome = function() {
-      if (document.getElementById('project-page').classList.contains('active')) {
-        window.closeProject();
-      } else if (document.getElementById('info-page').classList.contains('active')) {
-        window.closeInfo();
-      }
-    };
+      // ── HOME
+      window.showHome = function() {
+        if (document.getElementById('project-page').classList.contains('active')) {
+          window.closeProject();
+        } else if (document.getElementById('info-page').classList.contains('active')) {
+          window.closeInfo();
+        }
+      };
 
-    // ── BROWSER BACK
-    window.addEventListener('popstate', function () {
-      if (document.getElementById('project-page').classList.contains('active')) {
-        window.closeProject(true);
-      } else if (document.getElementById('info-page').classList.contains('active')) {
-        window.closeInfo(true);
-      }
-    });
-
-    // ── CUSTOM CURSOR
-    (function() {
-      if (window.matchMedia('(hover: none)').matches) return;
-      const cursor = document.getElementById('cursor');
-
-      document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top  = e.clientY + 'px';
-        cursor.classList.add('visible');
-      });
-
-      document.addEventListener('mouseleave', function() {
-        cursor.classList.remove('visible');
-      });
-
-      const constrictSel = 'nav a';
-      const expandSel    = 'a:not(nav a), button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
-
-      document.addEventListener('mouseover', function(e) {
-        if (e.target.closest(constrictSel)) {
-          cursor.classList.remove('hovering');
-          cursor.classList.add('constricting');
-        } else if (e.target.closest(expandSel)) {
-          cursor.classList.remove('constricting');
-          cursor.classList.add('hovering');
+      // ── BROWSER BACK
+      window.addEventListener('popstate', function () {
+        if (document.getElementById('project-page').classList.contains('active')) {
+          window.closeProject(true);
+        } else if (document.getElementById('info-page').classList.contains('active')) {
+          window.closeInfo(true);
         }
       });
 
-      document.addEventListener('mouseout', function(e) {
-        if (e.target.closest(constrictSel)) cursor.classList.remove('constricting');
-        if (e.target.closest(expandSel))    cursor.classList.remove('hovering');
-      });
-    })();
+      // ── CUSTOM CURSOR
+      (function() {
+        if (window.matchMedia('(hover: none)').matches) return;
+        const cursor = document.getElementById('cursor');
 
-    // ── SPLASH
-    (function() {
-      if (sessionStorage.getItem('splashSeen')) {
-        document.getElementById('splash').style.display = 'none';
-        return;
-      }
+        document.addEventListener('mousemove', function(e) {
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top  = e.clientY + 'px';
+          cursor.classList.add('visible');
+        });
 
-      const splash = document.getElementById('splash');
-      const enter  = document.getElementById('splash-enter');
+        document.addEventListener('mouseleave', function() {
+          cursor.classList.remove('visible');
+        });
 
-      const img = new Image();
-      img.onload = function() {
-        setTimeout(function() {
-          enter.classList.add('visible');
-        }, 600);
-      };
-      img.src = 'images/greeting.jpg';
-      if (img.complete) { setTimeout(function() { enter.classList.add('visible'); }, 600); }
+        const constrictSel = 'nav a';
+        const expandSel    = 'a:not(nav a), button, [onclick], .project-link, .back-btn, .info-close, .gallery-arrow';
 
-      function splashKeyHandler(e) {
-        if (e.key === 'Enter') window.dismissSplash();
-      }
-      document.addEventListener('keydown', splashKeyHandler);
+        document.addEventListener('mouseover', function(e) {
+          if (e.target.closest(constrictSel)) {
+            cursor.classList.remove('hovering');
+            cursor.classList.add('constricting');
+          } else if (e.target.closest(expandSel)) {
+            cursor.classList.remove('constricting');
+            cursor.classList.add('hovering');
+          }
+        });
 
-      window.dismissSplash = function() {
-        sessionStorage.setItem('splashSeen', '1');
-        splash.classList.add('leaving');
-        document.removeEventListener('keydown', splashKeyHandler);
-        setTimeout(function() {
-          splash.style.display = 'none';
-        }, 900);
-      };
-    })();
+        document.addEventListener('mouseout', function(e) {
+          if (e.target.closest(constrictSel)) cursor.classList.remove('constricting');
+          if (e.target.closest(expandSel))    cursor.classList.remove('hovering');
+        });
+      })();
 
-  </script>
+      // ── SPLASH
+      (function() {
+        if (sessionStorage.getItem('splashSeen')) {
+          document.getElementById('splash').style.display = 'none';
+          return;
+        }
 
-</body>
+        const splash = document.getElementById('splash');
+        const enter  = document.getElementById('splash-enter');
+
+        const img = new Image();
+        img.onload = function() {
+          setTimeout(function() {
+            enter.classList.add('visible');
+          }, 600);
+        };
+        img.src = 'images/greeting.jpg';
+        if (img.complete) { setTimeout(function() { enter.classList.add('visible'); }, 600); }
+
+        function splashKeyHandler(e) {
+          if (e.key === 'Enter') window.dismissSplash();
+        }
+        document.addEventListener('keydown', splashKeyHandler);
+
+        window.dismissSplash = function() {
+          sessionStorage.setItem('splashSeen', '1');
+          splash.classList.add('leaving');
+          document.removeEventListener('keydown', splashKeyHandler);
+          setTimeout(function() {
+            splash.style.display = 'none';
+          }, 900);
+        };
+      })();
+    </script>
+  </body>
 </html>
