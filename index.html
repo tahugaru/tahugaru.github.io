@@ -39,7 +39,7 @@
     />
 
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preload" as="image" href="images/greeting.jpg" />
+    <link rel="preload" as="image" href="images/greeting.jpg" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -92,11 +92,15 @@
         text-transform: uppercase;
         color: var(--ink);
         text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
       }
 
       nav { display: flex; align-items: center; gap: 2.5rem; }
 
-      nav a {
+      nav a,
+      nav button {
         font-family: var(--font-body);
         font-weight: 300;
         font-size: 0.75rem;
@@ -104,9 +108,13 @@
         text-transform: uppercase;
         color: var(--ink-light);
         text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
         transition: color 0.2s ease;
       }
-      nav a:hover { color: var(--ink); }
+      nav a:hover,
+      nav button:hover { color: var(--ink); }
 
       /* ── MAIN ── */
       main {
@@ -286,8 +294,7 @@
         .ci-meta-title {
           font-family: var(--font-body);
           font-weight: 500;
-          /* Scales with phone width so it tracks the square preview */
-          font-size: clamp(1.2rem, 5vw, 1.6rem);
+          font-size: clamp(1.5rem, 6vw, 2rem);
           color: var(--ink);
           line-height: 1;
         }
@@ -295,8 +302,8 @@
         .ci-meta-genre {
           font-family: var(--font-body);
           font-weight: 300;
-          font-size: clamp(0.72rem, 4.08vw, 0.96rem);
-          letter-spacing: 0.18em;
+          font-size: clamp(0.68rem, 2.5vw, 0.82rem);
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           color: var(--ink-light);
           white-space: nowrap;
@@ -394,7 +401,7 @@
         flex-shrink: 0;
         display: flex;
         overflow-x: auto;
-        overflow-y: visible;
+        overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
@@ -470,7 +477,7 @@
 
       .hero-title {
         font-family: var(--font-display);
-        font-weight: 500;
+        font-weight: 400;
         font-style: normal;
         font-size: clamp(2rem, 4vw, 3.5rem);
         color: #ffffff;
@@ -654,8 +661,10 @@
         color: var(--ink);
         text-decoration: none;
         display: inline-block;
+        opacity: 1;
+        transition: opacity 0.25s ease;
       }
-      .info-link:hover { font-style: italic; }
+      .info-link:hover { opacity: 0.45; }
 
       .info-close {
         position: fixed;
@@ -706,6 +715,30 @@
         color: var(--ink-light);
       }
 
+      /* ── FOCUS VISIBLE ── */
+      .ci-item-link:focus-visible {
+        outline: 2px solid rgba(28, 26, 24, 0.4);
+        outline-offset: 3px;
+      }
+      .back-btn:focus-visible,
+      .info-close:focus-visible,
+      .gallery-arrow:focus-visible {
+        outline: 2px solid rgba(28, 26, 24, 0.4);
+        outline-offset: 3px;
+      }
+      nav a:focus-visible,
+      nav button:focus-visible,
+      .site-name:focus-visible,
+      .info-link:focus-visible {
+        outline: 2px solid rgba(28, 26, 24, 0.4);
+        outline-offset: 3px;
+      }
+
+      /* Swipe hint is a touch affordance only — hide on hover-capable (mouse) devices */
+      @media (hover: hover) {
+        .scroll-hint { display: none !important; }
+      }
+
       /* ── ANIMATION ── */
       @keyframes fadeUp {
         to { opacity: 1; transform: translateY(0); }
@@ -713,7 +746,7 @@
 
       /* ── CUSTOM CURSOR ── */
       @media (hover: hover) {
-        html, body, a, button, [onclick] { cursor: none; }
+        html, body, a, button { cursor: none; }
 
         .gallery-arrow { cursor: none; }
 
@@ -844,15 +877,13 @@
 
     <!-- ── HEADER ── -->
     <header>
-      <a href="#" class="site-name" onclick="window.showHome(); return false;"
-        >Ivan Codrean</a
-      >
+      <button type="button" class="site-name" onclick="window.showHome()">Ivan Codrean</button>
       <nav>
-        <a href="#" onclick="window.showInfo(); return false;">Info</a>
+        <button type="button" onclick="window.showInfo()">Info</button>
         <a
           href="https://instagram.com/codrean.art"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           >Instagram</a
         >
       </nav>
@@ -871,11 +902,11 @@
     </footer>
 
     <!-- ── PROJECT PAGE ── -->
-    <div class="project-page" id="project-page">
+    <div class="project-page" id="project-page" role="dialog" aria-modal="true" aria-label="Project gallery">
       <div class="project-header">
         <span class="project-header-title" id="project-page-title"></span>
-        <button class="back-btn" onclick="window.closeProject()">
-          &#8592; Back
+        <button type="button" class="back-btn" onclick="window.closeProject()">
+          Close
         </button>
       </div>
 
@@ -895,8 +926,10 @@
 
     <!-- Arrows -->
     <button
+      type="button"
       class="gallery-arrow prev gone"
       id="gallery-prev"
+      aria-label="Previous image"
       onclick="window.galleryStep(-1)"
     >
       <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
@@ -905,8 +938,10 @@
     </button>
 
     <button
+      type="button"
       class="gallery-arrow next gone"
       id="gallery-next"
+      aria-label="Next image"
       onclick="window.galleryStep(1)"
     >
       <svg viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
@@ -918,12 +953,12 @@
     <div class="slide-counter gone" id="slide-counter"></div>
 
     <!-- ── INFO PAGE ── -->
-    <div class="info-page" id="info-page">
-      <button class="info-close" onclick="window.closeInfo()">
-        &#8592; Back
+    <div class="info-page" id="info-page" role="dialog" aria-modal="true" aria-label="About Ivan Codrean">
+      <button type="button" class="info-close" onclick="window.closeInfo()">
+        Close
       </button>
       <div class="info-inner">
-        <h1 class="info-name">About</h1>
+        <h1 class="info-name">Ivan Codrean</h1>
 
         <img
           src="images/portrait.png"
@@ -968,14 +1003,14 @@
           <a
             href="https://instagram.com/codrean.art"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="info-link"
             >@codrean.art</a
           >
           <a
             href="https://www.behance.net/ivancodrean"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="info-link"
             >Behance</a
           >
@@ -991,10 +1026,10 @@
         {
           id: 'jadis',
           title: 'Jadis',
-          genre: 'BOOK//LAYOUT DESIGN',
+          genre: 'Book Layout Design',
           year: '2022\u20132025',
           href: '/jadis/',
-          src: 'images/jadis-preview.jpg',
+          src: 'jadis/jadis-preview.jpg',
           alt: 'Jadis \u2014 a photo book by Ivan Codrean',
           focal: [50, 50],
           featured: true
@@ -1002,7 +1037,7 @@
         {
           id: 'summerhaze',
           title: 'Summer Haze',
-          genre: 'Photography',
+          genre: 'Editorial',
           year: '2024',
           projectKey: 'summerhaze',
           src: 'images/summerhaze-preview.jpg',
@@ -1013,7 +1048,7 @@
         {
           id: 'portraits',
           title: 'Portraits',
-          genre: 'Photography',
+          genre: 'Faces & Moments',
           year: '2023\u20132025',
           projectKey: 'portraits',
           src: 'images/portraits-preview.jpg',
@@ -1024,7 +1059,7 @@
         {
           id: 'stilllife',
           title: 'Still Life',
-          genre: 'Photography',
+          genre: 'Product Photography',
           year: '2018\u20132021',
           projectKey: 'stilllife',
           src: 'images/stilllife-preview.jpg',
@@ -1035,7 +1070,7 @@
         {
           id: 'passages',
           title: 'Passages',
-          genre: 'Photography',
+          genre: 'Lifestyle',
           year: '2020\u20132026',
           projectKey: 'passages',
           src: 'images/passages-preview.jpg',
@@ -1136,33 +1171,32 @@
           }
         });
 
-        // ── BASE IMAGES: lazy-load via IntersectionObserver for initial paint performance
+        // ── BASE IMAGES: first item loads eagerly (LCP); rest lazy via IntersectionObserver
         var imgs = container.querySelectorAll('img[data-src]');
 
-        if ('IntersectionObserver' in window) {
+        function loadImg(img) {
+          img.src = img.dataset.src;
+          img.addEventListener('load', function() { img.classList.add('ci-loaded'); });
+          if (img.complete) img.classList.add('ci-loaded');
+        }
+
+        // First image above the fold — load immediately for LCP
+        if (imgs.length > 0) loadImg(imgs[0]);
+
+        var lazyImgs = Array.prototype.slice.call(imgs, 1);
+
+        if ('IntersectionObserver' in window && lazyImgs.length) {
           var obs = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
               if (!entry.isIntersecting) return;
-              var img = entry.target;
-              img.src = img.dataset.src;
-              img.addEventListener('load', function() {
-                img.classList.add('ci-loaded');
-              });
-              if (img.complete) img.classList.add('ci-loaded');
-              obs.unobserve(img);
+              loadImg(entry.target);
+              obs.unobserve(entry.target);
             });
           }, { rootMargin: '500px 0px' });
 
-          imgs.forEach(function(img) { obs.observe(img); });
+          lazyImgs.forEach(function(img) { obs.observe(img); });
         } else {
-          // Fallback: eager load
-          imgs.forEach(function(img) {
-            img.src = img.dataset.src;
-            img.addEventListener('load', function() {
-              img.classList.add('ci-loaded');
-            });
-            if (img.complete) img.classList.add('ci-loaded');
-          });
+          lazyImgs.forEach(loadImg);
         }
 
       }
@@ -1336,22 +1370,6 @@
           window.addEventListener('resize', resizeHeroHeight);
           page._resizeHeroHeight = resizeHeroHeight;
 
-          // Helper: smoothly scroll the project page so the gallery viewport
-          // sits just below the sticky header + description area.
-          function scrollToGalleryViewport() {
-            var gallery = document.getElementById('gallery-scroll');
-            if (!gallery) return;
-            var headerH  = page.querySelector('.project-header')?.offsetHeight || 0;
-            var descH    = descBar.classList.contains('visible') ? descBar.offsetHeight : 0;
-            var target   = gallery.offsetTop - headerH - descH;
-            if (target < 0) target = 0;
-            if (page.scrollTo) {
-              page.scrollTo({ top: target, behavior: 'smooth' });
-            } else {
-              page.scrollTop = target;
-            }
-          }
-
           // Shared hero dismiss logic (used by click and scroll)
           function dismissHero(fromClick) {
             if (page._heroDismissed) return;
@@ -1363,6 +1381,11 @@
 
             // Fade the gallery viewer in as the hero fades out
             scroll.style.opacity = '1';
+
+            // Reveal the counter and swipe hint now that the gallery is taking over
+            counter.classList.remove('gone');
+            document.getElementById('scroll-hint').classList.remove('gone');
+            updateCounter(0);
 
             // After the fade completes, remove the hero's vertical footprint
             // so only the gallery remains and there is no persistent gap.
@@ -1422,10 +1445,15 @@
         home.style.transform = 'scale(0.97)';
         home.style.opacity   = '0';
 
-        counter.classList.remove('gone');
+        // Counter and swipe hint are deferred until hero is dismissed;
+        // show immediately only when there is no hero to scroll past first.
+        if (!currentProject.hero) {
+          counter.classList.remove('gone');
+          document.getElementById('scroll-hint').classList.remove('gone');
+          updateCounter(0);
+        }
         prev.classList.remove('gone');
         next.classList.remove('gone');
-        updateCounter(0);
 
         if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
         _scrollListener = function() {
@@ -1448,11 +1476,13 @@
         };
         page.addEventListener('click', _clickListener);
 
-        document.onkeydown = function(e) {
+        function _projectKeyHandler(e) {
           if (e.key === 'ArrowRight') window.galleryStep(1);
           if (e.key === 'ArrowLeft')  window.galleryStep(-1);
           if (e.key === 'Escape')     window.closeProject();
-        };
+        }
+        document.addEventListener('keydown', _projectKeyHandler);
+        page._projectKeyHandler = _projectKeyHandler;
 
         history.pushState({ project: key }, '', '');
       };
@@ -1554,11 +1584,15 @@
         var scroll = document.getElementById('gallery-scroll');
         if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
         if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
-        document.onkeydown = null;
+        if (page._projectKeyHandler) {
+          document.removeEventListener('keydown', page._projectKeyHandler);
+          page._projectKeyHandler = null;
+        }
 
         document.getElementById('slide-counter').classList.add('gone');
         document.getElementById('gallery-prev').classList.add('gone');
         document.getElementById('gallery-next').classList.add('gone');
+        document.getElementById('scroll-hint').classList.add('gone');
 
         page.style.transition = 'opacity 300ms ease, transform 300ms ease';
         page.style.opacity    = '0';
@@ -1667,8 +1701,8 @@
           cursor.classList.remove('visible');
         });
 
-        var constrictSel = 'nav a';
-        var expandSel    = 'a:not(nav a), button, [onclick], .ci-item-link, .back-btn, .info-close, .gallery-arrow';
+        var constrictSel = 'nav a, nav button';
+        var expandSel    = 'a:not(nav a), button:not(nav button), [onclick], .ci-item-link, .back-btn, .info-close, .gallery-arrow';
 
         document.addEventListener('mouseover', function(e) {
           if (e.target.closest(constrictSel)) {
