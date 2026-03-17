@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ivan Codrean // Jadis</title>
+  <title>Ivan Codrean — Jadis</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -273,9 +273,9 @@
       right: 3rem;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      color: rgba(28, 26, 24, 0.35);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: var(--ink-light);
       z-index: 100;
     }
 
@@ -300,18 +300,17 @@
       right: 3rem;
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(28, 26, 24, 0.35);
+      color: var(--ink-light);
       z-index: 100;
       transition: color 0.2s ease;
       background: none;
       border: none;
-      /* FIX 2: cursor: pointer removed — handled inside @media (hover: hover) */
       text-decoration: none;
     }
-    .back-link:hover { color: rgba(28, 26, 24, 0.7); }
+    .back-link:hover { color: var(--ink); }
 
     /* ── FIRST SPREAD FADE-IN ── */
     /* FIX 4: stage starts invisible and fades in once the first spread loads */
@@ -362,7 +361,7 @@
 
   <div id="cursor"></div>
 
-  <a class="back-link" href="/">&#8592; Back</a>
+  <a class="back-link" href="/">Close</a>
 
   <div class="book-description">
     Photographs and diary fragments. Landscapes, portraits, summer light, and quiet moments collected while wandering. Layout, editorial design and photography: Ivan Codrean.
@@ -388,10 +387,10 @@
     </div>
   </div>
 
-  <button class="nav-arrow prev" onclick="navigate(-1)">
+  <button type="button" class="nav-arrow prev" onclick="navigate(-1)">
     <svg viewBox="0 0 20 40"><polyline points="16,4 4,20 16,36"/></svg>
   </button>
-  <button class="nav-arrow next" onclick="navigate(1)">
+  <button type="button" class="nav-arrow next" onclick="navigate(1)">
     <svg viewBox="0 0 20 40"><polyline points="4,4 16,20 4,36"/></svg>
   </button>
 
