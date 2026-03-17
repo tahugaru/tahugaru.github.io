@@ -176,6 +176,22 @@
 
       .ci-img-base.ci-loaded { opacity: 1; }
 
+      .ci-video-base {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        opacity: 0;
+        transform: scale(1.12);
+        transition: opacity 0.5s ease, filter 0.4s ease-in-out;
+      }
+      .ci-video-base.ci-loaded { opacity: 1; }
+
+      .ci-item-link:hover .ci-video-base,
+      .ci-item-link:focus-visible .ci-video-base {
+        filter: blur(14px);
+      }
+
       .ci-img-blur {
         position: absolute;
         inset: 0;
@@ -1077,6 +1093,7 @@
           year: '2022\u20132025',
           href: '/jadis/',
           src: 'images/jadis-preview.jpg',
+          video: 'images/jadis-loop.mp4',
           alt: 'Jadis \u2014 a photo book by Ivan Codrean',
           focal: [50, 50],
           featured: true
@@ -1178,6 +1195,23 @@
             'animation-delay:' + delay + 's'
           );
 
+          var mediaHtml = proj.video
+            ? '<video class="ci-video-base"' +
+                ' data-src="' + proj.video + '"' +
+                ' autoplay loop muted playsinline' +
+                ' aria-hidden="true"' +
+              '></video>'
+            : '<img class="ci-img-base"' +
+                ' data-src="' + proj.src + '"' +
+                ' alt="' + proj.alt + '"' +
+                ' loading="lazy"' +
+                ' style="object-position:' + focalX + '% ' + focalY + '%"' +
+              '>' +
+              '<img class="ci-img-blur"' +
+                ' aria-hidden="true" alt=""' +
+                ' style="object-position:' + focalX + '% ' + focalY + '%"' +
+              '>';
+
           wrap.innerHTML =
             '<span class="ci-number" aria-hidden="true">[' + num + ']</span>' +
             '<a class="ci-item-link"' +
@@ -1186,16 +1220,7 @@
               ' aria-label="' + proj.title + ' \u2014 ' + proj.genre + ', ' + proj.year + '"' +
             '>' +
               '<div class="ci-frame">' +
-                '<img class="ci-img-base"' +
-                  ' data-src="' + proj.src + '"' +
-                  ' alt="' + proj.alt + '"' +
-                  ' loading="lazy"' +
-                  ' style="object-position:' + focalX + '% ' + focalY + '%"' +
-                '>' +
-                '<img class="ci-img-blur"' +
-                  ' aria-hidden="true" alt=""' +
-                  ' style="object-position:' + focalX + '% ' + focalY + '%"' +
-                '>' +
+                mediaHtml +
                 '<div class="ci-reveal" aria-hidden="true">' +
                   '<span class="ci-reveal-title">' + proj.title + '</span>' +
                   '<span class="ci-reveal-genre">' + proj.genre + '</span>' +
@@ -1232,18 +1257,33 @@
 
         var lazyImgs = Array.prototype.slice.call(imgs, 1);
 
-        if ('IntersectionObserver' in window && lazyImgs.length) {
+        // ── VIDEOS: lazy-load and autoplay only on hover-capable, motion-OK devices
+        var lazyVids = Array.prototype.slice.call(container.querySelectorAll('video[data-src]'));
+
+        function loadVid(vid) {
+          vid.src = vid.dataset.src;
+          vid.load();
+          vid.addEventListener('canplay', function() {
+            vid.classList.add('ci-loaded');
+            vid.play().catch(function() {});
+          }, { once: true });
+        }
+
+        if ('IntersectionObserver' in window && (lazyImgs.length || lazyVids.length)) {
           var obs = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
               if (!entry.isIntersecting) return;
-              loadImg(entry.target);
-              obs.unobserve(entry.target);
+              var el = entry.target;
+              if (el.tagName === 'VIDEO') { loadVid(el); } else { loadImg(el); }
+              obs.unobserve(el);
             });
           }, { rootMargin: '500px 0px' });
 
           lazyImgs.forEach(function(img) { obs.observe(img); });
+          lazyVids.forEach(function(vid) { obs.observe(vid); });
         } else {
           lazyImgs.forEach(loadImg);
+          lazyVids.forEach(loadVid);
         }
 
       }
