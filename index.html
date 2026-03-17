@@ -838,6 +838,49 @@
         40%            { opacity: 1;   transform: scale(1);   }
       }
 
+      /* ── PROJECT SCROLL INDICATOR ── */
+      .scroll-indicator {
+        position: fixed;
+        left: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 205;
+        pointer-events: none;
+      }
+      .scroll-indicator span {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(28, 26, 24, 0.4);
+        opacity: 0.55;
+        transform: scale(1);
+        transition:
+          opacity 220ms ease,
+          transform 220ms ease,
+          background 220ms ease;
+      }
+      .scroll-indicator span.is-complete {
+        opacity: 0.7;
+        background: rgba(28, 26, 24, 0.45);
+        transform: scale(1.15);
+      }
+      .scroll-indicator span.is-active {
+        opacity: 1;
+        background: rgba(28, 26, 24, 0.8);
+        transform: scale(1.45);
+      }
+      .scroll-indicator.at-end span {
+        opacity: 1;
+        background: rgba(28, 26, 24, 0.9);
+        transform: scale(1.25);
+      }
+      @media (max-width: 640px) {
+        .scroll-indicator { display: none; }
+      }
+
       /* ── SPLASH ── */
       #splash {
         position: fixed;
@@ -888,6 +931,15 @@
         >
       </nav>
     </header>
+
+    <!-- ── INDEX SCROLL INDICATOR ── -->
+    <div class="scroll-indicator" id="index-scroll-indicator" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
 
     <!-- ── MAIN: CINEMATIC PROJECT INDEX ── -->
     <main id="home">
@@ -974,10 +1026,9 @@
             for luxury brands and advertising agencies.
           </p>
           <p>
-            After years of commercial projects, a personal style emerged within
-            film, warm light, the unhurried quality of a summer afternoon. A
-            visual language built around female beauty, natural environments,
-            and stillness between moments.
+            After years of commercial work a personal style surfaced — filmic warmth,
+			the slow hush of a summer afternoon; images of female beauty,
+			nature, and the stillness between moments.
           </p>
           <p>
             That world between discipline and instinct is where the work lives
@@ -1029,7 +1080,7 @@
           genre: 'Book Layout Design',
           year: '2022\u20132025',
           href: '/jadis/',
-          src: 'images/jadis-preview.jpg',
+          src: 'jadis/jadis-preview.jpg',
           alt: 'Jadis \u2014 a photo book by Ivan Codrean',
           focal: [50, 50],
           featured: true
@@ -1202,6 +1253,8 @@
       }
 
       renderIndex();
+      updateIndexScrollIndicator();
+      window.addEventListener('scroll', updateIndexScrollIndicator);
 
       // ── GALLERY DATA
       var projects = {
@@ -1272,11 +1325,61 @@
       var _fading         = false;
       var _closing        = false;
       var _closingInfo    = false;
+      var _indexScrollDots = null;
 
       function updateCounter(index) {
         var total = document.getElementById('gallery-scroll').querySelectorAll('.gallery-slide').length || 1;
         document.getElementById('slide-counter').textContent =
           String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+      }
+
+      function updateIndexScrollIndicator() {
+        var indicator = document.getElementById('index-scroll-indicator');
+        if (!indicator) return;
+
+        if (!_indexScrollDots || _indexScrollDots.length !== 5) {
+          _indexScrollDots = Array.prototype.slice.call(
+            indicator.querySelectorAll('span')
+          );
+        }
+
+        if (!_indexScrollDots.length) return;
+
+        var scrollTop = window.scrollY || window.pageYOffset || 0;
+        var doc       = document.documentElement;
+        var maxScroll = doc.scrollHeight - doc.clientHeight;
+
+        if (maxScroll <= 0) {
+          indicator.classList.remove('at-end');
+          _indexScrollDots.forEach(function(dot, idx) {
+            dot.classList.remove('is-active', 'is-complete');
+            if (idx === 0) dot.classList.add('is-active');
+          });
+          return;
+        }
+
+        var progress = scrollTop / maxScroll;
+        if (progress < 0) progress = 0;
+        if (progress > 1) progress = 1;
+
+        var segments = _indexScrollDots.length;
+        var idx = Math.floor(progress * segments);
+        if (idx >= segments) idx = segments - 1;
+
+        _indexScrollDots.forEach(function(dot, i) {
+          dot.classList.remove('is-active', 'is-complete');
+          if (i < idx) {
+            dot.classList.add('is-complete');
+          } else if (i === idx) {
+            dot.classList.add('is-active');
+          }
+        });
+
+        if (progress >= 0.95) {
+          indicator.classList.add('at-end');
+        } else {
+          indicator.classList.remove('at-end');
+        }
       }
 
       // ── OPEN PROJECT
@@ -1437,6 +1540,10 @@
         home.style.transform = 'scale(0.97)';
         home.style.opacity   = '0';
 
+        // Hide index scroll indicator while a project overlay is open.
+        var indexIndicator = document.getElementById('index-scroll-indicator');
+        if (indexIndicator) indexIndicator.style.display = 'none';
+
         // Counter and swipe hint are deferred until hero is dismissed;
         // show immediately only when there is no hero to scroll past first.
         if (!currentProject.hero) {
@@ -1560,7 +1667,6 @@
           page.removeEventListener('scroll', page._heroScrollListener);
           page._heroScrollListener = null;
         }
-
         // Clear hero content
         var heroContainer = document.getElementById('project-hero');
         if (heroContainer) {
@@ -1594,6 +1700,10 @@
         home.style.transition = 'transform 300ms ease, opacity 200ms ease';
         home.style.transform  = '';
         home.style.opacity    = '1';
+
+        // Restore index scroll indicator once the project overlay closes.
+        var indexIndicator = document.getElementById('index-scroll-indicator');
+        if (indexIndicator) indexIndicator.style.display = '';
 
         setTimeout(function() {
           page.classList.remove('active');
@@ -1631,6 +1741,10 @@
         home.style.transition = 'transform 380ms ease';
         home.style.transform = 'scale(0.97)';
 
+        // Hide index scroll indicator while info overlay is open.
+        var indexIndicator = document.getElementById('index-scroll-indicator');
+        if (indexIndicator) indexIndicator.style.display = 'none';
+
         history.pushState({ page: 'info' }, '', '');
       };
 
@@ -1647,6 +1761,10 @@
         var home = document.getElementById('home');
         home.style.transition = 'transform 300ms ease';
         home.style.transform = '';
+
+        // Restore index scroll indicator once the info overlay closes.
+        var indexIndicator = document.getElementById('index-scroll-indicator');
+        if (indexIndicator) indexIndicator.style.display = '';
 
         setTimeout(function() {
           info.classList.remove('active');
