@@ -39,7 +39,7 @@
     />
 
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preload" as="image" href="images/greeting.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="images/greeting.jpg" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -886,7 +886,7 @@
         position: fixed;
         inset: 0;
         z-index: 300;
-        background: #0e0e0c url('images/greeting.webp') center / cover no-repeat;
+        background: #0e0e0c url('images/greeting.jpg') center / cover no-repeat;
         display: flex;
         align-items: flex-start;
         justify-content: center;
@@ -1846,7 +1846,7 @@
             enter.classList.add('visible');
           }, 600);
         };
-        img.src = 'images/greeting.webp';
+        img.src = 'images/greeting.jpg';
         if (img.complete) { setTimeout(function() { enter.classList.add('visible'); }, 600); }
 
         function splashKeyHandler(e) {
