@@ -1347,8 +1347,8 @@
             'images/portrait-01.jpg',
             'images/portrait-02.jpg',
             'images/portrait-03.jpg',
-            'images/portrait-04.jpg',
-            'images/portrait-05.jpg',
+			'images/portrait-04.jpg',
+			'images/portrait-05.jpg',
           ]
         },
 
@@ -1520,14 +1520,26 @@
           heroContainer.style.inset    = '0';
           heroContainer.style.zIndex   = '15';
 
-          // Shared hero dismiss logic (used by click/tap and scroll)
-          function dismissHero(fromClick) {
+          // Shared hero dismiss logic (used by click/tap, scroll, and wheel).
+          // Cleans up all three dismiss triggers so no orphaned listeners remain.
+          function dismissHero() {
             if (page._heroDismissed) return;
             page._heroDismissed = true;
+
+            // Remove all dismiss triggers in one place
+            if (page._heroScrollListener) {
+              page.removeEventListener('scroll', page._heroScrollListener);
+              page._heroScrollListener = null;
+            }
+            if (page._heroWheelListener) {
+              page.removeEventListener('wheel', page._heroWheelListener);
+              page._heroWheelListener = null;
+            }
+            heroContainer.onclick = null;
+
             heroContainer.style.opacity = '0';
             heroContainer.style.transform = 'translateY(-8px)';
             heroContainer.style.pointerEvents = 'none';
-            // Let the user's scroll continue naturally; we only fade the hero.
 
             // Fade the gallery viewer in as the hero fades out
             scroll.style.opacity = '1';
@@ -1539,27 +1551,29 @@
             next.classList.remove('gone');
             updateCounter(0);
 
-            // After the fade completes, remove the hero's vertical footprint
-            // so only the gallery remains and there is no persistent gap.
+            // After the fade completes, collapse the hero's footprint
             setTimeout(function() {
               heroContainer.style.display = 'none';
               heroContainer.style.height  = '0';
-            }, 550); // just after the 0.66s transition starts to settle
+            }, 550);
           }
 
-          // Scrolling past a threshold also fades hero out
+          // Scroll past threshold — tall galleries with enough scroll room
           function onHeroScroll() {
-            if (page.scrollTop > 40) {
-              dismissHero(false);
-              page.removeEventListener('scroll', onHeroScroll);
-              page._heroScrollListener = null;
-            }
+            if (page.scrollTop > 40) dismissHero();
           }
           page.addEventListener('scroll', onHeroScroll);
           page._heroScrollListener = onHeroScroll;
 
-          // Tap/click also dismisses the hero
-          heroContainer.onclick = function() { dismissHero(true); };
+          // Wheel-down — fires even when the page has no scroll room
+          function onHeroWheel(e) {
+            if (e.deltaY > 0) dismissHero();
+          }
+          page.addEventListener('wheel', onHeroWheel, { passive: true });
+          page._heroWheelListener = onHeroWheel;
+
+          // Tap/click
+          heroContainer.onclick = dismissHero;
         } else {
           heroContainer.style.height = '0';
         }
@@ -1718,10 +1732,14 @@
         if (!page.classList.contains('active')) return;
         _closing = true;
 
-        // Clean up hero scroll listener if present
+        // Clean up hero scroll and wheel listeners if present
         if (page._heroScrollListener) {
           page.removeEventListener('scroll', page._heroScrollListener);
           page._heroScrollListener = null;
+        }
+        if (page._heroWheelListener) {
+          page.removeEventListener('wheel', page._heroWheelListener);
+          page._heroWheelListener = null;
         }
         // Clear hero content
         var heroContainer = document.getElementById('project-hero');
