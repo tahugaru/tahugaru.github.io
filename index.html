@@ -475,6 +475,16 @@
         object-fit: cover;
         display: block;
       }
+      .project-hero img.hero-loaded {
+        animation: hero-enter 2.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+      }
+      @keyframes hero-enter {
+        from { transform: scale(1.06); }
+        to   { transform: scale(1); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .project-hero img.hero-loaded { animation: none; }
+      }
 
       .hero-overlay {
         position: absolute;
@@ -902,7 +912,7 @@
         position: fixed;
         inset: 0;
         z-index: 300;
-        background: #0e0e0c url('images/greeting.jpg') center / cover no-repeat;
+        background: #0e0e0c;
         display: flex;
         align-items: flex-start;
         justify-content: center;
@@ -912,7 +922,20 @@
       }
       #splash.leaving { opacity: 0; }
 
+      #splash-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.7s ease;
+      }
+      #splash-img.visible { opacity: 1; }
+
       #splash-enter {
+        position: relative;
+        z-index: 1;
         font-family: var(--font-body);
         font-weight: 300;
         font-size: 1.7rem;
@@ -929,6 +952,7 @@
   <body>
     <!-- ── SPLASH ── -->
     <div id="splash" onclick="window.dismissSplash()">
+      <img id="splash-img" alt="" aria-hidden="true">
       <span id="splash-enter">Enter</span>
     </div>
 
@@ -1036,7 +1060,7 @@
 
         <div class="info-bio">
           <p>
-            Ivan is a visual artist, introduced to photography through working in large
+            Ivan was introduced to photography through working in large
             commercial studios — building sets, shaping light, learning the
             craft from the inside out. That foundation led to commissioned work
             for luxury brands and advertising agencies.
@@ -1320,8 +1344,6 @@
             'images/portrait-01.jpg',
             'images/portrait-02.jpg',
             'images/portrait-03.jpg',
-            'images/portrait-04.jpg',
-            'images/portrait-05.jpg',
           ]
         },
 
@@ -1475,10 +1497,12 @@
             '<span class="hero-prompt">scroll</span>';
 
           heroImg.onload = function() {
+            heroImg.classList.add('hero-loaded');
             overlay.classList.add('visible');
             hideLoader();
           };
-          if (heroImg.complete) {
+          if (heroImg.complete && heroImg.naturalWidth) {
+            heroImg.classList.add('hero-loaded');
             overlay.classList.add('visible');
             hideLoader();
           }
@@ -1486,24 +1510,12 @@
           heroContainer.appendChild(heroImg);
           heroContainer.appendChild(overlay);
 
-          // Fit hero into the viewport area below the sticky header + description
-          function resizeHeroHeight() {
-            if (page._heroDismissed) return;
-            var headerH  = page.querySelector('.project-header')?.offsetHeight || 0;
-            var descH    = descBar.classList.contains('visible') ? descBar.offsetHeight : 0;
-            var reserved = headerH + descH;
-            var available = window.innerHeight - reserved - 8;
-            // Ensure a minimum visual height so the fade-out is visible
-            var minH = window.innerHeight * 0.45;
-            var maxH = Math.max(minH, available);
-            if (maxH < 0) maxH = minH;
-            heroContainer.style.height = maxH + 'px';
-          }
-          resizeHeroHeight();
-          window.addEventListener('resize', resizeHeroHeight);
-          page._resizeHeroHeight = resizeHeroHeight;
+          // Full-viewport hero: cover the entire project page overlay
+          heroContainer.style.position = 'absolute';
+          heroContainer.style.inset    = '0';
+          heroContainer.style.zIndex   = '15';
 
-          // Shared hero dismiss logic (used by click and scroll)
+          // Shared hero dismiss logic (used by click/tap and scroll)
           function dismissHero(fromClick) {
             if (page._heroDismissed) return;
             page._heroDismissed = true;
@@ -1515,9 +1527,11 @@
             // Fade the gallery viewer in as the hero fades out
             scroll.style.opacity = '1';
 
-            // Reveal the counter and swipe hint now that the gallery is taking over
+            // Reveal all gallery chrome now that the gallery is taking over
             counter.classList.remove('gone');
             document.getElementById('scroll-hint').classList.remove('gone');
+            prev.classList.remove('gone');
+            next.classList.remove('gone');
             updateCounter(0);
 
             // After the fade completes, remove the hero's vertical footprint
@@ -1538,6 +1552,9 @@
           }
           page.addEventListener('scroll', onHeroScroll);
           page._heroScrollListener = onHeroScroll;
+
+          // Tap/click also dismisses the hero
+          heroContainer.onclick = function() { dismissHero(true); };
         } else {
           heroContainer.style.height = '0';
         }
@@ -1587,10 +1604,10 @@
         if (!currentProject.hero) {
           counter.classList.remove('gone');
           document.getElementById('scroll-hint').classList.remove('gone');
+          prev.classList.remove('gone');
+          next.classList.remove('gone');
           updateCounter(0);
         }
-        prev.classList.remove('gone');
-        next.classList.remove('gone');
 
         if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
         _scrollListener = function() {
@@ -1638,6 +1655,7 @@
         if (nextIndex === currentIndex) return;
 
         _fading = true;
+        document.getElementById('scroll-hint').classList.add('gone');
 
         var currentSlide = slides[currentIndex];
         var nextSlide    = slides[nextIndex];
@@ -1695,11 +1713,6 @@
         if (!page.classList.contains('active')) return;
         _closing = true;
 
-        // Clean up hero resize listener if present
-        if (page._resizeHeroHeight) {
-          window.removeEventListener('resize', page._resizeHeroHeight);
-          page._resizeHeroHeight = null;
-        }
         // Clean up hero scroll listener if present
         if (page._heroScrollListener) {
           page.removeEventListener('scroll', page._heroScrollListener);
@@ -1710,6 +1723,9 @@
         if (heroContainer) {
           heroContainer.onclick = null;
           heroContainer.innerHTML = '';
+          heroContainer.style.position = '';
+          heroContainer.style.inset    = '';
+          heroContainer.style.zIndex   = '';
           heroContainer.style.height = '';
           heroContainer.style.opacity = '';
           heroContainer.style.transform = '';
@@ -1875,17 +1891,22 @@
           return;
         }
 
-        var splash = document.getElementById('splash');
-        var enter  = document.getElementById('splash-enter');
+        var splash    = document.getElementById('splash');
+        var splashImg = document.getElementById('splash-img');
+        var enter     = document.getElementById('splash-enter');
 
-        var img = new Image();
-        img.onload = function() {
+        function onImageReady() {
           setTimeout(function() {
-            enter.classList.add('visible');
-          }, 600);
-        };
-        img.src = 'images/greeting.jpg';
-        if (img.complete) { setTimeout(function() { enter.classList.add('visible'); }, 600); }
+            splashImg.classList.add('visible');
+            setTimeout(function() {
+              enter.classList.add('visible');
+            }, 400);
+          }, 350);
+        }
+
+        splashImg.onload = onImageReady;
+        splashImg.src    = 'images/greeting.jpg';
+        if (splashImg.complete && splashImg.naturalWidth) { onImageReady(); }
 
         function splashKeyHandler(e) {
           if (e.key === 'Enter') window.dismissSplash();
