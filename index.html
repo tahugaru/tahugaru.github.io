@@ -474,8 +474,11 @@
         height: 100%;
         object-fit: cover;
         display: block;
+        opacity: 0;
+        transition: opacity 0.5s ease;
       }
       .project-hero img.hero-loaded {
+        opacity: 1;
         animation: hero-enter 2.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
       }
       @keyframes hero-enter {
@@ -1344,8 +1347,6 @@
             'images/portrait-01.jpg',
             'images/portrait-02.jpg',
             'images/portrait-03.jpg',
-            'images/portrait-04.jpg',
-            'images/portrait-05.jpg',
           ]
         },
 
