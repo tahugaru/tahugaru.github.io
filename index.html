@@ -1631,6 +1631,13 @@
 
         titleEl.textContent = currentProject.title;
 
+        // Always reset chrome state at open — prevents any residual state from previous project
+        counter.classList.add('gone');
+        prev.classList.add('gone');
+        next.classList.add('gone');
+        document.getElementById('scroll-hint').classList.remove('fading');
+        document.getElementById('scroll-hint').classList.add('gone');
+
         // Clear both engines
         classic.innerHTML   = '';
         editorial.innerHTML = '';
