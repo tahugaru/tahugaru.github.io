@@ -1642,6 +1642,10 @@
           classic.style.display   = 'none';
           classic.style.opacity   = '';
           editorial.style.display = 'block';
+          document.getElementById('scroll-hint').classList.add('gone');
+          document.getElementById('slide-counter').classList.add('gone');
+          document.getElementById('gallery-prev').classList.add('gone');
+          document.getElementById('gallery-next').classList.add('gone');
         } else {
           editorial.style.display = 'none';
           classic.style.display   = '';
