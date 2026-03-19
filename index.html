@@ -1809,10 +1809,10 @@
         page.scrollTop = 0;
         void page.offsetWidth;
         if (isEditorial) {
-          document.getElementById('scroll-hint').classList.add('gone');
-          document.getElementById('slide-counter').classList.add('gone');
-          document.getElementById('gallery-prev').classList.add('gone');
-          document.getElementById('gallery-next').classList.add('gone');
+          document.getElementById('scroll-hint').style.display = 'none';
+          document.getElementById('slide-counter').style.display = 'none';
+          document.getElementById('gallery-prev').style.display = 'none';
+          document.getElementById('gallery-next').style.display = 'none';
         }
         page.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
         page.style.opacity   = '1';
@@ -1889,8 +1889,12 @@
 
         _fading = true;
         var hint = document.getElementById('scroll-hint');
+        hint.style.display = '';
         hint.classList.remove('fading');
         hint.classList.add('gone');
+        document.getElementById('slide-counter').style.display = '';
+        document.getElementById('gallery-prev').style.display = '';
+        document.getElementById('gallery-next').style.display = '';
 
         var currentSlide = slides[currentIndex];
         var nextSlide    = slides[nextIndex];
