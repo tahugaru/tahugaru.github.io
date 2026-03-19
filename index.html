@@ -1167,16 +1167,8 @@
         />
 
         <div class="info-bio">
-          <p>
-            Ivan Codrean is a Visual Artist and Director whose work exists at the
-			intersection of meticulously composed Still Life and cinematic editorial storytelling. 
-          </p>
-          <p>
-            Forged in the technical rigors of large-scale commercial studios, his practice has evolved into a
-			distinct visual language: one defined by filmic warmth, the stillness of a summer afternoon, and a
-			profound focus on the architecture of light. His imagery seeks the hush between moments, capturing a
-			quiet beauty and luxury that feels both grounded and ethereal.
-          </p>
+          <p>Visual Artist and Director working with photography and film.</p>
+          <p>His images are shaped by light, time, and a quiet attention to what remains. Moving between still life and editorial work, his practice stays close to atmosphere — where objects, places, and people are allowed to exist without force.</p>
         </div>
 
         <div class="info-divider"></div>
@@ -1980,7 +1972,9 @@
         document.getElementById('slide-counter').classList.add('gone');
         document.getElementById('gallery-prev').classList.add('gone');
         document.getElementById('gallery-next').classList.add('gone');
-        document.getElementById('scroll-hint').classList.add('gone');
+        var hint = document.getElementById('scroll-hint');
+        hint.classList.remove('fading');
+        hint.classList.add('gone');
 
         page.style.transition = 'opacity 300ms ease, transform 300ms ease';
         page.style.opacity    = '0';
