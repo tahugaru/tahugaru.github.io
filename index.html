@@ -1631,6 +1631,10 @@
 
         titleEl.textContent = currentProject.title;
 
+        // Always detach listeners from previous project regardless of type
+        if (_clickListener)  { page.removeEventListener('click', _clickListener);   _clickListener  = null; }
+        if (_scrollListener) { classic.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
+
         // Always reset chrome state at open — prevents any residual state from previous project
         counter.classList.add('gone');
         prev.classList.add('gone');
