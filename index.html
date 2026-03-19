@@ -1743,7 +1743,8 @@
               prev.classList.remove('gone');
               next.classList.remove('gone');
               updateCounter(0);
-              if (!firstLoaded) loader.classList.add('visible');
+              var allLoaded = classic.querySelectorAll('.gallery-slide img.loaded').length === classic.querySelectorAll('.gallery-slide img').length;
+              if (!allLoaded) loader.classList.add('visible');
             }
 
             setTimeout(function() {
