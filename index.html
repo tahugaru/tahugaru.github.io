@@ -583,6 +583,7 @@
         pointer-events: none;
       }
       .scroll-hint.hidden { opacity: 0; }
+      .scroll-hint.fading { opacity: 0; pointer-events: none; }
       .scroll-hint::before, .scroll-hint::after {
         content: '';
         display: block;
@@ -836,6 +837,26 @@
         .hero-prompt { font-size: 0.62rem; margin-top: 1rem; }
         .gallery-arrow { display: none !important; }
         .info-inner { padding-top: 6rem; }
+      }
+
+      /* ── HERO LOADING INDICATOR ── */
+      .hero-loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 16;
+        pointer-events: none;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(248, 244, 238, 0.55);
+        animation: hero-breath 2.2s ease-in-out infinite;
+      }
+      @keyframes hero-breath {
+        0%   { opacity: 0.15; transform: translate(-50%, -50%) scale(0.82); }
+        50%  { opacity: 0.85; transform: translate(-50%, -50%) scale(1);    }
+        100% { opacity: 0.15; transform: translate(-50%, -50%) scale(0.82); }
       }
 
       /* ── GALLERY LOADING INDICATOR ── */
@@ -1668,19 +1689,25 @@
             '<span class="hero-title">' + currentProject.title + '</span>' +
             '<span class="hero-prompt">scroll</span>';
 
+          var heroLoader = document.createElement('div');
+          heroLoader.className = 'hero-loader';
+
           heroImg.onload = function() {
             heroImg.classList.add('hero-loaded');
             overlay.classList.add('visible');
             hideLoader();
+            if (heroLoader.parentNode) heroLoader.parentNode.removeChild(heroLoader);
           };
           if (heroImg.complete && heroImg.naturalWidth) {
             heroImg.classList.add('hero-loaded');
             overlay.classList.add('visible');
             hideLoader();
+            if (heroLoader.parentNode) heroLoader.parentNode.removeChild(heroLoader);
           }
 
           heroContainer.appendChild(heroImg);
           heroContainer.appendChild(overlay);
+          heroContainer.appendChild(heroLoader);
 
           heroContainer.style.position   = 'absolute';
           heroContainer.style.inset      = '0';
@@ -1809,7 +1836,9 @@
           _scrollListener = function() {
             var index = Math.round(classic.scrollLeft / window.innerWidth);
             updateCounter(index);
-            document.getElementById('scroll-hint').classList.add('gone');
+            var hint = document.getElementById('scroll-hint');
+            hint.classList.add('fading');
+            setTimeout(function() { hint.classList.add('gone'); }, 400);
           };
           classic.addEventListener('scroll', _scrollListener);
 
@@ -1854,7 +1883,9 @@
         if (nextIndex === currentIndex) return;
 
         _fading = true;
-        document.getElementById('scroll-hint').classList.add('gone');
+        var hint = document.getElementById('scroll-hint');
+        hint.classList.remove('fading');
+        hint.classList.add('gone');
 
         var currentSlide = slides[currentIndex];
         var nextSlide    = slides[nextIndex];
