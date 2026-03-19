@@ -1642,10 +1642,6 @@
           classic.style.display   = 'none';
           classic.style.opacity   = '';
           editorial.style.display = 'block';
-          document.getElementById('scroll-hint').classList.add('gone');
-          document.getElementById('slide-counter').classList.add('gone');
-          document.getElementById('gallery-prev').classList.add('gone');
-          document.getElementById('gallery-next').classList.add('gone');
         } else {
           editorial.style.display = 'none';
           classic.style.display   = '';
@@ -1805,6 +1801,12 @@
         if (!isEditorial) classic.scrollLeft = 0;
         page.scrollTop = 0;
         void page.offsetWidth;
+        if (isEditorial) {
+          document.getElementById('scroll-hint').classList.add('gone');
+          document.getElementById('slide-counter').classList.add('gone');
+          document.getElementById('gallery-prev').classList.add('gone');
+          document.getElementById('gallery-next').classList.add('gone');
+        }
         page.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
         page.style.opacity   = '1';
         page.style.transform = 'translateY(0)';
