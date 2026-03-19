@@ -1990,10 +1990,14 @@
           page._projectKeyHandler = null;
         }
 
+        document.getElementById('slide-counter').style.display = '';
+        document.getElementById('gallery-prev').style.display = '';
+        document.getElementById('gallery-next').style.display = '';
         document.getElementById('slide-counter').classList.add('gone');
         document.getElementById('gallery-prev').classList.add('gone');
         document.getElementById('gallery-next').classList.add('gone');
         var hint = document.getElementById('scroll-hint');
+        hint.style.display = '';
         hint.classList.remove('fading');
         hint.classList.add('gone');
 
