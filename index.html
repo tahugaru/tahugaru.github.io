@@ -950,6 +950,89 @@
         text-transform: uppercase;
       }
       #splash-enter.visible { opacity: 1; }
+
+      /* ── GALLERY EDITORIAL ── */
+      #gallery-editorial {
+        display: none;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      /* hero-full: 3:2 cinematic full-bleed opener */
+      .ed-hero-full {
+        width: 100%;
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
+      }
+      .ed-hero-full img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* text-editorial: director's note, narrow centered column */
+      .ed-text-editorial {
+        max-width: 34rem;
+        margin: 0 auto;
+        padding: calc(var(--space) * 2.5) var(--space);
+        text-align: center;
+      }
+      .ed-text-editorial p {
+        font-family: var(--font-body);
+        font-weight: 300;
+        font-size: clamp(0.88rem, 0.95vw, 1rem);
+        line-height: 1.9;
+        color: var(--ink-light);
+        letter-spacing: 0.02em;
+      }
+
+      /* duo-grid: two images side by side */
+      .ed-duo-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 0 var(--space) var(--space);
+      }
+      .ed-duo-grid img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* image-padded: single focal image with breathing room */
+      .ed-image-padded {
+        padding: calc(var(--space) * 1.9) 17.7vw;
+      }
+      .ed-image-padded img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* editorial image fade-in */
+      .ed-hero-full img,
+      .ed-duo-grid img,
+      .ed-image-padded img {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .ed-hero-full img.ed-loaded,
+      .ed-duo-grid img.ed-loaded,
+      .ed-image-padded img.ed-loaded { opacity: 1; }
+
+      @media (max-width: 1280px) {
+        .ed-image-padded { padding: calc(var(--space) * 4.5) 8vw; }
+        .ed-duo-grid { gap: 8px; padding: 0 var(--space) calc(var(--space) * 2.25); }
+        .ed-text-editorial { padding-top: calc(var(--space) * 4.5); padding-bottom: calc(var(--space) * 4.5); }
+      }
+      @media (max-width: 640px) {
+        .ed-duo-grid {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .ed-image-padded { padding: var(--space) var(--space); }
+      }
     </style>
   </head>
   <body>
@@ -1016,7 +1099,8 @@
         <span></span><span></span><span></span>
       </div>
 
-      <div class="gallery-scroll" id="gallery-scroll"></div>
+      <div class="gallery-scroll" id="gallery-classic"></div>
+      <section id="gallery-editorial"></section>
     </div>
 
     <!-- Arrows -->
@@ -1110,8 +1194,8 @@
     <script>
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // ── CINEMATIC INDEX: DATA MODEL
-      var INDEX_PROJECTS = [
+      // ── PROJECTS MANIFEST: single source of truth for index + gallery
+      var PROJECTS_MANIFEST = [
         {
           id: 'jadis',
           title: 'Jadis',
@@ -1122,7 +1206,8 @@
           video: 'images/jadis-loop.mp4',
           alt: 'Jadis \u2014 a photo book by Ivan Codrean',
           focal: [50, 50],
-          featured: true
+          featured: true,
+          layoutType: 'external'
         },
         {
           id: 'summerhaze',
@@ -1133,7 +1218,21 @@
           src: 'images/summerhaze-preview.jpg',
           alt: 'Summer Haze \u2014 editorial photography by Ivan Codrean',
           focal: [50, 40],
-          featured: false
+          featured: false,
+          layoutType: 'classic',
+          hero: 'images/summerhaze-hero.jpg',
+          description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
+          images: [
+            'images/haze-1.jpg',
+            'images/haze-2.jpg',
+            'images/haze-3.jpg',
+            'images/haze-4.jpg',
+            'images/haze-5.jpg',
+            'images/haze-6.jpg',
+            'images/haze-7.jpg',
+            'images/haze-8.jpg',
+            'images/haze-9.jpg',
+          ]
         },
         {
           id: 'portraits',
@@ -1144,7 +1243,17 @@
           src: 'images/portraits-preview.jpg',
           alt: 'Portraits \u2014 photography series by Ivan Codrean',
           focal: [50, 30],
-          featured: false
+          featured: false,
+          layoutType: 'classic',
+          hero: 'images/portraits-hero.jpg',
+          description: '',
+          images: [
+            'images/portrait-01.jpg',
+            'images/portrait-02.jpg',
+            'images/portrait-03.jpg',
+            'images/portrait-04.jpg',
+            'images/portrait-05.jpg',
+          ]
         },
         {
           id: 'stilllife',
@@ -1155,7 +1264,23 @@
           src: 'images/stilllife-preview.jpg',
           alt: 'Still Life \u2014 commercial photography by Ivan Codrean',
           focal: [50, 50],
-          featured: false
+          featured: false,
+          layoutType: 'classic',
+          wide: true,
+          hero: 'images/stilllife-hero.jpg',
+          description: 'Commissioned photography and retouch work for luxury brands and advertising agencies.',
+          images: [
+            'images/objet-01.jpg',
+            'images/objet-02.jpg',
+            'images/objet-03.jpg',
+            'images/objet-04.jpg',
+            'images/objet-05.jpg',
+            'images/objet-06.jpg',
+            'images/objet-07.jpg',
+            'images/objet-08.jpg',
+            'images/objet-09.jpg',
+            'images/objet-10.jpg',
+          ]
         },
         {
           id: 'passages',
@@ -1166,7 +1291,55 @@
           src: 'images/passages-preview.jpg',
           alt: 'Passages \u2014 photography series by Ivan Codrean',
           focal: [50, 45],
-          featured: true
+          featured: true,
+          layoutType: 'classic',
+          hero: 'images/passages-hero.jpg',
+          description: '',
+          images: [
+            'images/passages-01.jpg',
+            'images/passages-02.jpg',
+            'images/passages-03.jpg',
+          ]
+        },
+        {
+          id: 'we53',
+          title: 'WE53',
+          genre: 'Product Photography',
+          year: '2024',
+          projectKey: 'we53',
+          src: 'images/we53/we53-preview.jpg',
+          video: 'images/we53/we53-preview.mp4',
+          alt: 'WE53 \u2014 product photography by Ivan Codrean',
+          focal: [50, 50],
+          featured: false,
+          layoutType: 'editorial',
+          hero: 'images/we53/we53-hero.jpg',
+          description: '',
+          content: [
+            {
+              type: 'hero-full',
+              src: 'images/we53/we53still-01.jpg'
+            },
+            {
+              type: 'text-editorial',
+              value: 'This project features a series of promotional visuals created for the social media presence of WE53. Responsible for both photography and videography, the work produced a cohesive set of stills and an introductory film \u2014 each frame considered against the brand\u2019s identity and crafted to hold attention in a crowded digital landscape.'
+            },
+            {
+              type: 'duo-grid',
+              src: [
+                'images/we53/we53still-02.jpg',
+                'images/we53/we53still-03.jpg'
+              ]
+            },
+            {
+              type: 'image-padded',
+              src: 'images/we53/we53still-04.jpg'
+            },
+            {
+              type: 'text-editorial',
+              value: 'Beyond the utility of the object, the focus remained on the dialogue between light and material. The result is a visual language that doesn\u2019t demand attention through noise, but earns it through the clarity of the form. It is a testament to the belief that even the most functional tools possess a cinematic soul when observed with intention.'
+            }
+          ]
         }
       ];
 
@@ -1199,7 +1372,7 @@
         if (!container) return;
         container.innerHTML = '';
 
-        INDEX_PROJECTS.forEach(function(proj, idx) {
+        PROJECTS_MANIFEST.forEach(function(proj, idx) {
           var num    = String(idx + 1).padStart(2, '0');
           var offset = ciComputeOffset(idx);
           var gutter = proj.featured
@@ -1318,71 +1491,6 @@
       updateIndexScrollIndicator();
       window.addEventListener('scroll', updateIndexScrollIndicator);
 
-      // ── GALLERY DATA
-      var projects = {
-
-        summerhaze: {
-          title: 'Summer Haze',
-          hero: 'images/summerhaze-hero.jpg',
-          description: 'An editorial series set against secluded beaches and open water. The haze of late summer air, the warmth of an afternoon that refuses to end. Unhurried and unguarded. Model: Polina Vorontsova.',
-          images: [
-            'images/haze-1.jpg',
-            'images/haze-2.jpg',
-            'images/haze-3.jpg',
-            'images/haze-4.jpg',
-            'images/haze-5.jpg',
-            'images/haze-6.jpg',
-            'images/haze-7.jpg',
-            'images/haze-8.jpg',
-            'images/haze-9.jpg',
-          ]
-        },
-
-        portraits: {
-          title: 'Portraits',
-          hero: 'images/portraits-hero.jpg',
-          description: '',
-          images: [
-            'images/portrait-01.jpg',
-            'images/portrait-02.jpg',
-            'images/portrait-03.jpg',
-			'images/portrait-04.jpg',
-			'images/portrait-05.jpg',
-          ]
-        },
-
-        stilllife: {
-          title: 'Still Life',
-          hero: 'images/stilllife-hero.jpg',
-          wide: true,
-          description: 'Commissioned photography and retouch work for luxury brands and advertising agencies.',
-          images: [
-            'images/objet-01.jpg',
-            'images/objet-02.jpg',
-            'images/objet-03.jpg',
-            'images/objet-04.jpg',
-            'images/objet-05.jpg',
-            'images/objet-06.jpg',
-            'images/objet-07.jpg',
-            'images/objet-08.jpg',
-            'images/objet-09.jpg',
-            'images/objet-10.jpg',
-          ]
-        },
-
-        passages: {
-          title: 'Passages',
-          hero: 'images/passages-hero.jpg',
-          description: '',
-          images: [
-            'images/passages-01.jpg',
-            'images/passages-02.jpg',
-            'images/passages-03.jpg',
-          ]
-        }
-
-      };
-
       var currentProject = null;
       var _scrollListener = null;
       var _clickListener  = null;
@@ -1392,7 +1500,7 @@
       var _indexScrollDots = null;
 
       function updateCounter(index) {
-        var total = document.getElementById('gallery-scroll').querySelectorAll('.gallery-slide').length || 1;
+        var total = document.getElementById('gallery-classic').querySelectorAll('.gallery-slide').length || 1;
         document.getElementById('slide-counter').textContent =
           String(index + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
       }
@@ -1446,26 +1554,86 @@
         }
       }
 
+      // ── RENDER EDITORIAL
+      function renderEditorial(project, container) {
+        if (!project.content) return;
+        project.content.forEach(function(block) {
+          var el = document.createElement('div');
+
+          if (block.type === 'hero-full') {
+            el.className = 'ed-hero-full';
+            var img = document.createElement('img');
+            img.alt = project.title;
+            img.onload = function() { img.classList.add('ed-loaded'); };
+            img.src = block.src;
+            if (img.complete) img.classList.add('ed-loaded');
+            el.appendChild(img);
+
+          } else if (block.type === 'text-editorial') {
+            el.className = 'ed-text-editorial';
+            var p = document.createElement('p');
+            p.textContent = block.value;
+            el.appendChild(p);
+
+          } else if (block.type === 'duo-grid') {
+            el.className = 'ed-duo-grid';
+            block.src.forEach(function(src) {
+              var img = document.createElement('img');
+              img.alt = project.title;
+              img.onload = function() { img.classList.add('ed-loaded'); };
+              img.src = src;
+              if (img.complete) img.classList.add('ed-loaded');
+              el.appendChild(img);
+            });
+
+          } else if (block.type === 'image-padded') {
+            el.className = 'ed-image-padded';
+            var img = document.createElement('img');
+            img.alt = project.title;
+            img.onload = function() { img.classList.add('ed-loaded'); };
+            img.src = block.src;
+            if (img.complete) img.classList.add('ed-loaded');
+            el.appendChild(img);
+          }
+
+          container.appendChild(el);
+        });
+      }
+
       // ── OPEN PROJECT
       window.openProject = function(key) {
-        currentProject = projects[key];
+        currentProject = PROJECTS_MANIFEST.find(function(p) { return p.id === key; });
         if (!currentProject) return;
 
-        var page     = document.getElementById('project-page');
-        var scroll   = document.getElementById('gallery-scroll');
-        var loader   = document.getElementById('gallery-loader');
-        var titleEl  = document.getElementById('project-page-title');
-        var descBar  = document.getElementById('project-description-bar');
-        var descText = document.getElementById('project-description-text');
-        var counter  = document.getElementById('slide-counter');
-        var prev     = document.getElementById('gallery-prev');
-        var next     = document.getElementById('gallery-next');
+        var page      = document.getElementById('project-page');
+        var classic   = document.getElementById('gallery-classic');
+        var editorial = document.getElementById('gallery-editorial');
+        var loader    = document.getElementById('gallery-loader');
+        var titleEl   = document.getElementById('project-page-title');
+        var descBar   = document.getElementById('project-description-bar');
+        var descText  = document.getElementById('project-description-text');
+        var counter   = document.getElementById('slide-counter');
+        var prev      = document.getElementById('gallery-prev');
+        var next      = document.getElementById('gallery-next');
 
         titleEl.textContent = currentProject.title;
-        scroll.innerHTML = '';
-        scroll.dataset.project = key;
-        // gallery fades in either immediately (no hero) or when hero is dismissed
-        scroll.style.opacity = currentProject.hero ? '0' : '1';
+
+        // Clear both engines
+        classic.innerHTML   = '';
+        editorial.innerHTML = '';
+        classic.dataset.project = key;
+
+        // Route: show active engine, hide the other
+        var isEditorial = currentProject.layoutType === 'editorial';
+        if (isEditorial) {
+          classic.style.display   = 'none';
+          classic.style.opacity   = '';
+          editorial.style.display = 'block';
+        } else {
+          editorial.style.display = 'none';
+          classic.style.display   = '';
+          classic.style.opacity   = currentProject.hero ? '0' : '1';
+        }
 
         if (currentProject.description && currentProject.description.trim() !== '') {
           descText.textContent = currentProject.description;
@@ -1483,7 +1651,7 @@
           loader.classList.remove('visible');
         }
 
-        // ── HERO: separate full-width section above horizontal gallery
+        // ── HERO: shared for all layout types
         var heroContainer = document.getElementById('project-hero');
         heroContainer.innerHTML = '';
 
@@ -1514,18 +1682,15 @@
           heroContainer.appendChild(heroImg);
           heroContainer.appendChild(overlay);
 
-          // Full-viewport hero: cover the entire project page overlay
-          heroContainer.style.position = 'absolute';
-          heroContainer.style.inset    = '0';
-          heroContainer.style.zIndex   = '15';
+          heroContainer.style.position   = 'absolute';
+          heroContainer.style.inset      = '0';
+          heroContainer.style.zIndex     = '15';
+          heroContainer.style.background = '#0e0e0c';
 
-          // Shared hero dismiss logic (used by click/tap, scroll, and wheel).
-          // Cleans up all three dismiss triggers so no orphaned listeners remain.
           function dismissHero() {
             if (page._heroDismissed) return;
             page._heroDismissed = true;
 
-            // Remove all dismiss triggers in one place
             if (page._heroScrollListener) {
               page.removeEventListener('scroll', page._heroScrollListener);
               page._heroScrollListener = null;
@@ -1536,90 +1701,91 @@
             }
             heroContainer.onclick = null;
 
-            heroContainer.style.opacity = '0';
-            heroContainer.style.transform = 'translateY(-8px)';
+            heroContainer.style.opacity      = '0';
+            heroContainer.style.transform    = 'translateY(-8px)';
             heroContainer.style.pointerEvents = 'none';
 
-            // Fade the gallery viewer in as the hero fades out
-            scroll.style.opacity = '1';
+            // Classic: fade gallery in and reveal chrome
+            if (!isEditorial) {
+              classic.style.opacity = '1';
+              counter.classList.remove('gone');
+              document.getElementById('scroll-hint').classList.remove('gone');
+              prev.classList.remove('gone');
+              next.classList.remove('gone');
+              updateCounter(0);
+              if (!firstLoaded) loader.classList.add('visible');
+            }
 
-            // Reveal all gallery chrome now that the gallery is taking over
-            counter.classList.remove('gone');
-            document.getElementById('scroll-hint').classList.remove('gone');
-            prev.classList.remove('gone');
-            next.classList.remove('gone');
-            updateCounter(0);
-
-            // After the fade completes, collapse the hero's footprint
             setTimeout(function() {
               heroContainer.style.display = 'none';
               heroContainer.style.height  = '0';
             }, 550);
           }
 
-          // Scroll past threshold — tall galleries with enough scroll room
           function onHeroScroll() {
             if (page.scrollTop > 40) dismissHero();
           }
           page.addEventListener('scroll', onHeroScroll);
           page._heroScrollListener = onHeroScroll;
 
-          // Wheel-down — fires even when the page has no scroll room
           function onHeroWheel(e) {
             if (e.deltaY > 0) dismissHero();
           }
           page.addEventListener('wheel', onHeroWheel, { passive: true });
           page._heroWheelListener = onHeroWheel;
 
-          // Tap/click
           heroContainer.onclick = dismissHero;
         } else {
           heroContainer.style.height = '0';
         }
 
-        currentProject.images.forEach(function(src, i) {
-          var slide = document.createElement('div');
-          slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
-          var img = document.createElement('img');
-          img.alt = currentProject.title + ' ' + (i + 1);
-          img.onload = function() {
-            img.classList.add('loaded');
-            if (i === 0) hideLoader();
-          };
-          img.src = src;
-          if (img.complete) {
-            img.classList.add('loaded');
-            if (i === 0) hideLoader();
-          }
-          slide.appendChild(img);
-          scroll.appendChild(slide);
-        });
+        // ── POPULATE ACTIVE ENGINE
+        if (isEditorial) {
+          renderEditorial(currentProject, editorial);
+        } else {
+          currentProject.images.forEach(function(src, i) {
+            var slide = document.createElement('div');
+            slide.className = currentProject.wide ? 'gallery-slide wide' : 'gallery-slide';
+            var img = document.createElement('img');
+            img.alt = currentProject.title + ' ' + (i + 1);
+            img.onload = function() {
+              img.classList.add('loaded');
+              if (i === 0) hideLoader();
+            };
+            img.src = src;
+            if (img.complete) {
+              img.classList.add('loaded');
+              if (i === 0) hideLoader();
+            }
+            slide.appendChild(img);
+            classic.appendChild(slide);
+          });
+        }
 
-        if (!firstLoaded) loader.classList.add('visible');
-        page.style.opacity = '0';
+        if (!firstLoaded && !currentProject.hero) loader.classList.add('visible');
+
+        page.style.opacity   = '0';
         page.style.transform = 'translateY(30px)';
         page.style.transition = 'none';
         page.classList.add('active');
         document.body.style.overflow = 'hidden';
-        scroll.scrollLeft = 0;
+        if (!isEditorial) classic.scrollLeft = 0;
         page.scrollTop = 0;
         void page.offsetWidth;
         page.style.transition = 'opacity 380ms ease, transform 380ms cubic-bezier(0.25, 0, 0.15, 1)';
-        page.style.opacity = '1';
+        page.style.opacity   = '1';
         page.style.transform = 'translateY(0)';
 
         var home = document.getElementById('home');
         home.style.transition = 'transform 380ms ease, opacity 200ms ease';
-        home.style.transform = 'scale(0.97)';
-        home.style.opacity   = '0';
+        home.style.transform  = 'scale(0.97)';
+        home.style.opacity    = '0';
 
-        // Hide index scroll indicator while a project overlay is open.
         var indexIndicator = document.getElementById('index-scroll-indicator');
         if (indexIndicator) indexIndicator.style.display = 'none';
 
-        // Counter and swipe hint are deferred until hero is dismissed;
-        // show immediately only when there is no hero to scroll past first.
-        if (!currentProject.hero) {
+        // Classic-only chrome (deferred if hero present)
+        if (!isEditorial && !currentProject.hero) {
           counter.classList.remove('gone');
           document.getElementById('scroll-hint').classList.remove('gone');
           prev.classList.remove('gone');
@@ -1627,31 +1793,36 @@
           updateCounter(0);
         }
 
-        if (_scrollListener) scroll.removeEventListener('scroll', _scrollListener);
-        _scrollListener = function() {
-          var index = Math.round(scroll.scrollLeft / window.innerWidth);
-          updateCounter(index);
-        };
-        scroll.addEventListener('scroll', _scrollListener);
+        // Classic-only scroll + click listeners
+        if (!isEditorial) {
+          if (_scrollListener) classic.removeEventListener('scroll', _scrollListener);
+          _scrollListener = function() {
+            var index = Math.round(classic.scrollLeft / window.innerWidth);
+            updateCounter(index);
+            document.getElementById('scroll-hint').classList.add('gone');
+          };
+          classic.addEventListener('scroll', _scrollListener);
 
-        if (_clickListener) page.removeEventListener('click', _clickListener);
-        _clickListener = function(e) {
-          // Ignore clicks on header chrome, description, arrows, and hero banner
-          if (
-            e.target.closest('.back-btn') ||
-            e.target.closest('.gallery-arrow') ||
-            e.target.closest('.project-header') ||
-            e.target.closest('.project-description-bar') ||
-            e.target.closest('#project-hero')
-          ) return;
-          window.galleryStep(1);
-        };
-        page.addEventListener('click', _clickListener);
+          if (_clickListener) page.removeEventListener('click', _clickListener);
+          _clickListener = function(e) {
+            if (
+              e.target.closest('.back-btn') ||
+              e.target.closest('.gallery-arrow') ||
+              e.target.closest('.project-header') ||
+              e.target.closest('.project-description-bar') ||
+              e.target.closest('#project-hero')
+            ) return;
+            window.galleryStep(1);
+          };
+          page.addEventListener('click', _clickListener);
+        }
 
         function _projectKeyHandler(e) {
-          if (e.key === 'ArrowRight') window.galleryStep(1);
-          if (e.key === 'ArrowLeft')  window.galleryStep(-1);
-          if (e.key === 'Escape')     window.closeProject();
+          if (!isEditorial) {
+            if (e.key === 'ArrowRight') window.galleryStep(1);
+            if (e.key === 'ArrowLeft')  window.galleryStep(-1);
+          }
+          if (e.key === 'Escape') window.closeProject();
         }
         document.addEventListener('keydown', _projectKeyHandler);
         page._projectKeyHandler = _projectKeyHandler;
@@ -1664,7 +1835,7 @@
 
       window.galleryStep = function(dir) {
         if (_fading) return;
-        var scroll       = document.getElementById('gallery-scroll');
+        var scroll       = document.getElementById('gallery-classic');
         var slides       = scroll.querySelectorAll('.gallery-slide');
         var total        = slides.length;
         var currentIndex = Math.round(scroll.scrollLeft / window.innerWidth);
@@ -1752,11 +1923,13 @@
           heroContainer.style.opacity = '';
           heroContainer.style.transform = '';
           heroContainer.style.pointerEvents = '';
+          heroContainer.style.background    = '';
           heroContainer.style.display = '';
         }
 
-        var scroll = document.getElementById('gallery-scroll');
-        if (_scrollListener) { scroll.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
+        var classic   = document.getElementById('gallery-classic');
+        var editorial = document.getElementById('gallery-editorial');
+        if (_scrollListener) { classic.removeEventListener('scroll', _scrollListener); _scrollListener = null; }
         if (_clickListener)  { page.removeEventListener('click',  _clickListener);  _clickListener  = null; }
         if (page._projectKeyHandler) {
           document.removeEventListener('keydown', page._projectKeyHandler);
@@ -1788,6 +1961,10 @@
           page.style.transform  = '';
           document.getElementById('gallery-loader').classList.remove('visible');
           document.getElementById('project-description-bar').classList.remove('visible');
+          classic.style.display   = '';
+          classic.style.opacity   = '';
+          editorial.style.display = 'none';
+          editorial.innerHTML     = '';
           document.body.style.overflow = '';
           currentProject = null;
           _fading  = false;
