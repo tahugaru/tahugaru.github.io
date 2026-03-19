@@ -1734,6 +1734,16 @@
           page.addEventListener('wheel', onHeroWheel, { passive: true });
           page._heroWheelListener = onHeroWheel;
 
+          var _touchStartY = 0;
+          function onHeroTouchStart(e) {
+            _touchStartY = e.touches[0].clientY;
+          }
+          function onHeroTouchMove(e) {
+            if (e.touches[0].clientY < _touchStartY - 10) dismissHero();
+          }
+          heroContainer.addEventListener('touchstart', onHeroTouchStart, { passive: true });
+          heroContainer.addEventListener('touchmove', onHeroTouchMove, { passive: true });
+
           heroContainer.onclick = dismissHero;
         } else {
           heroContainer.style.height = '0';
