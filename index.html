@@ -1667,10 +1667,8 @@
           descBar.classList.remove('visible');
         }
 
-        var firstLoaded = false;
         function hideLoader() {
-          if (firstLoaded) return;
-          firstLoaded = true;
+          if (!loader.classList.contains('visible')) return;
           loader.style.transition = 'opacity 400ms ease';
           loader.classList.remove('visible');
         }
@@ -1803,7 +1801,7 @@
           });
         }
 
-        if (!firstLoaded && !currentProject.hero) loader.classList.add('visible');
+        if (!currentProject.hero) loader.classList.add('visible');
 
         page.style.opacity   = '0';
         page.style.transform = 'translateY(30px)';
