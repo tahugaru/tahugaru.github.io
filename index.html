@@ -1739,8 +1739,23 @@
               prev.classList.remove('gone');
               next.classList.remove('gone');
               updateCounter(0);
-              var allLoaded = classic.querySelectorAll('.gallery-slide img.loaded').length === classic.querySelectorAll('.gallery-slide img').length;
-              if (!allLoaded) loader.classList.add('visible');
+              var imgs = classic.querySelectorAll('.gallery-slide img');
+              var loadedImgs = classic.querySelectorAll('.gallery-slide img.loaded');
+              if (loadedImgs.length === imgs.length) {
+                // all already loaded, no loader needed
+              } else {
+                loader.classList.add('visible');
+                // watch for any remaining image to finish and hide the loader
+                Array.prototype.forEach.call(imgs, function(img) {
+                  if (!img.classList.contains('loaded')) {
+                    img.addEventListener('load', function() {
+                      if (!loader.classList.contains('visible')) return;
+                      var remaining = classic.querySelectorAll('.gallery-slide img:not(.loaded)').length;
+                      if (remaining === 0) hideLoader();
+                    }, { once: true });
+                  }
+                });
+              }
             }
 
             setTimeout(function() {
