@@ -1930,8 +1930,8 @@
             inImg.style.transform  = 'scale(1.015)';
           }
 
-          scroll.style.overflow = 'hidden';
-          scroll.scrollLeft     = nextIndex * window.innerWidth;
+          scroll.style.scrollBehavior = 'auto';
+          scroll.scrollLeft = nextIndex * window.innerWidth;
 
           void nextSlide.offsetWidth;
 
@@ -1949,7 +1949,7 @@
             outImg.style.transform  = '';
           }
 
-          scroll.style.overflow = '';
+          scroll.style.scrollBehavior = '';
           updateCounter(nextIndex);
 
           setTimeout(function() {
