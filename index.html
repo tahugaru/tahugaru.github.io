@@ -1918,8 +1918,6 @@
         var outImg       = currentSlide.querySelector('img');
         var inImg        = nextSlide.querySelector('img');
 
-        currentSlide.style.willChange = 'opacity';
-        if (outImg) outImg.style.willChange = 'transform';
         currentSlide.style.transition = 'opacity ' + FADE_MS + 'ms ease';
         currentSlide.style.opacity    = '0';
         if (outImg) {
@@ -1935,7 +1933,6 @@
             inImg.style.transform  = 'scale(1.015)';
           }
 
-          scroll.style.scrollBehavior = 'auto';
           scroll.scrollLeft = nextIndex * window.innerWidth;
 
           void nextSlide.offsetWidth;
@@ -1947,16 +1944,13 @@
             inImg.style.transform  = 'scale(1)';
           }
 
-          currentSlide.style.willChange = '';
           currentSlide.style.transition = 'none';
           currentSlide.style.opacity    = '1';
           if (outImg) {
-            outImg.style.willChange = '';
             outImg.style.transition = 'none';
             outImg.style.transform  = '';
           }
 
-          scroll.style.scrollBehavior = '';
           updateCounter(nextIndex);
 
           setTimeout(function() {
