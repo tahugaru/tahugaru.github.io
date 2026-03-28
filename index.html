@@ -63,14 +63,16 @@
         --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
         --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
         --t-overlay-in: 380ms;
-        --t-overlay-out: 300ms;
+        /* Slightly longer than before: keeps project/index exit in sync with home recess restore */
+        --t-overlay-out: 420ms;
+        /* Index restore after closing project (slower than overlay-out for a softer return) */
+        --t-home-reveal-out: 540ms;
         --t-layer: 680ms;
         --t-fade-md: 400ms;
         /* Shared content entrance (index cards + info blocks) */
         --t-fade-up: 500ms;
-        --fade-up-y: 16px;
-        /* Index preview: hover blur layer, title reveal, video defocus */
-        --t-ci-hover: 500ms;
+        /* Index preview: hover blur overlay + title + video defocus (was 0.4s; tune here) */
+        --t-ci-hover-blur: 520ms;
         /* Micro-interactions (keep durations aligned across UI + JS timeouts) */
         --t-link: 200ms;
         --t-dot: 220ms;
@@ -92,7 +94,11 @@
         --t-splash-dismiss-padding: 80ms;
       }
 
-      html { font-size: 16px; scroll-behavior: smooth; }
+      html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+        scrollbar-gutter: stable;
+      }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
       }
@@ -106,6 +112,7 @@
         display: flex;
         flex-direction: column;
         -webkit-font-smoothing: antialiased;
+        scrollbar-gutter: stable;
       }
 
       /* ── HEADER ── */
@@ -162,6 +169,22 @@
       /* Hint compositor only while recessing behind overlay (class toggled in JS) */
       main.home-recessed {
         will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      /* While closing project: index was often without will-change (recess timer expired) — jitter fix */
+      main.home-index-close-anim {
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        main.home-recessed,
+        main.home-index-close-anim {
+          will-change: auto;
+          backface-visibility: visible;
+          -webkit-backface-visibility: visible;
+        }
       }
 
       /* ── CINEMATIC INDEX ── */
@@ -175,8 +198,8 @@
         margin-left: var(--pi-offset, 8vw);
         margin-bottom: var(--pi-gutter, 16vh);
         opacity: 0;
-        transform: translate3d(0, var(--fade-up-y), 0);
-        animation: fadeUp var(--t-fade-up) var(--ease-cinematic) forwards;
+        transform: translateY(20px);
+        animation: fadeUp 0.7s ease forwards;
       }
 
       .ci-number {
@@ -197,6 +220,7 @@
         -webkit-tap-highlight-color: transparent;
       }
 
+      /* Index preview hover / blur: match index_V3.html (avoids compositor + filter quirks) */
       .ci-frame {
         position: relative;
         overflow: hidden;
@@ -225,7 +249,7 @@
         transform: scale(1.12);
         transition:
           opacity var(--t-fade-up) ease,
-          filter var(--t-ci-hover) ease-in-out;
+          filter var(--t-ci-hover-blur) ease-in-out;
       }
       .ci-video-base.ci-loaded { opacity: 1; }
 
@@ -245,7 +269,7 @@
         transform: scale(1.12);
         opacity: 0;
         pointer-events: none;
-        transition: opacity var(--t-ci-hover) ease-in-out;
+        transition: opacity var(--t-ci-hover-blur) ease-in-out;
       }
 
       .ci-item-link:hover .ci-img-blur,
@@ -262,7 +286,7 @@
         justify-content: space-between;
         padding: 3.5%;
         opacity: 0;
-        transition: opacity var(--t-ci-hover) ease-in-out;
+        transition: opacity var(--t-ci-hover-blur) ease-in-out;
         pointer-events: none;
       }
 
@@ -404,13 +428,21 @@
         position: fixed;
         inset: 0;
         background-color: var(--cream);
-        z-index: 200;
+        z-index: 201;
         flex-direction: column;
         overflow-y: auto;
         overflow-x: hidden;
         isolation: isolate;
       }
       .project-page.active { display: flex; }
+
+      .project-page.project-page--exiting .project-header {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      .project-page.project-page--exiting::before {
+        opacity: 0;
+      }
 
       /* Very subtle film grain (active overlay only; page is display:none when closed) */
       .project-page::before {
@@ -586,14 +618,18 @@
         align-self: flex-start;
         padding-top: 0.35rem;
         opacity: 0;
-        transform: translate3d(0, 24px, 0);
+        /* Description only: ~30% more travel + ~30% slower than 2×--t-layer */
+        transform: translate3d(0, 31px, 0);
         transition:
-          opacity calc(2 * var(--t-layer)) var(--ease-soft) 0.16s,
-          transform calc(2 * var(--t-layer)) var(--ease-soft) 0.16s;
+          opacity calc(var(--t-layer) * 2.6) var(--ease-soft) 0.208s,
+          transform calc(var(--t-layer) * 2.6) var(--ease-soft) 0.208s;
       }
       .gallery-classic-shell.gallery-classic-shell--ready .gallery-classic-aside {
         opacity: 1;
         transform: translate3d(0, 0, 0);
+      }
+      .gallery-classic-shell.gallery-classic-shell--ready .gallery-classic-track {
+        opacity: 1;
       }
 
       .gallery-classic-track {
@@ -836,8 +872,8 @@
 
       .info-page.active .info-inner > *:not(.info-divider) {
         opacity: 0;
-        transform: translate3d(0, var(--fade-up-y), 0);
-        animation: fadeUp var(--t-fade-up) var(--ease-cinematic) forwards;
+        transform: translateY(16px);
+        animation: fadeUp 0.5s ease forwards;
       }
       .info-page.active .info-inner > *:not(.info-divider):nth-child(1) { animation-delay: 0.15s; }
       .info-page.active .info-inner > *:not(.info-divider):nth-child(2) { animation-delay: 0.22s; }
@@ -894,7 +930,7 @@
 
       /* ── ANIMATION ── */
       @keyframes fadeUp {
-        to { opacity: 1; transform: translate3d(0, 0, 0); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       @keyframes infoDividerScaleX {
@@ -1145,6 +1181,7 @@
         transform: translate3d(0, -50%, 0);
         flex-direction: column;
         gap: 6px;
+        opacity: 1;
       }
       #index-scroll-indicator span {
         width: 4px;
@@ -1495,6 +1532,19 @@
         if (!m) return fallback;
         var n = parseFloat(m[1], 10);
         return m[2].toLowerCase() === 's' ? Math.round(n * 1000) : Math.round(n);
+      }
+
+      function focusWithoutScroll(el) {
+        if (!el || typeof el.focus !== 'function') return;
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            try {
+              el.focus({ preventScroll: true });
+            } catch (err) {
+              try { el.focus(); } catch (e2) {}
+            }
+          });
+        });
       }
 
       function clearGalleryLoaderTransitionCleanup(el) {
@@ -1883,6 +1933,46 @@
         }
       } catch (e) {}
 
+      function hideIndexScrollIndicatorForOverlay() {
+        var ind = elIndexScrollIndicator;
+        if (!ind) return;
+        if (ind._indexIndRevealTimer) {
+          clearTimeout(ind._indexIndRevealTimer);
+          ind._indexIndRevealTimer = null;
+        }
+        ind.style.transition = '';
+        ind.style.opacity = '';
+        ind.style.display = 'none';
+      }
+
+      function revealIndexScrollIndicator() {
+        var ind = elIndexScrollIndicator;
+        if (!ind) return;
+        if (ind._indexIndRevealTimer) {
+          clearTimeout(ind._indexIndRevealTimer);
+          ind._indexIndRevealTimer = null;
+        }
+        if (prefersReducedMotion) {
+          ind.style.display = '';
+          ind.style.opacity = '';
+          ind.style.transition = '';
+          return;
+        }
+        ind.style.display = '';
+        ind.style.opacity = '0';
+        ind.style.transition = 'none';
+        void ind.offsetWidth;
+        requestAnimationFrame(function() {
+          ind.style.transition = 'opacity var(--t-fade-md) var(--ease-out)';
+          ind.style.opacity = '1';
+        });
+        ind._indexIndRevealTimer = setTimeout(function() {
+          ind._indexIndRevealTimer = null;
+          ind.style.transition = '';
+          ind.style.opacity = '';
+        }, readCssMs('--t-fade-md', 400) + 60);
+      }
+
       var _closing        = false;
       var _closingInfo    = false;
       var _indexScrollDots = null;
@@ -1892,6 +1982,13 @@
       var _projectScrollRaf  = null;
       var _projectScrollVisualKey = '';
       var _layoutResizeRaf = null;
+      var _initialHashApplied = false;
+
+      function runInitialRouteFromHashOnce() {
+        if (_initialHashApplied) return;
+        _initialHashApplied = true;
+        applyInitialRouteFromHash();
+      }
 
       function computeScrollDotState(scrollTop, scrollHeight, clientHeight, segments) {
         var maxScroll = scrollHeight - clientHeight;
@@ -2233,12 +2330,19 @@
 
       // ── OPEN PROJECT (options.skipHistory: use replaceState for hash hydration)
       window.openProject = function(key, options) {
-        currentProject = PROJECTS_MANIFEST.find(function(p) {
+        if (_closing || _closingInfo) return;
+        var nextProject = PROJECTS_MANIFEST.find(function(p) {
           return p.id === key || p.projectKey === key;
         });
-        if (!currentProject) return;
+        if (!nextProject) return;
 
-        var page      = elProjectPage;
+        var page = elProjectPage;
+        if (page.classList.contains('active') && currentProject === nextProject) {
+          history.replaceState({ project: key }, '', '#work-' + key);
+          return;
+        }
+
+        currentProject = nextProject;
         page.classList.remove('project-header-revealed');
         var rfFromOpen = document.activeElement;
         page._returnFocusFromProject = (rfFromOpen && typeof rfFromOpen.focus === 'function') ? rfFromOpen : null;
@@ -2266,7 +2370,7 @@
         } else {
           shell.style.display = 'flex';
           editorial.style.display = 'none';
-          classic.style.opacity = currentProject.hero ? '0' : '1';
+          classic.style.opacity = currentProject.hero ? '0' : '';
         }
         shell.classList.remove('gallery-classic-shell--ready');
 
@@ -2559,6 +2663,14 @@
           }
         }
 
+        if (page._overlayVisibilityTimer) {
+          clearTimeout(page._overlayVisibilityTimer);
+          page._overlayVisibilityTimer = null;
+        }
+        page.classList.remove('project-page--exiting');
+        page.style.visibility   = '';
+        page.style.pointerEvents  = '';
+        page.style.willChange     = '';
         page.style.opacity   = '0';
         page.style.transform = 'translate3d(0, 30px, 0)';
         page.style.transition = 'none';
@@ -2567,31 +2679,51 @@
         page.scrollTop = 0;
         page.classList.remove('is-scrolled');
         void page.offsetWidth;
-        page.style.transition =
-          'opacity var(--t-overlay-in) var(--ease-cinematic), transform var(--t-overlay-in) var(--ease-cinematic)';
-        page.style.opacity   = '1';
-        page.style.transform = 'translate3d(0, 0, 0)';
-        revealProjectHeaderTitle(titleEl, page);
-        if (prefersReducedMotion || !titleEl.querySelector('.project-header-title-inner')) {
+
+        if (prefersReducedMotion) {
+          page.style.transition = 'none';
+          page.style.opacity   = '1';
+          page.style.transform = 'translate3d(0, 0, 0)';
           page.classList.add('project-header-revealed');
+          elHome.classList.add('home-recessed');
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome.style.transition = 'none';
+          elHome.style.transform  = 'scale3d(0.97, 0.97, 1)';
+          elHome.style.opacity    = '0';
+          elHome._recessWillChangeTimer = setTimeout(function() {
+            elHome._recessWillChangeTimer = null;
+            elHome.classList.remove('home-recessed');
+          }, 0);
+        } else {
+          page.style.transition =
+            'opacity var(--t-overlay-in) var(--ease-cinematic), transform var(--t-overlay-in) var(--ease-cinematic)';
+          page.style.opacity   = '1';
+          page.style.transform = 'translate3d(0, 0, 0)';
+          revealProjectHeaderTitle(titleEl, page);
+          if (!titleEl.querySelector('.project-header-title-inner')) {
+            page.classList.add('project-header-revealed');
+          }
+
+          elHome.classList.add('home-recessed');
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome._recessWillChangeTimer = setTimeout(function() {
+            elHome._recessWillChangeTimer = null;
+            elHome.classList.remove('home-recessed');
+          }, readCssMs('--t-home-recess-clear', 430));
+
+          elHome.style.transition =
+            'transform var(--t-overlay-in) var(--ease-cinematic), opacity var(--t-overlay-in) var(--ease-cinematic)';
+          elHome.style.transform  = 'scale3d(0.97, 0.97, 1)';
+          elHome.style.opacity    = '0';
         }
 
-        elHome.classList.add('home-recessed');
-        if (elHome._recessWillChangeTimer) {
-          clearTimeout(elHome._recessWillChangeTimer);
-          elHome._recessWillChangeTimer = null;
-        }
-        elHome._recessWillChangeTimer = setTimeout(function() {
-          elHome._recessWillChangeTimer = null;
-          elHome.classList.remove('home-recessed');
-        }, readCssMs('--t-home-recess-clear', 430));
-
-        elHome.style.transition =
-          'transform var(--t-overlay-in) var(--ease-cinematic), opacity var(--t-dot) var(--ease-out)';
-        elHome.style.transform  = 'scale3d(0.97, 0.97, 1)';
-        elHome.style.opacity    = '0';
-
-        if (elIndexScrollIndicator) elIndexScrollIndicator.style.display = 'none';
+        hideIndexScrollIndicatorForOverlay();
 
         var scrollBehaviorGallery = prefersReducedMotion ? 'auto' : 'smooth';
 
@@ -2664,7 +2796,7 @@
 
         requestAnimationFrame(function() {
           var closeBtn = page.querySelector('.project-header .back-btn');
-          if (closeBtn && typeof closeBtn.focus === 'function') closeBtn.focus();
+          focusWithoutScroll(closeBtn);
         });
 
         var skipHistory = options && options.skipHistory;
@@ -2755,23 +2887,20 @@
           page._projectKeyHandler = null;
         }
 
-        page.style.transition =
-          'opacity var(--t-overlay-out) var(--ease-cinematic), transform var(--t-overlay-out) var(--ease-cinematic)';
-        page.style.opacity    = '0';
-        page.style.transform  = 'translate3d(0, 20px, 0)';
-
-        elHome.style.transition =
-          'transform var(--t-overlay-out) var(--ease-cinematic), opacity var(--t-dot) var(--ease-out)';
-        elHome.style.transform  = '';
-        elHome.style.opacity    = '1';
-
-        if (elIndexScrollIndicator) elIndexScrollIndicator.style.display = '';
-
-        setTimeout(function() {
+        function finishCloseProjectCleanup() {
+          if (page._overlayVisibilityTimer) {
+            clearTimeout(page._overlayVisibilityTimer);
+            page._overlayVisibilityTimer = null;
+          }
+          revealIndexScrollIndicator();
           page.classList.remove('active');
+          page.classList.remove('project-page--exiting');
           page.style.opacity    = '';
           page.style.transition = '';
           page.style.transform  = '';
+          page.style.visibility = '';
+          page.style.pointerEvents = '';
+          page.style.willChange    = '';
           var glClose = document.getElementById('gallery-loader');
           if (glClose) {
             clearGalleryLoaderTransitionCleanup(glClose);
@@ -2804,27 +2933,94 @@
           }
           var rf = page._returnFocusFromProject;
           page._returnFocusFromProject = null;
-          if (rf && typeof rf.focus === 'function') {
-            try { rf.focus(); } catch (err) {}
-          }
+          focusWithoutScroll(rf);
           elHome.style.transition = '';
-        }, readCssMs('--t-overlay-out', 300));
+          elHome.style.transform  = '';
+          elHome.style.opacity    = '';
+          elHome.classList.remove('home-index-close-anim');
+        }
+
+        if (prefersReducedMotion) {
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome.style.transition = 'none';
+          elHome.style.transform  = 'scale3d(1, 1, 1)';
+          elHome.style.opacity    = '1';
+          page.style.transition   = 'none';
+          page.style.pointerEvents = 'none';
+          page.style.willChange   = '';
+          page.style.opacity      = '0';
+          page.style.transform    = 'translate3d(0, 20px, 0)';
+          page.style.visibility   = 'hidden';
+          setTimeout(finishCloseProjectCleanup, 0);
+          if (!fromPopstate) history.back();
+          return;
+        }
+
+        if (elHome._recessWillChangeTimer) {
+          clearTimeout(elHome._recessWillChangeTimer);
+          elHome._recessWillChangeTimer = null;
+        }
+        elHome.classList.add('home-index-close-anim');
+
+        if (page._overlayVisibilityTimer) {
+          clearTimeout(page._overlayVisibilityTimer);
+          page._overlayVisibilityTimer = null;
+        }
+
+        page.classList.add('project-page--exiting');
+        page.style.pointerEvents = 'none';
+        page.style.willChange    = 'opacity, transform';
+
+        page.style.transition =
+          'opacity var(--t-overlay-out) var(--ease-cinematic), transform var(--t-overlay-out) var(--ease-cinematic)';
+        page.style.opacity    = '0';
+        page.style.transform  = 'translate3d(0, 20px, 0)';
+
+        elHome.style.transition =
+          'transform var(--t-home-reveal-out) var(--ease-cinematic), opacity var(--t-home-reveal-out) var(--ease-cinematic)';
+        elHome.style.transform  = 'scale3d(1, 1, 1)';
+        elHome.style.opacity    = '1';
+
+        var tOverlayOutMs = readCssMs('--t-overlay-out', 420);
+        page._overlayVisibilityTimer = setTimeout(function() {
+          page._overlayVisibilityTimer = null;
+          if (_closing && page.classList.contains('active')) {
+            page.style.visibility = 'hidden';
+          }
+        }, tOverlayOutMs);
+
+        var _closeCleanupMs = Math.max(
+          tOverlayOutMs,
+          readCssMs('--t-home-reveal-out', 540)
+        );
+        setTimeout(finishCloseProjectCleanup, _closeCleanupMs);
 
         if (!fromPopstate) history.back();
       };
 
       // ── INFO (options.skipHistory: use replaceState for hash hydration)
       window.showInfo = function(options) {
+        if (_closing) return;
         var skipHistory = !!(options && options.skipHistory);
         var info = document.getElementById('info-page');
         if (info._closeInfoTimer) {
           clearTimeout(info._closeInfoTimer);
           info._closeInfoTimer = null;
         }
+        if (info._overlayVisibilityTimer) {
+          clearTimeout(info._overlayVisibilityTimer);
+          info._overlayVisibilityTimer = null;
+        }
         _closingInfo = false;
         var rfInfoOpen = document.activeElement;
         info._returnFocusFromInfo = (rfInfoOpen && typeof rfInfoOpen.focus === 'function') ? rfInfoOpen : null;
 
+        info.style.visibility   = '';
+        info.style.pointerEvents = '';
+        info.style.willChange    = '';
         info.style.opacity = '0';
         info.style.transform = 'translate3d(0, 30px, 0)';
         info.style.transition = 'none';
@@ -2833,29 +3029,46 @@
         info.scrollTop = 0;
         void info.offsetWidth;
 
-        info.style.transition =
-          'opacity var(--t-overlay-in) var(--ease-cinematic), transform var(--t-overlay-in) var(--ease-cinematic)';
-        info.style.opacity = '1';
-        info.style.transform = 'translate3d(0, 0, 0)';
+        if (prefersReducedMotion) {
+          info.style.transition = 'none';
+          info.style.opacity = '1';
+          info.style.transform = 'translate3d(0, 0, 0)';
+          elHome.classList.add('home-recessed');
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome.style.transition = 'none';
+          elHome.style.transform = 'scale3d(0.97, 0.97, 1)';
+          elHome._recessWillChangeTimer = setTimeout(function() {
+            elHome._recessWillChangeTimer = null;
+            elHome.classList.remove('home-recessed');
+          }, 0);
+        } else {
+          info.style.transition =
+            'opacity var(--t-overlay-in) var(--ease-cinematic), transform var(--t-overlay-in) var(--ease-cinematic)';
+          info.style.opacity = '1';
+          info.style.transform = 'translate3d(0, 0, 0)';
 
-        elHome.classList.add('home-recessed');
-        if (elHome._recessWillChangeTimer) {
-          clearTimeout(elHome._recessWillChangeTimer);
-          elHome._recessWillChangeTimer = null;
+          elHome.classList.add('home-recessed');
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome._recessWillChangeTimer = setTimeout(function() {
+            elHome._recessWillChangeTimer = null;
+            elHome.classList.remove('home-recessed');
+          }, readCssMs('--t-home-recess-clear', 430));
+
+          elHome.style.transition = 'transform var(--t-overlay-in) var(--ease-cinematic)';
+          elHome.style.transform = 'scale3d(0.97, 0.97, 1)';
         }
-        elHome._recessWillChangeTimer = setTimeout(function() {
-          elHome._recessWillChangeTimer = null;
-          elHome.classList.remove('home-recessed');
-        }, readCssMs('--t-home-recess-clear', 430));
 
-        elHome.style.transition = 'transform var(--t-overlay-in) var(--ease-cinematic)';
-        elHome.style.transform = 'scale3d(0.97, 0.97, 1)';
-
-        if (elIndexScrollIndicator) elIndexScrollIndicator.style.display = 'none';
+        hideIndexScrollIndicatorForOverlay();
 
         requestAnimationFrame(function() {
           var ib = info.querySelector('.info-close');
-          if (ib && typeof ib.focus === 'function') ib.focus();
+          focusWithoutScroll(ib);
         });
 
         if (skipHistory) {
@@ -2875,22 +3088,20 @@
           info._closeInfoTimer = null;
         }
 
-        info.style.transition =
-          'opacity var(--t-overlay-out) var(--ease-cinematic), transform var(--t-overlay-out) var(--ease-cinematic)';
-        info.style.opacity = '0';
-        info.style.transform = 'translate3d(0, 20px, 0)';
-
-        elHome.style.transition = 'transform var(--t-overlay-out) var(--ease-cinematic)';
-        elHome.style.transform = '';
-
-        if (elIndexScrollIndicator) elIndexScrollIndicator.style.display = '';
-
-        info._closeInfoTimer = setTimeout(function() {
+        function finishCloseInfoCleanup() {
+          if (info._overlayVisibilityTimer) {
+            clearTimeout(info._overlayVisibilityTimer);
+            info._overlayVisibilityTimer = null;
+          }
+          revealIndexScrollIndicator();
           info._closeInfoTimer = null;
           info.classList.remove('active');
           info.style.opacity = '';
           info.style.transition = '';
           info.style.transform = '';
+          info.style.visibility = '';
+          info.style.pointerEvents = '';
+          info.style.willChange = '';
           document.body.style.overflow = '';
           _closingInfo = false;
           elHome.classList.remove('home-recessed');
@@ -2900,11 +3111,62 @@
           }
           var rfi = info._returnFocusFromInfo;
           info._returnFocusFromInfo = null;
-          if (rfi && typeof rfi.focus === 'function') {
-            try { rfi.focus(); } catch (errI) {}
-          }
+          focusWithoutScroll(rfi);
           elHome.style.transition = '';
-        }, readCssMs('--t-overlay-out', 300));
+          elHome.style.transform = '';
+          elHome.classList.remove('home-index-close-anim');
+        }
+
+        if (prefersReducedMotion) {
+          if (elHome._recessWillChangeTimer) {
+            clearTimeout(elHome._recessWillChangeTimer);
+            elHome._recessWillChangeTimer = null;
+          }
+          elHome.style.transition = 'none';
+          elHome.style.transform = 'scale3d(1, 1, 1)';
+          info.style.transition = 'none';
+          info.style.pointerEvents = 'none';
+          info.style.willChange = '';
+          info.style.opacity = '0';
+          info.style.transform = 'translate3d(0, 20px, 0)';
+          info.style.visibility = 'hidden';
+          info._closeInfoTimer = setTimeout(finishCloseInfoCleanup, 0);
+          if (!fromPopstate) history.back();
+          return;
+        }
+
+        if (elHome._recessWillChangeTimer) {
+          clearTimeout(elHome._recessWillChangeTimer);
+          elHome._recessWillChangeTimer = null;
+        }
+        elHome.classList.add('home-index-close-anim');
+
+        if (info._overlayVisibilityTimer) {
+          clearTimeout(info._overlayVisibilityTimer);
+          info._overlayVisibilityTimer = null;
+        }
+
+        info.style.pointerEvents = 'none';
+        info.style.willChange = 'opacity, transform';
+
+        info.style.transition =
+          'opacity var(--t-overlay-out) var(--ease-cinematic), transform var(--t-overlay-out) var(--ease-cinematic)';
+        info.style.opacity = '0';
+        info.style.transform = 'translate3d(0, 20px, 0)';
+
+        elHome.style.transition =
+          'transform var(--t-overlay-out) var(--ease-cinematic)';
+        elHome.style.transform = 'scale3d(1, 1, 1)';
+
+        var tInfoOutMs = readCssMs('--t-overlay-out', 420);
+        info._overlayVisibilityTimer = setTimeout(function() {
+          info._overlayVisibilityTimer = null;
+          if (_closingInfo && info.classList.contains('active')) {
+            info.style.visibility = 'hidden';
+          }
+        }, tInfoOutMs);
+
+        info._closeInfoTimer = setTimeout(finishCloseInfoCleanup, tInfoOutMs);
 
         if (!fromPopstate) history.back();
       };
@@ -2947,22 +3209,22 @@
         }
         window.openProject(key, { skipHistory: true });
       }
-      applyInitialRouteFromHash();
 
       window.addEventListener('resize', function() {
         if (_layoutResizeRaf != null) return;
         _layoutResizeRaf = requestAnimationFrame(function() {
           _layoutResizeRaf = null;
+          if (
+            _closing ||
+            _closingInfo ||
+            elProjectPage.classList.contains('active') ||
+            document.getElementById('info-page').classList.contains('active')
+          ) {
+            return;
+          }
           _indexScrollVisualKey = '';
           updateIndexScrollIndicator();
           _projectScrollVisualKey = '';
-          if (
-            elProjectPage.classList.contains('active') &&
-            elProjectScrollIndicator &&
-            elProjectScrollIndicator.classList.contains('is-visible')
-          ) {
-            updateProjectScrollIndicator();
-          }
         });
       }, { passive: true });
 
@@ -3080,6 +3342,7 @@
           if (e.target !== splash || e.propertyName !== 'opacity') return;
           splash.removeEventListener('transitionend', onSplashLeavingEnd);
           splash.style.display = 'none';
+          runInitialRouteFromHashOnce();
         }
 
         window.dismissSplash = function() {
@@ -3096,9 +3359,14 @@
             if (splash.style.display === 'none') return;
             splash.removeEventListener('transitionend', onSplashLeavingEnd);
             splash.style.display = 'none';
+            runInitialRouteFromHashOnce();
           }, readCssMs('--t-splash-leave', 900) + readCssMs('--t-splash-dismiss-padding', 80));
         };
       })();
+
+      if (sessionStorage.getItem('splashSeen')) {
+        runInitialRouteFromHashOnce();
+      }
     </script>
   </body>
 </html>
