@@ -85,6 +85,8 @@
         --t-loader-breath: 2.2s;
         --t-dot-pulse: 1.2s;
         --t-project-ind: 550ms;
+        --t-ruler-tick: 450ms;
+        --t-ruler-at-end: 680ms;
         --t-home-recess-clear: 430ms;
         /* Splash scene (durations tied in JS fallbacks) */
         --t-splash-leave: 900ms;
@@ -1018,6 +1020,9 @@
         #project-scroll-indicator {
           transition: none;
         }
+        .project-ruler-tick {
+          transition: none;
+        }
         .hero-loader::before {
           animation: none;
           opacity: 0.5;
@@ -1190,7 +1195,7 @@
         height: 4px;
       }
 
-      /* Classic: fixed for always-visible progress; left synced to .gallery-classic-aside in JS */
+      /* Classic: per-image ruler ticks; left synced to .gallery-classic-aside in JS */
       #project-scroll-indicator {
         display: flex;
         position: fixed;
@@ -1198,9 +1203,8 @@
         bottom: var(--space);
         top: auto;
         flex-direction: row;
-        align-items: center;
-        gap: 12px;
-        transform: none;
+        align-items: flex-end;
+        gap: 0;
         visibility: hidden;
         opacity: 0;
         transition: opacity var(--t-project-ind) var(--ease-soft);
@@ -1210,9 +1214,36 @@
         visibility: visible;
         opacity: 1;
       }
-      #project-scroll-indicator span {
-        width: 8px;
-        height: 8px;
+      #project-scroll-indicator .project-ruler-track {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 7px;
+      }
+      .project-ruler-tick {
+        display: block;
+        flex-shrink: 0;
+        width: 2px;
+        height: 7px;
+        border-radius: 1px;
+        background: rgba(28, 26, 24, 0.32);
+        transform-origin: center bottom;
+        transition:
+          height var(--t-ruler-tick) var(--ease-soft),
+          background var(--t-ruler-tick) var(--ease-soft),
+          opacity var(--t-ruler-tick) var(--ease-soft);
+      }
+      .project-ruler-tick.is-active {
+        height: 20px;
+        background: rgba(28, 26, 24, 0.78);
+      }
+      #project-scroll-indicator.at-end .project-ruler-tick {
+        height: 17px;
+        background: rgba(28, 26, 24, 0.52);
+        transition:
+          height var(--t-ruler-at-end) var(--ease-cinematic),
+          background var(--t-ruler-at-end) var(--ease-cinematic),
+          opacity var(--t-ruler-at-end) var(--ease-cinematic);
       }
 
       /* Hide scroll dots on mobile + small tablet (layout goes single-column at 768px) */
@@ -1459,11 +1490,7 @@
 
     <!-- Outside #project-page: ancestor transform breaks position:fixed for descendants -->
     <div class="scroll-indicator" id="project-scroll-indicator" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      <div class="project-ruler-track" id="project-ruler-track"></div>
     </div>
 
 
@@ -1983,9 +2010,9 @@
       var _indexScrollDots = null;
       var _indexScrollRaf  = null;
       var _indexScrollVisualKey = '';
-      var _projectScrollDots = null;
+      var _projectRulerTicks = null;
       var _projectScrollRaf  = null;
-      var _projectScrollVisualKey = '';
+      var _projectRulerVisualKey = '';
       var _layoutResizeRaf = null;
       var _initialHashApplied = false;
 
@@ -2026,54 +2053,173 @@
         else indicator.classList.remove('at-end');
       }
 
-      /* Classic dots: map viewport-centered gallery item → segment (not scrollTop/maxScroll).
-         Lazy images below the fold change scrollHeight but not which item is centered, so no
-         backward jump and no false “almost done”. Single-image projects use scroll fraction. */
-      function computeClassicProjectDotState(page, segments) {
-        var sh = page.scrollHeight;
-        var ch = page.clientHeight;
-        var maxScroll = sh - ch;
-        var st = page.scrollTop;
-        if (maxScroll <= 8) {
-          return { idx: 0, atEnd: false, noScroll: true };
-        }
-        var items = page.querySelectorAll('.gallery-vertical-item');
-        var n = items.length;
-        var progress;
-        if (n <= 1) {
-          progress = st / maxScroll;
-        } else {
-          var ci = classicGalleryClosestIndex(page, items);
-          progress = ci / (n - 1);
-        }
-        if (progress < 0) progress = 0;
-        if (progress > 1) progress = 1;
-        var idx = Math.floor(progress * segments);
-        if (idx >= segments) idx = segments - 1;
-        var endSlack = Math.max(48, ch * 0.06);
-        var atEnd = st >= maxScroll - endSlack;
-        return {
-          idx: idx,
-          atEnd: atEnd,
-          noScroll: false
-        };
+      function clearProjectRuler(elProjectPage) {
+        var ind = document.getElementById('project-scroll-indicator');
+        if (!ind) return;
+        ind.classList.remove('at-end');
+        var track = ind.querySelector('.project-ruler-track');
+        if (track) track.innerHTML = '';
+        if (elProjectPage) elProjectPage._projectRulerBuiltKey = '';
+        _projectRulerTicks = null;
+        _projectRulerVisualKey = '';
       }
 
+      function buildProjectRulerTicks(elProjectPage, n) {
+        if (n < 1) return;
+        var ind = elProjectScrollIndicator || document.getElementById('project-scroll-indicator');
+        if (!ind) return;
+        var track = ind.querySelector('.project-ruler-track');
+        if (!track) return;
+        var key = String(n);
+        if (
+          elProjectPage &&
+          elProjectPage._projectRulerBuiltKey === key &&
+          track.children.length === n
+        ) {
+          _projectRulerTicks = Array.prototype.slice.call(
+            track.querySelectorAll('.project-ruler-tick')
+          );
+          return;
+        }
+        track.innerHTML = '';
+        for (var i = 0; i < n; i++) {
+          var tick = document.createElement('div');
+          tick.className = 'project-ruler-tick';
+          tick.setAttribute('aria-hidden', 'true');
+          track.appendChild(tick);
+        }
+        if (elProjectPage) elProjectPage._projectRulerBuiltKey = key;
+        _projectRulerTicks = Array.prototype.slice.call(track.querySelectorAll('.project-ruler-tick'));
+        _projectRulerVisualKey = '';
+      }
+
+      /* Classic ruler: items only inside #gallery-classic (same column as ticks). */
+      function getClassicGalleryItems() {
+        var track = document.getElementById('gallery-classic');
+        if (!track) {
+          return document.createDocumentFragment().querySelectorAll('*');
+        }
+        return track.querySelectorAll('.gallery-vertical-item');
+      }
+
+      /* Classic ruler: which block contains the reading line in scroll coordinates + gap fallbacks. */
+      function computeClassicProjectRulerState(page) {
+        var sh = page.scrollHeight;
+        var maxScroll = sh - page.clientHeight;
+        var st = page.scrollTop;
+        if (maxScroll <= 8) {
+          return { closestIndex: 0, atEnd: false, noScroll: true };
+        }
+        var items = getClassicGalleryItems();
+        var ni = items.length;
+        if (ni < 1) {
+          return { closestIndex: 0, atEnd: false, noScroll: true };
+        }
+        var closestIndex = 0;
+        if (ni <= 1) {
+          var progress = maxScroll > 0 ? st / maxScroll : 0;
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+          var denom = Math.max(0, ni - 1);
+          closestIndex = denom < 1 ? 0 : Math.round(progress * denom);
+        } else {
+          closestIndex = classicGalleryClosestIndex(page, items);
+        }
+        if (closestIndex < 0) closestIndex = 0;
+        if (closestIndex >= ni) closestIndex = ni - 1;
+        /* True bottom only: large slack made “all ticks” fire before the last photo read as active. */
+        var endEpsilon = 3;
+        var atEnd = st >= maxScroll - endEpsilon;
+        return { closestIndex: closestIndex, atEnd: atEnd, noScroll: false };
+      }
+
+      function applyProjectRulerState(indicator, rulerTicks, state) {
+        if (!rulerTicks.length) return;
+        if (state.noScroll) {
+          indicator.classList.remove('at-end');
+          rulerTicks.forEach(function(t, i) {
+            t.classList.toggle('is-active', i === 0);
+          });
+          return;
+        }
+        if (state.atEnd) {
+          indicator.classList.add('at-end');
+          rulerTicks.forEach(function(t) {
+            t.classList.remove('is-active');
+          });
+          return;
+        }
+        indicator.classList.remove('at-end');
+        rulerTicks.forEach(function(t, i) {
+          t.classList.toggle('is-active', i === state.closestIndex);
+        });
+      }
+
+      /* Reading line at (scrollTop + fraction of clientHeight) must fall inside an item’s
+         [top, bottom) in scroll space. Using only “deepest blockTop ≤ probe” breaks on very tall
+         last frames: probe can sit above the last block’s top while the viewport shows only that
+         image (Summer Haze haze-11). */
       function classicGalleryClosestIndex(pageEl, items) {
-        var rect = pageEl.getBoundingClientRect();
-        var mid = rect.top + rect.height / 2;
+        var n = items.length;
+        if (n < 2) return 0;
+
+        var st = pageEl.scrollTop;
+        var ch = pageEl.clientHeight;
+        if (ch < 1) return 0;
+
+        var pr = pageEl.getBoundingClientRect();
+        var probe = st + ch * 0.42;
+
+        function metrics(i) {
+          var el = items[i];
+          var r = el.getBoundingClientRect();
+          var top = st + (r.top - pr.top);
+          var h = r.height;
+          if (h < 2) {
+            var im = el.querySelector('img');
+            if (im) {
+              var ir = im.getBoundingClientRect();
+              if (ir.height >= 2) {
+                top = st + (ir.top - pr.top);
+                h = ir.height;
+              }
+            }
+          }
+          h = Math.max(h, 1);
+          return { top: top, bottom: top + h };
+        }
+
+        for (var i = 0; i < n; i++) {
+          var m = metrics(i);
+          if (probe >= m.top && probe < m.bottom) return i;
+        }
+
+        var m0 = metrics(0);
+        if (probe < m0.top) return 0;
+
+        var mLast = metrics(n - 1);
+        if (probe >= mLast.bottom) return n - 1;
+
         var best = 0;
-        var bestDist = Infinity;
-        for (var i = 0; i < items.length; i++) {
-          var r = items[i].getBoundingClientRect();
-          var c = r.top + r.height / 2;
-          var d = Math.abs(c - mid);
-          if (d < bestDist) {
-            bestDist = d;
-            best = i;
+        var bestV = -1;
+        for (var j = 0; j < n; j++) {
+          var r = items[j].getBoundingClientRect();
+          var vTop = Math.max(r.top, pr.top);
+          var vBottom = Math.min(r.bottom, pr.bottom);
+          var vis = Math.max(0, vBottom - vTop);
+          if (vis > bestV + 0.5) {
+            bestV = vis;
+            best = j;
+          } else if (Math.abs(vis - bestV) <= 0.5 && vis > 0 && j > best) {
+            best = j;
           }
         }
-        return best;
+        if (bestV > 2) return best;
+
+        for (var k = n - 1; k >= 0; k--) {
+          if (probe + 0.5 >= metrics(k).top) return k;
+        }
+        return 0;
       }
 
       function ensureClassicRevealIO(page) {
@@ -2156,11 +2302,12 @@
         });
       }
 
-      /* Align project dots to description column (same left edge as .gallery-classic-aside). */
-      function syncProjectIndicatorPosition() {
+      /* Align project ruler to description column (same left edge as .gallery-classic-aside). */
+      function syncProjectIndicatorPosition(evenWhenHidden) {
         var ind = elProjectScrollIndicator || document.getElementById('project-scroll-indicator');
-        if (!ind || !ind.classList.contains('is-visible')) {
-          if (ind) ind.style.left = '';
+        if (!ind) return;
+        if (!evenWhenHidden && !ind.classList.contains('is-visible')) {
+          ind.style.left = '';
           return;
         }
         var aside = document.querySelector('.gallery-classic-aside');
@@ -2183,26 +2330,29 @@
 
           syncProjectIndicatorPosition();
 
-          if (!_projectScrollDots || _projectScrollDots.length !== 5) {
-            _projectScrollDots = Array.prototype.slice.call(
-              indicator.querySelectorAll('span')
-            );
-          }
-
-          if (!_projectScrollDots.length) return;
-
           var page = elProjectPage;
           if (!page || !page.classList.contains('active')) return;
 
-          var segments = _projectScrollDots.length;
-          var state = computeClassicProjectDotState(page, segments);
+          var itemEls = getClassicGalleryItems();
+          var n = itemEls.length;
+          if (n < 1) return;
+
+          if (!_projectRulerTicks || _projectRulerTicks.length !== n) {
+            buildProjectRulerTicks(page, n);
+          }
+          if (!_projectRulerTicks || !_projectRulerTicks.length) return;
+
+          var state = computeClassicProjectRulerState(page);
 
           var visualKey =
-            (state.noScroll ? 'ns|' : '') + state.idx + '|' + (state.atEnd ? '1' : '0');
-          if (visualKey === _projectScrollVisualKey) return;
-          _projectScrollVisualKey = visualKey;
+            (state.noScroll ? 'ns|' : '') +
+            state.closestIndex +
+            '|' +
+            (state.atEnd ? '1' : '0');
+          if (visualKey === _projectRulerVisualKey) return;
+          _projectRulerVisualKey = visualKey;
 
-          applyScrollDotsToIndicator(indicator, _projectScrollDots, state);
+          applyProjectRulerState(indicator, _projectRulerTicks, state);
         });
       }
 
@@ -2365,6 +2515,7 @@
         // Clear both engines
         classic.innerHTML   = '';
         editorial.innerHTML = '';
+        clearProjectRuler(page);
 
         // Route: show active engine, hide the other
         var isEditorial = currentProject.layoutType === 'editorial';
@@ -2660,6 +2811,10 @@
               });
             }
           }
+          var nClassic = classic.querySelectorAll('.gallery-vertical-item').length;
+          if (nClassic > 0) {
+            buildProjectRulerTicks(page, nClassic);
+          }
         }
 
         if (!currentProject.hero) {
@@ -2763,13 +2918,15 @@
         if (isEditorial) {
           if (elProjectScrollIndicator) {
             elProjectScrollIndicator.classList.remove('is-visible');
+            elProjectScrollIndicator.classList.remove('at-end');
+            elProjectScrollIndicator.style.left = '';
           }
           if (page._projectScrollListener) {
             page.removeEventListener('scroll', page._projectScrollListener);
             page._projectScrollListener = null;
           }
-          _projectScrollVisualKey = '';
-          _projectScrollDots = null;
+          clearProjectRuler(page);
+          _projectRulerVisualKey = '';
         } else {
           if (page._projectScrollListener) {
             page.removeEventListener('scroll', page._projectScrollListener);
@@ -2788,13 +2945,13 @@
           if (elProjectScrollIndicator) {
             if (currentProject.hero) {
               elProjectScrollIndicator.classList.remove('is-visible');
+              elProjectScrollIndicator.classList.remove('at-end');
               elProjectScrollIndicator.style.left = '';
             } else {
               elProjectScrollIndicator.classList.add('is-visible');
             }
           }
-          _projectScrollVisualKey = '';
-          _projectScrollDots = null;
+          _projectRulerVisualKey = '';
           if (!currentProject.hero) {
             requestAnimationFrame(function() {
               shell.classList.add('gallery-classic-shell--ready');
@@ -2855,10 +3012,10 @@
         }
         if (elProjectScrollIndicator) {
           elProjectScrollIndicator.classList.remove('is-visible');
+          elProjectScrollIndicator.classList.remove('at-end');
           elProjectScrollIndicator.style.left = '';
         }
-        _projectScrollVisualKey = '';
-        _projectScrollDots = null;
+        clearProjectRuler(page);
         // Clear hero content
         var heroContainer = document.getElementById('project-hero');
         if (heroContainer) {
@@ -3223,17 +3380,22 @@
         if (_layoutResizeRaf != null) return;
         _layoutResizeRaf = requestAnimationFrame(function() {
           _layoutResizeRaf = null;
-          if (
-            _closing ||
-            _closingInfo ||
-            elProjectPage.classList.contains('active') ||
-            document.getElementById('info-page').classList.contains('active')
-          ) {
+          if (_closing || _closingInfo) return;
+          if (elProjectPage.classList.contains('active')) {
+            _projectRulerVisualKey = '';
+            syncProjectIndicatorPosition(true);
+            updateProjectScrollIndicator();
+            return;
+          }
+          if (document.getElementById('info-page').classList.contains('active')) {
+            _indexScrollVisualKey = '';
+            updateIndexScrollIndicator();
+            _projectRulerVisualKey = '';
             return;
           }
           _indexScrollVisualKey = '';
           updateIndexScrollIndicator();
-          _projectScrollVisualKey = '';
+          _projectRulerVisualKey = '';
         });
       }, { passive: true });
 
