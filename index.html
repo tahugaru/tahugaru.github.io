@@ -99,7 +99,11 @@
       html {
         font-size: 16px;
         scroll-behavior: smooth;
+        /* Reserve gutter on the index only; released while overlays lock body scroll (see .scroll-locked). */
         scrollbar-gutter: stable;
+      }
+      html.scroll-locked {
+        scrollbar-gutter: auto;
       }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
@@ -114,7 +118,6 @@
         display: flex;
         flex-direction: column;
         -webkit-font-smoothing: antialiased;
-        scrollbar-gutter: stable;
       }
 
       /* ── HEADER ── */
@@ -2840,6 +2843,7 @@
         page.style.transition = 'none';
         page.classList.add('active');
         document.body.style.overflow = 'hidden';
+        document.documentElement.classList.add('scroll-locked');
         page.scrollTop = 0;
         page.classList.remove('is-scrolled');
         void page.offsetWidth;
@@ -3090,6 +3094,7 @@
           }
           page.classList.remove('project-header-revealed');
           document.body.style.overflow = '';
+          document.documentElement.classList.remove('scroll-locked');
           currentProject = null;
           _closing = false;
           elHome.classList.remove('home-recessed');
@@ -3192,6 +3197,7 @@
         info.style.transition = 'none';
         info.classList.add('active');
         document.body.style.overflow = 'hidden';
+        document.documentElement.classList.add('scroll-locked');
         info.scrollTop = 0;
         void info.offsetWidth;
 
@@ -3269,6 +3275,7 @@
           info.style.pointerEvents = '';
           info.style.willChange = '';
           document.body.style.overflow = '';
+          document.documentElement.classList.remove('scroll-locked');
           _closingInfo = false;
           elHome.classList.remove('home-recessed');
           if (elHome._recessWillChangeTimer) {
