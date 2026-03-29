@@ -455,6 +455,8 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
         background-repeat: repeat;
         mix-blend-mode: multiply;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
       }
 
       .project-page > *:not(.project-header) {
@@ -1600,6 +1602,7 @@
             'images/haze-8.jpg',
             'images/haze-9.jpg',
             'images/haze-10.jpg',
+            'images/haze-11.jpg',
           ]
         },
         {
@@ -2430,6 +2433,10 @@
         if (currentProject.hero) {
           var heroImg  = document.createElement('img');
           heroImg.alt  = currentProject.title;
+          heroImg.decoding = 'sync';
+          if ('fetchPriority' in heroImg) {
+            heroImg.fetchPriority = 'high';
+          }
           heroImg.src  = currentProject.hero;
 
           var overlay = document.createElement('div');
@@ -3343,6 +3350,10 @@
         function onSplashLeavingEnd(e) {
           if (e.target !== splash || e.propertyName !== 'opacity') return;
           splash.removeEventListener('transitionend', onSplashLeavingEnd);
+          if (splash._splashLeaveFallback) {
+            clearTimeout(splash._splashLeaveFallback);
+            splash._splashLeaveFallback = null;
+          }
           splash.style.display = 'none';
           runInitialRouteFromHashOnce();
         }
@@ -3354,10 +3365,15 @@
             clearTimeout(splash._splashEnterFallback);
             splash._splashEnterFallback = null;
           }
+          if (splash._splashLeaveFallback) {
+            clearTimeout(splash._splashLeaveFallback);
+            splash._splashLeaveFallback = null;
+          }
           splash.classList.add('leaving');
           document.removeEventListener('keydown', splashKeyHandler);
           splash.addEventListener('transitionend', onSplashLeavingEnd);
-          window.setTimeout(function() {
+          splash._splashLeaveFallback = window.setTimeout(function() {
+            splash._splashLeaveFallback = null;
             if (splash.style.display === 'none') return;
             splash.removeEventListener('transitionend', onSplashLeavingEnd);
             splash.style.display = 'none';
