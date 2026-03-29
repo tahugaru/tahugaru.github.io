@@ -71,6 +71,8 @@
         --t-fade-md: 400ms;
         /* Shared content entrance (index cards + info blocks) */
         --t-fade-up: 500ms;
+        /* Slower fade-up (cinematic index .ci-wrap; reuse for similar entrances) */
+        --t-fade-up-long: 700ms;
         /* Index preview: hover blur overlay + title + video defocus (was 0.4s; tune here) */
         --t-ci-hover-blur: 520ms;
         /* Micro-interactions (keep durations aligned across UI + JS timeouts) */
@@ -204,7 +206,7 @@
         margin-bottom: var(--pi-gutter, 16vh);
         opacity: 0;
         transform: translateY(20px);
-        animation: fadeUp 0.7s ease forwards;
+        animation: fadeUp var(--t-fade-up-long) var(--ease-out) forwards;
       }
 
       .ci-number {
@@ -880,7 +882,7 @@
       .info-page.active .info-inner > *:not(.info-divider) {
         opacity: 0;
         transform: translateY(16px);
-        animation: fadeUp 0.5s ease forwards;
+        animation: fadeUp var(--t-fade-up) var(--ease-out) forwards;
       }
       .info-page.active .info-inner > *:not(.info-divider):nth-child(1) { animation-delay: 0.15s; }
       .info-page.active .info-inner > *:not(.info-divider):nth-child(2) { animation-delay: 0.22s; }
@@ -3462,6 +3464,7 @@
       (function() {
         if (sessionStorage.getItem('splashSeen')) {
           document.getElementById('splash').style.display = 'none';
+          runInitialRouteFromHashOnce();
           return;
         }
 
@@ -3551,9 +3554,6 @@
         };
       })();
 
-      if (sessionStorage.getItem('splashSeen')) {
-        runInitialRouteFromHashOnce();
-      }
     </script>
   </body>
 </html>
